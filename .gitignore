@@ -1,0 +1,68 @@
+.cursorignore
+.idea
+.vscode
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# 00_doc 自 2026-10-28 起纳入版本库（调研记录 / 问题清单 / 方案 / 实施清单 / SQL 脚本）
+# 仅忽略其运行产物
+00_doc/sql/*.log
+00_doc/**/*.tmp
+
+D:
+logPath_IS_UNDEFINED
+rebel.xml
+
+*.iml
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Claude Code configuration
+/.claude
+
+# Specs directory
+specs/
+claudedocs/
+
+# Temporary files
+*.rsls
+nul
+*.backup
+*.bak
+
+
+
+avatar_temp/

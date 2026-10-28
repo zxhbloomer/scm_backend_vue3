@@ -1,0 +1,16 @@
+package com.xinyirun.scm.core.system.service.business.so.soorder;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.xinyirun.scm.bean.entity.business.so.soorder.BSoOrderAttachEntity;
+
+/**
+ * <p>
+ * 销售订单附件表 服务类
+ * </p>
+ *
+ * @author xinyirun
+ * @since 2025-07-23
+ */
+public interface IBSoOrderAttachService extends IService<BSoOrderAttachEntity> {
+
+}

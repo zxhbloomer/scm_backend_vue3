@@ -1,0 +1,418 @@
+package com.xinyirun.scm.core.system.mapper.master.goods;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xinyirun.scm.bean.entity.master.goods.MGoodsSpecEntity;
+import com.xinyirun.scm.bean.api.vo.master.goods.ApiGoodsSpecVo;
+import com.xinyirun.scm.bean.system.vo.master.goods.MGoodsSpecExportVo;
+import com.xinyirun.scm.bean.system.vo.master.goods.MGoodsSpecLeftVo;
+import com.xinyirun.scm.bean.system.vo.master.goods.MGoodsSpecVo;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author htt
+ * @since 2021-09-23
+ */
+@Repository
+public interface MGoodsSpecMapper extends BaseMapper<MGoodsSpecEntity> {
+    String common_select = "  "
+            + "     SELECT                                                             "
+            + "            t.*,                                                        "
+            + "            t7.name as prop_name,                                       "
+            + "            t7.code as prop_code,                                       "
+            + "            t.code as sku_code,                                         "
+            + "            t6.id as goods_id,                                          "
+            + "            t6.code as goods_code,                                      "
+            + "            t6.name as goods_name,                                      "
+            + "            t5.id as category_id,                                       "
+            + "            t5.name as category_name,                                   "
+            + "            t1.name as c_name,                                          "
+            + "            t2.name as u_name                                           "
+            + "       FROM                                                             "
+            + "  	       m_goods_spec t                                              "
+            + "  LEFT JOIN m_staff t1 ON t.c_id = t1.id                                "
+            + "  LEFT JOIN m_staff t2 ON t.u_id = t2.id                                "
+            + "  LEFT JOIN m_goods t6 ON t.goods_id = t6.id                            "
+            + "  LEFT JOIN m_category t5 ON t6.category_id = t5.id                     "
+            + "  LEFT JOIN m_goods_spec_prop t7 ON t.prop_id = t7.id                   "
+            + "                                                                        "
+            ;
+
+    /**
+     * AI专用查询：三字段独立like，enable过滤在SQL层
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.enable = true "
+            // 商品名：对应 m_goods.name
+            + "    and (#{p1.ai_goods_name} is null or t6.name like concat('%', #{p1.ai_goods_name,jdbcType=VARCHAR}, '%')) "
+            // 规格参数：对应 m_goods_spec.spec（如 30-80mm）
+            + "    and (#{p1.ai_spec} is null or t.spec like concat('%', #{p1.ai_spec,jdbcType=VARCHAR}, '%')) "
+            // SKU编码：对应 m_goods_spec.code
+            + "    and (#{p1.ai_code} is null or t.code like concat('%', #{p1.ai_code,jdbcType=VARCHAR}, '%')) "
+            + "    order by t.u_time desc "
+            + "      ")
+    IPage<MGoodsSpecVo> selectPageForAi(Page page, @Param("p1") MGoodsSpecVo searchCondition);
+
+    /**
+     * AI专用查询：单关键词全字段OR模糊匹配，enable过滤在SQL层
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.enable = true "
+            + "    and (#{p1.keyword} is null "
+            + "         or t6.name like concat('%', #{p1.keyword,jdbcType=VARCHAR}, '%') "
+            + "         or t.spec   like concat('%', #{p1.keyword,jdbcType=VARCHAR}, '%') "
+            + "         or t.code   like concat('%', #{p1.keyword,jdbcType=VARCHAR}, '%') "
+            + "        ) "
+            + "    order by t.u_time desc "
+            + "      ")
+    IPage<MGoodsSpecVo> selectPageForAiByKeyword(Page page, @Param("p1") MGoodsSpecVo searchCondition);
+
+    /**
+     * 页面查询列表
+     * @param page
+     * @param searchCondition
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and (concat(ifnull(t.spec,''),                                                                       "
+            + "     ifnull(t.name,''),                                                                                  "
+            + "     ifnull(t6.name,''),                                                                                 "
+            + "     ifnull(t5.name,''),                                                                                 "
+            + "     ifnull(t7.name,''),                                                                                 "
+            + "     ifnull(t.code,''))                                                                                  "
+            + "like CONCAT ('%',#{p1.keyword,jdbcType=VARCHAR},'%') or #{p1.keyword,jdbcType=VARCHAR} is null)          "
+            + "    and (t6.id = #{p1.goods_id} or #{p1.goods_id} is null) "
+            + "      ")
+    IPage<MGoodsSpecVo> selectPage(Page page, @Param("p1") MGoodsSpecVo searchCondition);
+
+    /**
+     * 查询树状列表
+     * @param searchCondition
+     * @return
+     */
+    @Select(" select    "
+            + "  t.*,     "
+            + "  t5.name as category_name , t5.id as category_id,     "
+            + "  t6.name , t6.id as goods_id                            "
+            + "  from    "
+            + "  	       m_goods_spec t                                                  "
+            + "  LEFT JOIN m_goods t6 ON t.goods_id = t6.id                "
+            + "  LEFT JOIN m_category t5 ON t6.category_id = t5.id                "
+            + "  where t.is_del = false                "
+            )
+    List<MGoodsSpecLeftVo> selectLeft(MGoodsSpecLeftVo searchCondition);
+
+    /**
+     * 按条件获取数据
+     * @param spec
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.enable =  true "
+            + "    and t.spec =  #{p1} "
+            + "      ")
+    List<MGoodsSpecEntity> selectByName(@Param("p1") String spec);
+
+    /**
+     * 按条件获取数据
+     * @param spec
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.enable =  true "
+            + "    and t6.NAME =  #{p1} "
+            + "    and t.spec =  #{p2} "
+            + "      ")
+    List<MGoodsSpecEntity> selectByName(@Param("p1") String goodsName, @Param("p2") String spec);
+
+    /**
+     * 按条件获取数据
+     * @param code
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.goods_code =  #{p1}"
+            + "      ")
+    List<MGoodsSpecEntity> selectByGoodsCode(@Param("p1") String code);
+
+    /**
+     * 没有分页，按id筛选条件
+     * @param searchCondition
+     * @return
+     */
+    @Select("   <script>   "
+            + common_select
+            + "  where t.is_del = false and t.id in "
+            + "        <foreach collection='p1' item='item' index='index' open='(' separator=',' close=')'>    "
+            + "         #{item.id,jdbcType=INTEGER}  "
+            + "        </foreach>    "
+            + "  </script>    ")
+    List<MGoodsSpecEntity> selectIdsIn(@Param("p1") List<MGoodsSpecVo> searchCondition);
+
+    /**
+     * 按条件获取所有数据，没有分页
+     * @param id
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where t.is_del = false and t.id =  #{p1,jdbcType=INTEGER}"
+            + "      ")
+    MGoodsSpecVo selectId(@Param("p1") int id);
+
+    /**
+     * 按规格编码和来源获取数据
+     * @param vo
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where t.is_del = false and t.code =  #{p1.code,jdbcType=VARCHAR}    "
+            + "      ")
+    MGoodsSpecEntity selectByCodeAppCode(@Param("p1") ApiGoodsSpecVo vo);
+
+    /**
+     * 按规格编码和来源获取数据
+     * @param code
+     * @return
+     */
+    @Select("    "
+            + common_select
+            + "  where t.is_del = false and t.code =  #{p1,jdbcType=VARCHAR}    "
+            + "      ")
+    MGoodsSpecVo selectByCode(@Param("p1") String code);
+
+    @Select(" <script>                                                                                                 "
+            + "     SELECT                                                                                             "
+            + "            @row_num:= @row_num+ 1 as no,                                                               "
+            + "            t.name,                                                                                     "
+            + "            t.code,                                                                                     "
+            + "            if(t.enable, '是', '否') enable,                                                             "
+            + "            t.c_time,                                                                                   "
+            + "            t.u_time,                                                                                   "
+            + "            t.spec,                                                                                     "
+            + "            t.code as sku_code,                                                                         "
+            + "            t5.name as category_name,                                                                   "
+            + "            t1.name as c_name,                                                                          "
+            + "            t7.name as prop_name,                                                                       "
+            + "            t2.name as u_name                                                                           "
+            + "       FROM                                                                                             "
+            + "  	       m_goods_spec t                                                                              "
+            + "  LEFT JOIN m_staff t1 ON t.c_id = t1.id                                                                "
+            + "  LEFT JOIN m_staff t2 ON t.u_id = t2.id                                                                "
+            + "  LEFT JOIN m_goods t6 ON t.goods_id = t6.id                                                            "
+            + "  LEFT JOIN m_category t5 ON t6.category_id = t5.id                                                     "
+            + "  LEFT JOIN m_goods_spec_prop t7 ON t.prop_id = t7.id                   "
+            + " ,(select @row_num:=0) t15                                                                              "
+            + "  where true                                                                                            "
+            + "    and t.is_del = false                                                                                "
+            + "    and (concat(ifnull(t.spec,''),                                                                      "
+            + "     ifnull(t.name,''),                                                                                 "
+            + "     ifnull(t6.name,''),                                                                                "
+            + "     ifnull(t5.name,''),                                                                                "
+            + "     ifnull(t7.name,''),                                                                                "
+            + "     ifnull(t.code,''))                                                                                 "
+            + " like CONCAT ('%',#{p1.keyword,jdbcType=VARCHAR},'%') or #{p1.keyword,jdbcType=VARCHAR} is null)        "
+            + "    and (t6.id = #{p1.goods_id} or #{p1.goods_id} is null)                                              "
+            + "   <if test='p1.ids != null and p1.ids.length != 0' >                                                   "
+            + "    and t.id in                                                                                         "
+            + "        <foreach collection='p1.ids' item='item' index='index' open='(' separator=',' close=')'>        "
+            + "         #{item}                                                                                        "
+            + "        </foreach>                                                                                      "
+            + "   </if>                                                                                                "
+            + " </script>                                                                                              "
+    )
+    List<MGoodsSpecExportVo> exportList(@Param("p1") MGoodsSpecVo searchConditionList);
+
+    /**
+     * 查询物料转换商品, 转换前的, 过滤转换前的和转换后的
+     * @param pageCondition
+     * @param searchCondition
+     * @return
+     */
+    @Select("<script>    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and t.id not in (SELECT t1.source_sku_id FROM b_material_convert_detail t1 left join b_material_convert t2 "
+            + "    ON t1.material_convert_id = t2.id where t1.source_sku_id is not null and t2.is_latested = true       "
+            + "    AND (t2.owner_id = #{p1.owner_id} or #{p1.owner_id} is null or #{p1.owner_id} = '')                  "
+            + "  <if test='p1.covert_type == 1'>                                                                        "
+            + "    union all SELECT t1.target_sku_id FROM b_material_convert_detail t1 left join  b_material_convert t2 "
+            + "    ON t1.material_convert_id = t2.id where t1.target_sku_id is not null and t2.is_latested = true       "
+            + "    AND (t2.owner_id = #{p1.owner_id} or #{p1.owner_id} is null or #{p1.owner_id} = '')                  "
+            + "  </if>)"
+            + "    and (concat(ifnull(t.spec,''),                                                                       "
+            + "     ifnull(t.name,''),                                                                                  "
+            + "     ifnull(t6.name,''),                                                                                 "
+            + "     ifnull(t5.name,''),                                                                                 "
+            + "     ifnull(t7.name,''),                                                                                 "
+            + "     ifnull(t.code,''))                                                                                  "
+            + "like CONCAT ('%',#{p1.keyword,jdbcType=VARCHAR},'%') or #{p1.keyword,jdbcType=VARCHAR} is null)          "
+            + "    and (t6.id = #{p1.goods_id} or #{p1.goods_id} is null)                                               "
+            + " </script>     ")
+    IPage<MGoodsSpecVo> getConvertGoodsList(Page<MGoodsSpecEntity> pageCondition,@Param("p1") MGoodsSpecVo searchCondition);
+
+    @Select("    "
+            + common_select
+            + "  where true "
+            + "    and t.is_del = false "
+            + "    and (t6.id = #{p1.goods_id} or #{p1.goods_id} is null) "
+            + "      ")
+    List<MGoodsSpecVo> selectListByGoodsId(@Param("p1") MGoodsSpecVo searchCondition);
+
+    /**
+     * 导出数据列表查询（支持动态排序）- 完全按照仓库管理模式实现
+     * @param searchCondition 搜索条件
+     * @param orderByClause 动态排序子句
+     * @return 导出VO列表
+     */
+    String selectExportList_select = """
+        SELECT 
+        (@row_num := @row_num + 1) as no,
+        t.code as sku_code,
+        t.name,
+        t.spec,
+        t5.name as category_name,
+        t7.name as prop_name,
+        CASE WHEN t.enable = true THEN '启用' ELSE '停用' END as enable,
+        t1.name as c_name,
+        t.c_time,
+        t2.name as u_name,
+        t.u_time
+        FROM m_goods_spec t
+        CROSS JOIN (SELECT @row_num := 0) r
+        LEFT JOIN m_staff t1 ON t.c_id = t1.id
+        LEFT JOIN m_staff t2 ON t.u_id = t2.id
+        LEFT JOIN m_goods t6 ON t.goods_id = t6.id
+        LEFT JOIN m_category t5 ON t6.category_id = t5.id
+        LEFT JOIN m_goods_spec_prop t7 ON t.prop_id = t7.id
+        WHERE t.is_del = false
+        """;
+
+    @Select({
+        "<script>"
+        + selectExportList_select
+        + "<!-- 动态查询条件 -->"
+        + "<if test='p1.keyword != null and p1.keyword != \"\"'>"
+        + "  and (concat(ifnull(t.spec,''),"
+        + "       ifnull(t.name,''),"
+        + "       ifnull(t6.name,''),"
+        + "       ifnull(t5.name,''),"
+        + "       ifnull(t7.name,''),"
+        + "       ifnull(t.code,''))"
+        + "       like CONCAT('%', #{p1.keyword}, '%'))"
+        + "</if>"
+        + "<if test='p1.goods_id != null'>"
+        + "  and t6.id = #{p1.goods_id}"
+        + "</if>"
+        + "<!-- 选中导出ID条件 -->"
+        + "<if test='p1.ids != null and p1.ids.length != 0'>"
+        + "  and t.id in"
+        + "  <foreach collection='p1.ids' item='item' open='(' separator=',' close=')'>"
+        + "    #{item}"
+        + "  </foreach>"
+        + "</if>"
+        + "<!-- 动态排序（关键特殊逻辑）-->"
+        + "<if test=\"orderByClause != null and orderByClause != ''\">"
+        + "  ${orderByClause}"
+        + "</if>"
+        + "<if test=\"orderByClause == null or orderByClause == ''\">"
+        + "  ORDER BY t.u_time DESC"
+        + "</if>"
+        + "</script>"
+    })
+    List<MGoodsSpecExportVo> selectExportList(@Param("p1") MGoodsSpecVo searchCondition, 
+                                              @Param("orderByClause") String orderByClause);
+
+    /**
+     * 校验规格在库存中的使用情况
+     * @param specId 规格ID（对应业务表中的sku_id）
+     * @return 库存记录数量
+     */
+    @Select("""
+        SELECT COUNT(*) 
+        FROM b_daily_inventory t1
+        WHERE t1.sku_id = #{specId} 
+          AND t1.qty > 0
+        """)
+    Integer checkInventoryExists(@Param("specId") Integer specId);
+
+    /**
+     * 校验规格在入库业务中的使用情况
+     * @param specId 规格ID（对应业务表中的sku_id）
+     * @return 入库记录数量
+     */
+    @Select("""
+        SELECT COUNT(*) 
+        FROM b_in t1
+        WHERE t1.sku_id = #{specId} 
+          AND t1.is_del = 0
+        """)
+    Integer checkInboundExists(@Param("specId") Integer specId);
+
+    /**
+     * 校验规格在出库业务中的使用情况
+     * @param specId 规格ID（对应业务表中的sku_id）
+     * @return 出库记录数量
+     */
+    @Select("""
+        SELECT COUNT(*) 
+        FROM b_out t1 
+        WHERE t1.sku_id = #{specId} 
+          AND t1.is_del = 0
+        """)
+    Integer checkOutboundExists(@Param("specId") Integer specId);
+
+    /**
+     * 校验规格在采购订单中的使用情况
+     * @param specId 规格ID（对应业务表中的sku_id）
+     * @return 采购订单明细记录数量
+     */
+    @Select("""
+        SELECT COUNT(*) 
+        FROM b_po_order_detail t1
+        WHERE t1.sku_id = #{specId}
+        """)
+    Integer checkPurchaseOrderExists(@Param("specId") Integer specId);
+
+    /**
+     * 校验规格在销售订单中的使用情况
+     * @param specId 规格ID（对应业务表中的sku_id）
+     * @return 销售订单明细记录数量
+     */
+    @Select("""
+        SELECT COUNT(*) 
+        FROM b_so_order_detail t1 
+        WHERE t1.sku_id = #{specId}
+        """)
+    Integer checkSalesOrderExists(@Param("specId") Integer specId);
+
+}

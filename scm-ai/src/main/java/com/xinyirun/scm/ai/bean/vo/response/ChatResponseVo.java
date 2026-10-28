@@ -1,0 +1,350 @@
+package com.xinyirun.scm.ai.bean.vo.response;
+
+import com.xinyirun.scm.ai.common.constant.AiMessageTypeConstant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+/**
+ * Spring AI标准ChatResponse响应格式
+ * 用于流式AI聊天输出，遵循Spring AI标准
+ *
+ * @Author: SCM-AI
+ * @CreateTime: 2025-01-01 00:00
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChatResponseVo {
+
+    /**
+     * 生成结果列表，通常包含一个结果
+     */
+    private List<Generation> results;
+
+    /**
+     * 响应元数据信息
+     */
+    private ChatResponseMetadata metadata;
+
+    /**
+     * 错误标识(顶层字段,方便前端快速判断)
+     * 用于严格模式下的知识库错误拦截
+     *
+     * <p>
+     * true: 错误响应(问题过长、检索结果为空等)
+     * false/null: 正常响应
+     *
+     * @since 2025-10-16 严格模式优化
+     */
+    @Builder.Default
+    private Boolean isError = false;
+
+    /**
+     * 是否等待用户输入(用于工作流多轮对话)
+     * true: 工作流暂停等待用户输入
+     * false/null: 正常响应
+     *
+     * @since 2025-11-10 工作流多轮对话支持
+     */
+    @Builder.Default
+    private Boolean isWaitingInput = false;
+
+    /**
+     * 是否完成(用于工作流完成判断)
+     * true: 工作流执行完成
+     * false/null: 正常响应或执行中
+     *
+     * @since 2025-11-10 工作流多轮对话支持
+     */
+    @Builder.Default
+    private Boolean isComplete = false;
+
+    /**
+     * 工作流运行时ID(数据库主键,用于查询执行详情)
+     *
+     * @since 2025-11-11 AI-Chat执行详情功能
+     */
+    private Long runtimeId;
+
+    /**
+     * 工作流运行时UUID(用于恢复暂停的工作流)
+     *
+     * @since 2025-11-10 工作流多轮对话支持
+     */
+    private String runtimeUuid;
+
+    /**
+     * 工作流UUID
+     *
+     * @since 2025-11-10 工作流多轮对话支持
+     */
+    private String workflowUuid;
+
+    /**
+     * 工作流名称（runtime事件时携带，用于前端展示"调用agent：xxx"行）
+     *
+     * @since 2026-03-08 ThinkingSteps工作流详情展示
+     */
+    private String workflowTitle;
+
+    /**
+     * AI消息ID(数据库message_id字段)
+     * 用于前端在完成后更新本地消息ID,支持删除等操作
+     *
+     * @since 2025-11-24 消息删除功能修复
+     */
+    private String messageId;
+
+    /**
+     * MCP工具调用结果列表(用于传递工具返回的特殊指令,如openPage)
+     * 格式: [{"toolName":"PermissionMcpTools.openPage", "result":{...JSON...}}]
+     *
+     * @since 2025-11-24 MCP页面跳转功能
+     */
+    private List<java.util.Map<String, Object>> mcpToolResults;
+
+    /**
+     * AI打开弹窗的参数数据（含ai_new_route的JSON）
+     * OpenPage节点或Synthesizer路径透传给前端，触发业务弹窗
+     *
+     * @since 2026-02-28 AI业务弹窗通用组件
+     */
+    private String ai_open_dialog_para;
+
+    /**
+     * 页面导航指令（JSON字符串）
+     * OpenPage节点route模式输出，触发前端RouterTab导航
+     *
+     * @since 2026-03-06 AI快速打开页面
+     */
+    private String open_page_command;
+
+    /**
+     * 人机交互请求（JSON字符串）
+     * OpenPage节点交互模式输出，触发前端Chat交互组件
+     *
+     * @since 2026-03-06 AI人机交互
+     */
+    private String interaction_request;
+
+    /**
+     * 节点事件类型（node_complete）
+     * 用于前端展示工作流执行步骤
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private String nodeEventType;
+
+    /**
+     * 节点UUID
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private String nodeUuid;
+
+    /**
+     * 节点组件名称（如KnowledgeRetrieval）
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private String nodeName;
+
+    /**
+     * 节点标题（用户在工作流编辑器中设置的名称）
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private String nodeTitle;
+
+    /**
+     * 节点完成时间戳（毫秒，node_complete事件使用）
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private Long nodeTimestamp;
+
+    /**
+     * 节点执行耗时（毫秒，node_complete事件使用）
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private Long nodeDuration;
+
+    /**
+     * 节点执行摘要（node_complete事件使用）
+     * KnowledgeRetrieval节点包含：{matchCount: N}
+     *
+     * @since 2026-03-02 AI聊天思考过程展示
+     */
+    private java.util.Map<String, Object> nodeSummary;
+
+    /**
+     * 生成结果内部类
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Generation {
+        /**
+         * 输出内容
+         */
+        private AssistantMessage output;
+
+        /**
+         * 生成元数据
+         */
+        private GenerationMetadata metadata;
+    }
+
+    /**
+     * 助手消息内容
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AssistantMessage {
+        /**
+         * 消息内容
+         */
+        private String content;
+
+        /**
+         * 消息类型，固定为assistant
+         */
+        @Builder.Default
+        private String messageType = AiMessageTypeConstant.MESSAGE_TYPE_ASSISTANT;
+    }
+
+    /**
+     * 生成元数据
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GenerationMetadata {
+        /**
+         * 结束原因
+         */
+        private String finishReason;
+    }
+
+    /**
+     * 聊天响应元数据
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChatResponseMetadata {
+        /**
+         * 模型信息
+         */
+        private String model;
+
+        /**
+         * 使用统计信息
+         */
+        private Usage usage;
+    }
+
+    /**
+     * 使用统计信息
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Usage {
+        /**
+         * 输入token数量
+         */
+        private Integer promptTokens;
+
+        /**
+         * 输出token数量
+         */
+        private Integer generationTokens;
+
+        /**
+         * 总token数量
+         */
+        private Integer totalTokens;
+    }
+
+    /**
+     * 创建内容块（用于流式输出）
+     */
+    public static ChatResponseVo createContentChunk(String content) {
+        return ChatResponseVo.builder()
+            .results(List.of(
+                Generation.builder()
+                    .output(AssistantMessage.builder()
+                        .content(content)
+                        .build())
+                    .build()
+            ))
+            .build();
+    }
+
+    /**
+     * 创建完成响应（用于流式结束）
+     */
+    public static ChatResponseVo createCompleteResponse(String fullContent, String model) {
+        return ChatResponseVo.builder()
+            .results(List.of(
+                Generation.builder()
+                    .output(AssistantMessage.builder()
+                        .content(fullContent)
+                        .build())
+                    .metadata(GenerationMetadata.builder()
+                        .finishReason("stop")
+                        .build())
+                    .build()
+            ))
+            .metadata(ChatResponseMetadata.builder()
+                .model(model)
+                .build())
+            .build();
+    }
+
+    /**
+     * 创建错误响应(用于严格模式拦截)
+     *
+     * <p>使用方式：</p>
+     * <pre>
+     * if (maxResults == 0) {
+     *     if (Boolean.TRUE.equals(knowledgeBase.getIsStrict())) {
+     *         fluxSink.next(createErrorResponse("提问内容过长..."));
+     *     }
+     * }
+     * </pre>
+     *
+     * @param errorMessage 错误消息内容
+     * @return 错误响应对象
+     * @since 2025-10-16 严格模式优化
+     */
+    public static ChatResponseVo createErrorResponse(String errorMessage) {
+        return ChatResponseVo.builder()
+            .isError(true)
+            .isComplete(true)
+            .results(List.of(
+                Generation.builder()
+                    .output(AssistantMessage.builder()
+                        .content(errorMessage)
+                        .build())
+                    .metadata(GenerationMetadata.builder()
+                        .finishReason("error")
+                        .build())
+                    .build()
+            ))
+            .build();
+    }
+}

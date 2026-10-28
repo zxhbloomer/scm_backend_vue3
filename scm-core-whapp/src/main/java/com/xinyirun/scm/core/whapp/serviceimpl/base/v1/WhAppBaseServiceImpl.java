@@ -1,0 +1,68 @@
+package com.xinyirun.scm.core.whapp.serviceimpl.base.v1;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xinyirun.scm.core.system.service.sys.config.config.ISAppConfigService;
+import com.xinyirun.scm.core.whapp.service.base.v1.WhAppIBaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+public class WhAppBaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> implements WhAppIBaseService<T> {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Lazy
+    @Autowired
+    private ISAppConfigService appConfigService;
+
+    public String uploadFile(String fileUrl, String fileName, long contentLength) throws Exception {
+        URL url = new URL(fileUrl);
+        URLConnection connection = url.openConnection();
+        InputStream inputStream = connection.getInputStream();
+
+        com.xinyirun.scm.bean.entity.sys.config.config.SAppConfigEntity fsConfig = appConfigService.getFsConfig();
+        String uploadUrl = fsConfig.getUrl();
+        // 1、封装请求头
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("multipart/form-data");
+        headers.setContentType(type);
+        headers.setContentDispositionFormData("media", fileName);
+        headers.set("Authorization", "Bearer " + fsConfig.getSecret_key());
+        // 2、封装请求体
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        InputStreamResource resource = new InputStreamResource(inputStream){
+            @Override
+            public long contentLength(){
+                return contentLength;
+            }
+            @Override
+            public String getFilename(){
+                return fileName;
+            }
+        };
+        param.add("file", resource);
+        // 3、封装整个请求报文
+        HttpEntity<MultiValueMap<String, Object>> formEntity = new HttpEntity<>(param, headers);
+        // 4、发送请求
+        ResponseEntity<String> data = restTemplate.postForEntity(uploadUrl, formEntity, String.class);
+        // 5、请求结果处理
+        JSONObject result = JSONObject.parseObject(data.getBody());
+
+        return JSONObject.parseObject(result.getString("data")).getString("url");
+    }
+
+}

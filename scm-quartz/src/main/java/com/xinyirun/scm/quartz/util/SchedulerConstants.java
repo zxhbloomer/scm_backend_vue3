@@ -1,0 +1,89 @@
+package com.xinyirun.scm.quartz.util;
+
+import com.xinyirun.scm.common.constant.DictConstant;
+
+/**
+ * 关于定时任务的常量类
+ */
+public class SchedulerConstants {
+
+
+    /**
+     * 每日库存差量
+     */
+    public static class DAILY_INVENTORY_DIFF {
+        public static final String JOB_NAME = "每日库存差量";
+        public static final String JOB_GROUP_TYPE = DictConstant.DICT_SYS_JOB_GROUP_TYPE_DAILY_INVENTORY_DIFF;
+        public static final String JOB_DESC = "每日库存差量计算，在入库、出库、调整业务后自定执行，计算每日库存";
+        // 0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行
+        public static final String MISFIRE_POLICY = "2";
+        public static final Boolean CONCURRENT = false;
+        public static final Boolean IS_CRON = false;
+        public static final Boolean IS_DEL = false;
+        public static final Boolean IS_EFFECTED = true;
+        public static final Integer NEXT_FIRE_SECONDS = 10;
+        public static final String CLASS_NAME = "com.xinyirun.scm.core.system.serviceimpl.sys.schedule.v2.SBDailyInventoryV2ServiceImpl";
+        public static final String METHOD_NAME = "reCreateDailyInventoryAll";
+        public static final String PARAM_CLASS = "com.xinyirun.scm.bean.system.vo.business.inventory.BDailyInventoryVo";
+    }
+
+    /**
+     * 物料转换
+     */
+    public static class MATERIAL_CONVERT {
+        public static final String JOB_NAME = "物料转换";
+        public static final String JOB_GROUP_TYPE = DictConstant.DICT_SYS_JOB_GROUP_TYPE_MATERIAL_CONVERT;
+        public static final String JOB_DESC = "物料转换";
+        // 0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行
+        public static final String MISFIRE_POLICY0 = "0";
+        public static final String MISFIRE_POLICY1 = "1";
+        public static final String MISFIRE_POLICY2 = "2";
+        public static final String MISFIRE_POLICY3 = "3";
+        public static final Boolean CONCURRENT = false;
+        public static final Boolean IS_CRON_TRUE = true;
+        public static final Boolean IS_CRON_FALSE = false;
+        public static final Boolean IS_DEL = false;
+        public static final Boolean IS_EFFECTED = true;
+        public static final Integer NEXT_FIRE_SECONDS = 10;
+        public static final String CLASS_NAME = "com.xinyirun.scm.core.system.serviceimpl.sys.schedule.v2.SBMaterialConvertV2ServiceImpl";
+        public static final String METHOD_NAME = "materialConvert";
+        public static final String PARAM_CLASS = "com.xinyirun.scm.bean.system.vo.business.materialconvert.BMaterialConvertVo";
+    }
+
+    /**
+     * AI知识库统计
+     */
+    public static class KNOWLEDGE_BASE_STATISTICS {
+        public static final String JOB_NAME = "AI知识库统计";
+        public static final String JOB_GROUP_TYPE = DictConstant.DICT_SYS_JOB_GROUP_TYPE_AI_KB_STATISTICS;
+        public static final String JOB_DESC = "更新AI知识库的embedding_count等统计数据";
+        // 0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行
+        public static final String MISFIRE_POLICY = "2"; // 触发一次执行
+        public static final Boolean CONCURRENT = false;
+        public static final Boolean IS_CRON = false; // 使用SimpleTrigger单次执行
+        public static final Boolean IS_DEL = false;
+        public static final Boolean IS_EFFECTED = true;
+        public static final Integer NEXT_FIRE_SECONDS = 5; // 5秒后执行
+        public static final String CLASS_NAME = "com.xinyirun.scm.ai.core.service.KnowledgeBaseStatisticsService";
+        public static final String METHOD_NAME = "updateStatistics";
+        public static final String PARAM_CLASS = "com.xinyirun.scm.bean.system.vo.business.ai.KnowledgeBaseStatisticsParamVo";
+    }
+
+    /**
+     * AI临时知识库清理
+     */
+    public static class TEMP_KB_CLEANUP {
+        public static final String JOB_NAME = "临时知识库清理";
+        public static final String JOB_GROUP_TYPE = DictConstant.DICT_SYS_JOB_GROUP_TYPE_AI_TEMP_KB_CLEANUP;
+        public static final String JOB_DESC = "清理过期的临时知识库及其关联数据";
+        // 0=默认,1=立即触发执行,2=触发一次执行,3=不触发立即执行
+        public static final String MISFIRE_POLICY = "2"; // 触发一次执行
+        public static final Boolean CONCURRENT = false;
+        public static final Boolean IS_CRON = false; // 使用SimpleTrigger单次执行
+        public static final Boolean IS_DEL = false;
+        public static final Boolean IS_EFFECTED = true;
+        public static final String CLASS_NAME = "com.xinyirun.scm.ai.core.service.milvus.TempKnowledgeBaseCleanupService";
+        public static final String METHOD_NAME = "cleanupTempKnowledgeBase";
+        public static final String PARAM_CLASS = "com.xinyirun.scm.bean.system.vo.business.ai.TempKbCleanupParamVo";
+    }
+}

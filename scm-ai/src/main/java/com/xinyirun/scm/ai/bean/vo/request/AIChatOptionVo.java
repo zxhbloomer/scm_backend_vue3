@@ -1,0 +1,95 @@
+package com.xinyirun.scm.ai.bean.vo.request;
+
+import com.xinyirun.scm.ai.bean.vo.config.AiModelConfigVo;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * AI聊天选项业务视图对象
+ *
+ * 用于AI聊天功能的选项配置传输，包含聊天所需的配置信息
+ *
+ * @author SCM-AI重构团队
+ * @since 2025-09-28
+ */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class AIChatOptionVo implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -9157522931636771829L;
+
+    /**
+     * 对话ID
+     */
+    @Schema(description = "对话ID")
+    private String conversationId;
+
+    /**
+     * AI模型配置信息
+     */
+    @Schema(description = "AI模型配置信息")
+    private AiModelConfigVo module;
+
+    /**
+     * 用户输入的提示词
+     */
+    @Schema(description = "提示词")
+    private String prompt;
+
+    /**
+     * 系统提示词
+     */
+    @Schema(description = "系统提示词")
+    private String system;
+
+    private String tenantId;
+
+    /**
+     * Tool上下文，用于传递额外信息给工具(如租户编码)
+     */
+    @Schema(description = "Tool上下文")
+    private Map<String, Object> toolContext;
+
+    /**
+     * 是否启用MCP工具自动调用
+     * true: 启用MCP工具(适用于MCP工具节点)
+     * false: 禁用MCP工具(适用于生成回答节点等)
+     * 默认值: false(安全默认值,避免不必要的工具调用)
+     */
+    @Schema(description = "是否启用MCP工具")
+    private Boolean enableMcpTools = false;
+
+    /**
+     * 指定加载的MCP工具名称列表
+     * null或空: 加载全部MCP工具
+     * 指定具体名称: 只加载这些工具
+     */
+    @Schema(description = "指定MCP工具名称列表")
+    private List<String> toolNames;
+
+    /**
+     * 设置提示词并返回当前对象（链式调用）
+     *
+     * @param prompt 提示词
+     * @return 当前对象
+     */
+    public AIChatOptionVo withPrompt(@NotBlank String prompt) {
+        this.prompt = prompt;
+        return this;
+    }
+
+}

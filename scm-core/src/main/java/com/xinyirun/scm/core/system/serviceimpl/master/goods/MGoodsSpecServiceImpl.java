@@ -1,0 +1,442 @@
+package com.xinyirun.scm.core.system.serviceimpl.master.goods;
+
+import cn.hutool.json.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xinyirun.scm.bean.entity.master.goods.*;
+import com.xinyirun.scm.bean.entity.sys.config.config.SConfigEntity;
+import com.xinyirun.scm.bean.system.ao.result.CheckResultAo;
+import com.xinyirun.scm.bean.system.ao.result.DeleteResultAo;
+import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
+import com.xinyirun.scm.bean.system.ao.result.UpdateResultAo;
+import com.xinyirun.scm.bean.system.result.utils.v1.CheckResultUtil;
+import com.xinyirun.scm.bean.system.result.utils.v1.InsertResultUtil;
+import com.xinyirun.scm.bean.system.result.utils.v1.UpdateResultUtil;
+import com.xinyirun.scm.bean.system.vo.master.goods.*;
+import com.xinyirun.scm.bean.system.vo.master.goods.unit.MGoodsUnitCalcVo;
+import com.xinyirun.scm.common.constant.SystemConstants;
+import com.xinyirun.scm.common.exception.system.BusinessException;
+import com.xinyirun.scm.common.exception.system.InsertErrorException;
+import com.xinyirun.scm.common.exception.system.UpdateErrorException;
+import com.xinyirun.scm.common.utils.bean.BeanUtilsSupport;
+import com.xinyirun.scm.core.system.mapper.master.goods.*;
+import com.xinyirun.scm.core.system.service.master.goods.IMGoodsSpecService;
+import com.xinyirun.scm.core.system.service.master.goods.unit.IMGoodsUnitCalcService;
+import com.xinyirun.scm.core.system.service.sys.config.config.ISConfigService;
+import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
+import com.xinyirun.scm.core.system.utils.mybatis.PageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+/**
+ * <p>
+ *  服务实现类
+ * </p>
+ *
+ * @author htt
+ * @since 2021-09-23
+ */
+@Service
+public class MGoodsSpecServiceImpl extends BaseServiceImpl<MGoodsSpecMapper, MGoodsSpecEntity> implements IMGoodsSpecService {
+
+    @Autowired
+    private MGoodsSpecMapper mapper;
+
+
+    @Autowired
+    private MCategoryMapper categorymapper;
+
+    @Autowired
+    private MGoodsMapper goodsmapper;
+
+    @Autowired
+    private IMGoodsUnitCalcService unitCalcService;
+
+    @Autowired
+    private ISConfigService isConfigService;
+
+    /**
+     * 查询分页列表
+     * @param searchCondition
+     * @return
+     */
+    @Override
+    public IPage<MGoodsSpecVo> selectPage(MGoodsSpecVo searchCondition) {
+        // 分页条件
+        Page<MGoodsSpecEntity> pageCondition =
+                new Page(searchCondition.getPageCondition().getCurrent(), searchCondition.getPageCondition().getSize());
+        // 通过page进行排序
+        PageUtil.setSort(pageCondition, searchCondition.getPageCondition().getSort());
+        IPage<MGoodsSpecVo> list = mapper.selectPage( pageCondition,searchCondition);
+//        for(MGoodsSpecVo v:list.getRecords()){
+//            MGoodsUnitConvertVo vo = new MGoodsUnitConvertVo();
+//            vo.setSku_id(v.getId());
+//            List<MGoodsUnitConvertVo> unitConverVoList = mGoodsUnitConvertMapper.selectList(vo);
+//            v.setUnitList(unitConverVoList);
+//        }
+        return list;
+    }
+
+    /**
+     * 查询树状列表
+     * @param searchCondition
+     * @return
+     */
+    @Override
+    public List<MGoodsSpecLeftVo> selectLeft(MGoodsSpecLeftVo searchCondition) {
+        // 简化为类别-物料两层结构
+        List<MCategoryEntity> categorylist = categorymapper.selectList(new QueryWrapper<MCategoryEntity>());
+        List<MCategoryVo> calist = BeanUtilsSupport.copyProperties(categorylist,MCategoryVo.class);
+        for(MCategoryVo ca:calist){
+            // 通过类别id查询物料list
+            List<MGoodsEntity> goodslist = goodsmapper.selectList(new QueryWrapper<MGoodsEntity>().eq("category_id",ca.getId()));
+            List<MGoodsVo> golist = BeanUtilsSupport.copyProperties(goodslist,MGoodsVo.class);
+            ca.setGoodsVo(golist);
+        }
+        return mapper.selectLeft(searchCondition);
+    }
+
+    /**
+     * 插入一条记录（选择字段，策略插入）
+     *
+     * @param vo 实体对象
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public InsertResultAo<Integer> insert(MGoodsSpecVo vo) {
+        // 插入前check
+        CheckResultAo cr = checkLogic(vo.getSpec(),vo.getPm(),vo.getCode(), CheckResultAo.INSERT_CHECK_TYPE);
+        if (!cr.isSuccess()) {
+            throw new BusinessException(cr.getMessage());
+        }
+
+        // 插入逻辑保存
+        MGoodsSpecEntity entity = (MGoodsSpecEntity) BeanUtilsSupport.copyProperties(vo, MGoodsSpecEntity.class);
+        if(vo.getGoods_name() != null){
+            entity.setName(vo.getGoods_name());
+        }
+        int rtn = mapper.insert(entity);
+        vo.setId(entity.getId());
+//        for(MGoodsUnitConvertVo unit:vo.getUnitList()){
+//            unit.setSku_id(entity.getId());
+//        }
+
+        // 添加单位换算关系
+        insertUnitCalc(entity);
+
+        // 插入逻辑保存
+        return InsertResultUtil.OK(rtn);
+    }
+
+    /**
+     * 新增 默认 单位换算关系
+     * @param entity
+     */
+    private void insertUnitCalc(MGoodsSpecEntity entity) {
+        MGoodsUnitCalcVo calcVo = new MGoodsUnitCalcVo();
+        calcVo.setSku_id(entity.getId());
+        List<MGoodsUnitCalcVo> vos = unitCalcService.selectList(calcVo);
+        if (!CollectionUtils.isEmpty(vos)) {
+            return;
+        }
+        // 执行新增
+        SConfigEntity config = isConfigService.selectByKey(SystemConstants.DEFAULT_GOODS_UNIT_CALC);
+        if (null == config) {
+            throw new InsertErrorException("保存失败, 未配置默认单位换算关系");
+        }
+        JSONObject jsonObject = new JSONObject(config.getValue());
+        // 查询配置
+        MGoodsUnitCalcVo vo = new MGoodsUnitCalcVo();
+        vo.setSku_id(entity.getId());
+        vo.setSrc_unit(jsonObject.getStr("src_unit"));
+        vo.setSrc_unit_id(jsonObject.getInt("src_unit_id"));
+        vo.setSrc_unit_code(jsonObject.getStr("src_unit_code"));
+        vo.setCalc(jsonObject.getBigDecimal("calc"));
+        vo.setRemark(jsonObject.getStr("remark"));
+        unitCalcService.insert(vo);
+    }
+
+    /**
+     * 更新一条记录（选择字段，策略更新）
+     *
+     * @param vo 实体对象
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public UpdateResultAo<Integer> update(MGoodsSpecVo vo) {
+        // 更新前check
+        CheckResultAo cr = checkLogic(vo.getSpec(),vo.getPm(),vo.getCode(), CheckResultAo.UPDATE_CHECK_TYPE);
+        if (!cr.isSuccess()) {
+            throw new BusinessException(cr.getMessage());
+        }
+
+        // 更新逻辑保存
+        vo.setC_id(null);
+        vo.setC_time(null);
+
+        MGoodsSpecEntity entity = (MGoodsSpecEntity) BeanUtilsSupport.copyProperties(vo, MGoodsSpecEntity.class);
+        if(vo.getGoods_name() != null){
+            entity.setName(vo.getGoods_name());
+        }
+        int updCount = mapper.updateById(entity);
+        if(updCount == 0){
+            throw new UpdateErrorException("您提交的数据已经被修改，请查询后重新编辑更新。");
+        }
+        return UpdateResultUtil.OK(updCount);
+    }
+
+    @Override
+    public DeleteResultAo<Integer> deleteByIdsIn(List<MGoodsSpecVo> searchCondition) {
+        return null;
+    }
+
+    /**
+     * 启用规格并返回更新后的数据
+     * @param specVo 规格对象
+     * @return 更新后的规格数据
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MGoodsSpecVo enabledById(MGoodsSpecVo specVo) {
+        // 根据ID查询实体
+        MGoodsSpecEntity entity = this.getById(specVo.getId());
+        if (entity == null) {
+            throw new BusinessException("规格不存在，启用失败");
+        }
+        
+        // 执行启用操作
+        entity.setEnable(Boolean.TRUE);
+        boolean updateResult = this.updateById(entity);
+        
+        if (!updateResult) {
+            throw new BusinessException("规格启用失败，请重试");
+        }
+        
+        // 查询并返回更新后的完整数据
+        return mapper.selectId(specVo.getId());
+    }
+
+    /**
+     * 停用规格并返回更新后的数据
+     * @param specVo 规格对象
+     * @return 更新后的规格数据
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MGoodsSpecVo disabledById(MGoodsSpecVo specVo) {
+        // 根据ID查询实体
+        MGoodsSpecEntity entity = this.getById(specVo.getId());
+        if (entity == null) {
+            throw new BusinessException("规格不存在，停用失败");
+        }
+        
+        // 执行停用操作（规格停用无需复杂业务校验，类似类别管理）
+        entity.setEnable(Boolean.FALSE);
+        boolean updateResult = this.updateById(entity);
+        
+        if (!updateResult) {
+            throw new BusinessException("规格停用失败，请重试");
+        }
+        
+        // 查询并返回更新后的完整数据
+        return mapper.selectId(specVo.getId());
+    }
+
+
+    /**
+     * 导出
+     *
+     * @param searchConditionList 入参
+     * @return List<MGoodsSpecExportVo>
+     */
+    @Override
+    public List<MGoodsSpecExportVo> export(MGoodsSpecVo searchConditionList) {
+        return mapper.exportList(searchConditionList);
+    }
+
+    /**
+     * 查询导出列表数据（支持动态排序）- 完全按照仓库管理模式实现
+     * @param searchCondition 搜索条件
+     * @return 导出VO列表
+     */
+    @Override
+    public List<MGoodsSpecExportVo> selectExportList(MGoodsSpecVo searchCondition) {
+        // 构建排序子句（关键特殊逻辑）
+        String orderByClause = buildOrderByClause(searchCondition);
+        return mapper.selectExportList(searchCondition, orderByClause);
+    }
+
+    /**
+     * 构建动态排序子句 - 完全按照仓库管理模式实现
+     * @param searchCondition 搜索条件
+     * @return 排序子句
+     */
+    private String buildOrderByClause(MGoodsSpecVo searchCondition) {
+        // 复制仓库管理的排序逻辑
+        // 如果前端传入排序参数，构建对应的ORDER BY子句
+        // 默认按更新时间倒序
+        return " ORDER BY t.u_time DESC";
+    }
+
+    /**
+     * 查询物料转换 商品
+     *
+     * @param searchCondition
+     * @return
+     */
+    @Override
+    public IPage<MGoodsSpecVo> getConvertGoodsList(MGoodsSpecVo searchCondition) {
+        // 分页条件
+        Page<MGoodsSpecEntity> pageCondition =
+                new Page(searchCondition.getPageCondition().getCurrent(), searchCondition.getPageCondition().getSize());
+        // 通过page进行排序
+        PageUtil.setSort(pageCondition, searchCondition.getPageCondition().getSort());
+        return mapper.getConvertGoodsList( pageCondition,searchCondition);
+    }
+
+    /**
+     * 根据 物料id查询规格
+     *
+     * @param searchCondition
+     * @return
+     */
+    @Override
+    public List<MGoodsSpecVo> selectListByGoodsId(MGoodsSpecVo searchCondition) {
+        return mapper.selectListByGoodsId(searchCondition);
+    }
+
+    @Override
+    public MGoodsSpecVo selectById(int id) {
+        return mapper.selectId(id);
+    }
+
+    @Override
+    public List<MGoodsSpecEntity> selectByName(String spec) {
+        // 查询 数据
+        return mapper.selectByName(spec);
+    }
+
+    @Override
+    public MGoodsSpecVo selectByCode(String code) {
+        return mapper.selectByCode(code);
+    }
+
+
+    /**
+     * 逻辑删除规格
+     * @param searchCondition 规格对象
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(MGoodsSpecVo searchCondition) {
+        // 根据ID查询实体
+        MGoodsSpecEntity entity = this.getById(searchCondition.getId());
+        if (entity == null) {
+            throw new BusinessException("规格不存在，删除失败");
+        }
+        
+        // 检查业务关联（防止删除正在使用的规格）
+        CheckResultAo businessCheck = checkSpecBusinessAssociations(searchCondition.getId());
+        if (!businessCheck.isSuccess()) {
+            throw new BusinessException(businessCheck.getMessage());
+        }
+        
+        // 执行逻辑删除
+        entity.setIs_del(Boolean.TRUE);
+        boolean updateResult = this.updateById(entity);
+        
+        if (!updateResult) {
+            throw new BusinessException("规格删除失败，请重试");
+        }
+    }
+
+    /**
+     * 检查规格业务关联 - L1到L5层级校验
+     * @param specId 规格ID
+     * @return 检查结果
+     */
+    private CheckResultAo checkSpecBusinessAssociations(Integer specId) {
+        // L1级别：库存数据检查 - 高风险
+        Integer inventoryCount = mapper.checkInventoryExists(specId);
+        if (inventoryCount > 0) {
+            return CheckResultUtil.NG("删除失败：该规格存在库存记录，无法删除");
+        }
+        
+        // L2级别：入库记录检查 - 中度风险  
+        Integer inboundCount = mapper.checkInboundExists(specId);
+        if (inboundCount > 0) {
+            return CheckResultUtil.NG("删除失败：该规格存在入库记录，无法删除");
+        }
+        
+        // L3级别：出库记录检查 - 中度风险
+        Integer outboundCount = mapper.checkOutboundExists(specId);
+        if (outboundCount > 0) {
+            return CheckResultUtil.NG("删除失败：该规格存在出库记录，无法删除");
+        }
+        
+        // L4级别：采购订单检查 - 低度风险
+        Integer purchaseOrderCount = mapper.checkPurchaseOrderExists(specId);
+        if (purchaseOrderCount > 0) {
+            return CheckResultUtil.NG("删除失败：该规格存在采购订单记录，无法删除");
+        }
+        
+        // L5级别：销售订单检查 - 低度风险
+        Integer salesOrderCount = mapper.checkSalesOrderExists(specId);
+        if (salesOrderCount > 0) {
+            return CheckResultUtil.NG("删除失败：该规格存在销售订单记录，无法删除");
+        }
+        
+        return CheckResultUtil.OK();
+    }
+
+    /**
+     * check逻辑
+     *
+     * @return
+     */
+    public CheckResultAo checkLogic(String spec, String pm, String code, String moduleType) {
+        List<MGoodsSpecEntity> selectBySpec = selectByName(spec);
+        List<MGoodsSpecEntity>  pmlist = mapper.selectList(new QueryWrapper<MGoodsSpecEntity>().eq("pm",pm));
+        List<MGoodsSpecEntity>  codelist = mapper.selectList(new QueryWrapper<MGoodsSpecEntity>().eq("code",code));
+        switch (moduleType) {
+            case CheckResultAo.INSERT_CHECK_TYPE:
+                // 新增场合，不能重复
+                if (selectBySpec.size() > 0) {
+                    return CheckResultUtil.NG("新增保存出错：规格出现重复", spec);
+                }
+                if (pmlist.size() > 1) {
+                    return CheckResultUtil.NG("新增保存出错：品名出现重复", pm);
+                }
+                if (codelist.size() > 0) {
+                    return CheckResultUtil.NG("新增保存出错：编码出现重复", code);
+                }
+                break;
+            case CheckResultAo.UPDATE_CHECK_TYPE:
+                // 更新场合，不能重复设置
+                if (selectBySpec.size() > 1) {
+                    return CheckResultUtil.NG("新增保存出错：规格出现重复", spec);
+                }
+                if (pmlist.size() > 1) {
+                    return CheckResultUtil.NG("新增保存出错：品名出现重复", pm);
+                }
+                if (codelist.size() > 1) {
+                    return CheckResultUtil.NG("新增保存出错：编码出现重复", code);
+                }
+                break;
+            case CheckResultAo.DELETE_CHECK_TYPE:
+                // 删除场合，检查业务关联
+                // 注意：这里可以扩展删除前的业务校验逻辑
+                break;
+            default:
+        }
+        return CheckResultUtil.OK();
+    }
+
+}

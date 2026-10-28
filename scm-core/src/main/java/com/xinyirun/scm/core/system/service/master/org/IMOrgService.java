@@ -1,0 +1,200 @@
+package com.xinyirun.scm.core.system.service.master.org;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
+import com.xinyirun.scm.bean.system.ao.result.UpdateResultAo;
+import com.xinyirun.scm.bean.entity.master.org.MOrgEntity;
+import com.xinyirun.scm.bean.system.vo.common.component.NameAndValueVo;
+import com.xinyirun.scm.bean.system.vo.master.org.*;
+import com.xinyirun.scm.bean.system.vo.master.user.MStaffVo;
+
+import java.util.List;
+
+/**
+ * <p>
+ * 岗位主表 服务类 接口
+ * </p>
+ *
+ * @author zxh
+ * @since 2019-08-23
+ */
+public interface IMOrgService extends IService<MOrgEntity> {
+
+    /**
+     * 获取所有数据，左侧树数据
+     */
+    List<MOrgTreeVo> getTreeList(MOrgTreeVo searchCondition) ;
+
+    /**
+     * 获取所有数据
+     */
+    List<MOrgTreeVo> select(MOrgVo searchCondition) ;
+
+    /**
+     * 获取所有的组织以及子组织数量，仅仅是数量
+     * @param searchCondition
+     * @return
+     */
+    MOrgCountsVo getAllOrgDataCount(MOrgVo searchCondition);
+
+    /**
+     * 获取组织数据
+     * @param searchCondition
+     * @return
+     */
+    List<MOrgTreeVo> getOrgs(MOrgVo searchCondition);
+
+    /**
+     * 获取集团数据
+     * @param searchCondition
+     * @return
+     */
+    IPage<MGroupVo> getGroups(MOrgTreeVo searchCondition);
+
+    /**
+     * 获取企业数据
+     * @param searchCondition
+     * @return
+     */
+    IPage<MCompanyVo> getCompanies(MOrgTreeVo searchCondition);
+
+    /**
+     * 获取部门数据
+     * @param searchCondition
+     * @return
+     */
+    IPage<MDeptVo> getDepts(MOrgTreeVo searchCondition);
+
+    /**
+     * 获取岗位数据
+     * @param searchCondition
+     * @return
+     */
+    IPage<MPositionVo> getPositions(MOrgTreeVo searchCondition);
+
+    /**
+     * 获取员工数据
+     * @param searchCondition
+     * @return
+     */
+    List<MStaffVo> getStaffs(MOrgVo searchCondition);
+
+    /**
+     * 插入一条记录（选择字段，策略插入）
+     * @param entity 实体对象
+     * @return
+     */
+    InsertResultAo<Integer> insert(MOrgEntity entity);
+
+    /**
+     * 更新一条记录（选择字段，策略更新）
+     * @param entity 实体对象
+     * @return
+     */
+    UpdateResultAo<Integer> update(MOrgEntity entity);
+
+    /**
+     * 获取数据byid
+     * @param id
+     * @return
+     */
+    MOrgVo selectByid(Long id);
+
+    /**
+     * 新增模式下，可新增子结点得类型
+     * @return
+     */
+    List<NameAndValueVo> getCorrectTypeByInsertStatus(MOrgVo vo);
+
+    /**
+     * 删除
+     * @param entity
+     * @return
+     */
+    Boolean deleteById(MOrgEntity entity);
+
+    /**
+     * 根据code，进行 like 'code%'，匹配当前结点以及子结点
+     * @param vo
+     * @return
+     */
+    List<MOrgEntity> getDataByCode(MOrgEntity vo);
+
+    /**
+     * 拖拽保存
+     * @param bean
+     * @return
+     */
+    Boolean dragsave(List<MOrgTreeVo> bean);
+
+    /**
+     * 获取员工清单，为穿梭框服务
+     * @return
+     */
+    MStaffPositionTransferVo getStaffTransferList(MStaffTransferVo condition);
+
+    /**
+     * 保存穿梭框数据，员工岗位设置
+     * @return
+     */
+    MStaffPositionTransferVo setStaffTransfer(MStaffTransferVo bean);
+
+    /**
+     * 获取员工列表，页面查询
+     */
+    MStaffTabVo selectStaff(MStaffTabDataVo searchCondition) ;
+
+    /**
+     * 获取当组织下员工count
+     */
+    Integer getCurrentOrgStaffCount(MStaffTabDataVo searchCondition) ;
+
+    /**
+     * 获取所有员工count
+     */
+    Integer getAllOrgStaffCount(MStaffTabDataVo searchCondition) ;
+
+    /**
+     * 获取组织子节点数量
+     * @param orgId 组织ID  
+     * @return 子节点数量
+     */
+    Integer getSubCount(Long orgId);
+
+    /**
+     * 根据组织类型智能获取子节点统计
+     * @param orgId 组织ID
+     * @param orgType 组织类型（可选）
+     * @return 集团类型返回详细分类统计，其他类型返回简单计数
+     */
+    Object getSubCountByType(Long orgId, String orgType);
+
+    /**
+     * 获取根节点统计信息
+     * 包含集团数、主体企业数、岗位数、员工数的综合统计
+     * 
+     * @return 根节点统计数据VO
+     */
+    MOrgCountsVo getRootStatistics();
+    
+    /**
+     * 清理根节点统计缓存
+     * 当员工数据发生变更时调用，确保根节点统计数据正确
+     */
+    void clearRootStatisticsCache();
+
+    /**
+     * 清理所有组织架构相关缓存
+     * 模仿logout中的clearTenantSharedCaches方法
+     * 在组织架构数据发生变化时调用，确保缓存一致性
+     *
+     * 清理的缓存包括：
+     * - CACHE_ORG_SUB_COUNT: 组织架构统计缓存（部门岗位数等）
+     * - CACHE_DICT_TYPE: 数据字典缓存（可能包含组织类型等）
+     * - CACHE_COLUMNS_TYPE: 表格列配置缓存（组织架构相关页面的列配置）
+     * - CACHE_SYSTEM_ICON_TYPE: 系统图标缓存（组织架构图标）
+     * - CACHE_CONFIG: 系统参数配置缓存（可能包含组织配置参数）
+     */
+    public void clearAllOrgCaches() ;
+}
