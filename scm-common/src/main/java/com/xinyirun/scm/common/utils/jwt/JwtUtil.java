@@ -11,7 +11,7 @@ import lombok.Data;
 import org.apache.commons.beanutils.BeanUtils;
 import org.bson.json.JsonObject;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,11 +25,11 @@ public class JwtUtil {
      * @throws Exception
      */
     public static String getUserStringByToken(String token, String base64Secret) throws Exception {
-        Key key;
+        SecretKey key;
         byte[] keyBytes = Decoders.BASE64.decode(base64Secret);
         key = Keys.hmacShaKeyFor(keyBytes);
-        String user = Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token.replace(JWTSecurityConstants.TOKEN_PREFIX, "")).getBody().getSubject();
+        String user = Jwts.parser().verifyWith(key).build()
+                .parseSignedClaims(token.replace(JWTSecurityConstants.TOKEN_PREFIX, "")).getPayload().getSubject();
         return user;
     }
 
@@ -43,10 +43,10 @@ public class JwtUtil {
     public static Optional<Claims> getClaimsFromToken(String token, String secret) throws Exception {
         Claims claims;
         try {
-            claims = Jwts.parserBuilder()
-                    .setSigningKey(secret).build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            claims = Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))).build()
+                    .parseSignedClaims(token)
+                    .getPayload();
             return Optional.of(claims);
         } catch (Exception e) {
             return Optional.empty();

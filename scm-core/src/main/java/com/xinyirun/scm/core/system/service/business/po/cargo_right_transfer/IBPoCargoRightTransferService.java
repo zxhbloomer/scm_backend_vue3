@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.service.business.po.cargo_right_transfer;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.po.cargo_right_transfer.BPoCargoRightTransferEntity;
 import com.xinyirun.scm.bean.system.ao.result.CheckResultAo;
 import com.xinyirun.scm.bean.system.ao.result.DeleteResultAo;

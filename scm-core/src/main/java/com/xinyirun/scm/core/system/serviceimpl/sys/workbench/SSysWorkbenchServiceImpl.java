@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.sys.workbench;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.sys.config.config.SConfigEntity;
 import com.xinyirun.scm.bean.entity.sys.workbench.SSysWorkbenchEntity;
 import com.xinyirun.scm.bean.system.vo.business.notice.BNoticeVo;

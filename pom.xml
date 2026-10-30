@@ -45,7 +45,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>4.1.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -55,17 +55,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.jdk>${java.version}</project.build.jdk>
-        <project.build.springbootversion>3.5.5</project.build.springbootversion>
-        <spring.social.version>1.1.6.RELEASE</spring.social.version>
+        <project.build.springbootversion>4.1.2</project.build.springbootversion>
         <poi.version>5.2.4</poi.version>
-        <fastjson.version>2.0.59</fastjson.version>
-        <mybatis-plus.version>3.5.14</mybatis-plus.version>
-        <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+        <fastjson.version>2.0.66</fastjson.version>
+        <mybatis-plus.version>3.5.18</mybatis-plus.version>
+        <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
         <!--        <mybatis-spring-boot-starter.version>2.1.1</mybatis-spring-boot-starter.version>-->
         <kaptcha.version>2.3.2</kaptcha.version>
-        <lombok.version>1.18.38</lombok.version>
-        <jjwt.version>0.11.5</jjwt.version>
-        <flowable.version>7.1.0</flowable.version>
+        <lombok.version>1.18.48</lombok.version>
+        <jjwt.version>0.13.0</jjwt.version>
+        <flowable.version>8.0.0</flowable.version>
         <batik.version>1.7</batik.version>
         <weixin-java-mp.version>4.6.3.B</weixin-java-mp.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
@@ -74,11 +73,11 @@
         <jeasypoi.version>2.1.6</jeasypoi.version>
         <!--        <knife4j.version>3.0.3</knife4j.version>-->
         <!-- springdoc-openapi 版本管理 -->
-        <springdoc.version>2.8.8</springdoc.version>
-        <!-- Spring AI 版本管理 -->
-        <spring-ai.version>1.1.3</spring-ai.version>
-        <spring-ai-alibaba.version>1.1.2.0</spring-ai-alibaba.version>
-        <mcp.sdk.version>0.16.0</mcp.sdk.version>
+        <springdoc.version>3.2.0</springdoc.version>
+        <!-- Spring AI 版本管理（2.0.x = Spring Boot 4.1 世代） -->
+        <spring-ai.version>2.0.1</spring-ai.version>
+        <!-- ARGI：Spring AI Alibaba Graph 的官方后继（原 com.alibaba.cloud.ai:spring-ai-alibaba-graph-core） -->
+        <argi.version>2.1.0-RC1</argi.version>
         <ansj_seg.version>5.1.6</ansj_seg.version>
     </properties>
 
@@ -92,8 +91,10 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-redis</artifactId>
-                <version>3.5.4</version>
+                <artifactId>spring-data-bom</artifactId>
+                <version>2026.0.2</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -123,7 +124,7 @@
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-aop</artifactId>
+                <artifactId>spring-boot-starter-aspectj</artifactId>
                 <version>${project.build.springbootversion}</version>
             </dependency>
             <dependency>
@@ -134,8 +135,10 @@
 
             <dependency>
                 <groupId>org.springframework.session</groupId>
-                <artifactId>spring-session-data-redis</artifactId>
-                <version>3.5.2</version>
+                <artifactId>spring-session-bom</artifactId>
+                <version>4.1.1</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <!--            <dependency>-->
             <!--                <groupId>org.springframework.boot</groupId>-->
@@ -180,11 +183,6 @@
 <!--                <artifactId>spring-boot-starter-data-mongodb</artifactId>-->
 <!--                <version>${project.build.springbootversion}</version>-->
 <!--            </dependency>-->
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-commons</artifactId>
-                <version>3.5.4</version>
-            </dependency>
 <!--            <dependency>-->
 <!--                <groupId>org.springframework.data</groupId>-->
 <!--                <artifactId>spring-data-mongodb</artifactId>-->
@@ -203,15 +201,15 @@
                 <version>${project.build.springbootversion}</version>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql-connector-java.version}</version>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql-connector-j.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid</artifactId>
-                <version>1.2.20</version>
+                <version>1.2.28</version>
             </dependency>
             <!--            <dependency>-->
             <!--                <groupId>org.springframework.security</groupId>-->
@@ -225,12 +223,6 @@
                 <optional>true</optional>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.restdocs</groupId>
-                <artifactId>spring-restdocs-mockmvc</artifactId>
-                <version>2.0.5.RELEASE</version>
-                <scope>test</scope>
-            </dependency>
             <!--            <dependency>-->
             <!--                <groupId>com.baomidou</groupId>-->
             <!--                <artifactId>mybatis-plus-extension</artifactId>-->
@@ -238,6 +230,8 @@
             <!--                <scope>compile</scope>-->
             <!--            </dependency>-->
             <dependency>
+                <!-- fastjson2 边界（doc26 §2.9）：仅限 ①DB JSON 文本 ②MyBatis TypeHandler ③外部响应解析 ④MQ 存量消息与生产端；禁止新增 @RestController 出参 / @RequestBody 入参 / Redis 序列化用法 -->
+                <!-- fastjson2 仅限 DB JSON 文本 / 外部响应解析 / MQ 存量消息与生产端 / MyBatis TypeHandler；禁止新增 HTTP 出入口用法 -->
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2-extension-spring6</artifactId>
                 <version>${fastjson.version}</version>
@@ -262,27 +256,6 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>2.6</version>
-            </dependency>
-            <!-- spring social -->
-            <dependency>
-                <groupId>org.springframework.social</groupId>
-                <artifactId>spring-social-config</artifactId>
-                <version>${spring.social.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.social</groupId>
-                <artifactId>spring-social-core</artifactId>
-                <version>${spring.social.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.social</groupId>
-                <artifactId>spring-social-security</artifactId>
-                <version>${spring.social.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.social</groupId>
-                <artifactId>spring-social-web</artifactId>
-                <version>${spring.social.version}</version>
             </dependency>
             <!--            <dependency>-->
             <!--                <groupId>org.springframework.social</groupId>-->
@@ -314,17 +287,12 @@
             <!-- mybatis-plus-->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
@@ -336,21 +304,6 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mybatis</groupId>
-                <artifactId>mybatis-spring</artifactId>
-                <version>3.0.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>7.0.1.Final</version>
             </dependency>
             <!-- xss过滤 -->
             <dependency>
@@ -420,11 +373,6 @@
 <!--                    </exclusion>-->
 <!--                </exclusions>-->
 <!--            </dependency>-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-quartz</artifactId>
-                <version>3.2.1</version>
-            </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
@@ -661,8 +609,8 @@
             <!--动态数据源-->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
-                <version>4.3.1</version>
+                <artifactId>dynamic-datasource-spring-boot4-starter</artifactId>
+                <version>4.6.0</version>
             </dependency>
             <dependency>
                 <groupId>p6spy</groupId>
@@ -672,8 +620,8 @@
             <!--druid数据源-->
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>1.2.20</version>
+                <artifactId>druid-spring-boot-4-starter</artifactId>
+                <version>1.2.28</version>
             </dependency>
 
             <dependency>
@@ -722,7 +670,7 @@
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-jackson</artifactId>
+                <artifactId>jjwt-gson</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
             <dependency>
@@ -818,11 +766,7 @@
                 <artifactId>openpdf</artifactId>
                 <version>1.3.27</version>
             </dependency>
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>5.0.1</version>
-            </dependency>
+            <!-- HikariCP 不钉版本：由 spring-boot-dependencies 4.1.2 托管（7.0.2） -->
             <dependency>
                 <groupId>gui.ava</groupId>
                 <artifactId>html2image</artifactId>
@@ -904,27 +848,17 @@
                 <version>${project.build.springbootversion}</version>
             </dependency>
 
-            <!-- Spring AI 中国AI提供商支持 -->
+            <!-- ARGI：Spring AI Alibaba Graph 的官方后继，工作流编排引擎(基于DAG) -->
             <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
-                <artifactId>spring-ai-alibaba-bom</artifactId>
-                <version>${spring-ai-alibaba.version}</version>
+                <groupId>io.github.agentic-ai-java</groupId>
+                <artifactId>argi-bom</artifactId>
+                <version>${argi.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Spring AI Alibaba Graph - 工作流编排引擎(基于DAG) -->
-            <dependency>
-                <groupId>com.alibaba.cloud.ai</groupId>
-                <artifactId>spring-ai-alibaba-graph-core</artifactId>
-                <version>${spring-ai-alibaba.version}</version>
-            </dependency>
 
-            <!-- MCP SDK - 模型上下文协议SDK，与Spring AI 1.1.0配套 -->
-            <dependency>
-                <groupId>io.modelcontextprotocol.sdk</groupId>
-                <artifactId>mcp</artifactId>
-                <version>${mcp.sdk.version}</version>
-            </dependency>
+            <!-- 说明：MCP SDK（io.modelcontextprotocol.sdk:mcp）不再硬钉版本，
+                 自 Spring AI 2.0.1 起交由 spring-ai-bom 统一管理（2.x 世代）。 -->
 
             <!-- Ollama4j Java客户端 -->
             <dependency>
@@ -986,7 +920,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
+                    <version>3.5.6</version>
                     <configuration>
                         <skipTests>true</skipTests>
                     </configuration>

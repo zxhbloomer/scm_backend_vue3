@@ -1,6 +1,5 @@
 package com.xinyirun.scm.excel.bean.importconfig.template.title;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,13 +13,11 @@ public class TitleCol {
      * 列名
      */
     @Getter @Setter
-	@JSONField
 	private String title;
     /**
      * 列跨度
      */
 	@Getter @Setter
-	@JSONField
 	private int colSpan = 1;
 
 	/**

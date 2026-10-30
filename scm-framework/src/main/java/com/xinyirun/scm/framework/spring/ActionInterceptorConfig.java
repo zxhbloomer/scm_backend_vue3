@@ -5,6 +5,8 @@ import com.xinyirun.scm.framework.spring.interceptor.ActionInterceptor;
 import com.xinyirun.scm.framework.spring.interceptor.TenantDyanmicDataSourceInterceptor;
 import com.xinyirun.scm.framework.spring.interceptor.TenantLogInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.http.converter.autoconfigure.ServerHttpMessageConvertersCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -63,12 +65,26 @@ public class ActionInterceptorConfig implements WebMvcConfigurer {
 //        WebMvcConfigurer.super.addReturnValueHandlers(returnValueHandlers);
     }
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        //        converters.add(0, new CallbackMappingJackson2HttpMessageConverter());
-        CallbackMappingJackson2HttpMessageConverter converter = new CallbackMappingJackson2HttpMessageConverter();
-        converter.setDefaultCharset(Charset.forName("UTF-8"));
-        converters.add(4, converter);
+    /**
+     * 注册统一 JSON 出口（Jackson 3）。
+     *
+     * <p>Spring Boot 4 / Spring Framework 7 的正确用法：实现
+     * {@link ServerHttpMessageConvertersCustomizer}，把自定义转换器注册成「JSON 转换器」本身
+     * （{@code withJsonConverter}）。这样它天然位于 StringHttpMessageConverter 之后，
+     * 既有默认顺序不变，也不会让 controller 返回的 String 被写成带引号的 JSON。</p>
+     *
+     * <p>旧写法说明：{@code configureMessageConverters(List)} 在 Framework 7 收到的是空列表
+     * （语义为“替换默认转换器”，且已被标记为待删除）；{@code extendMessageConverters} 虽可用，
+     * 但需要自己算插入位置，容易踩到 StringHttpMessageConverter 的先后顺序。</p>
+     */
+    @Bean
+    public ServerHttpMessageConvertersCustomizer scmJsonMessageConvertersCustomizer() {
+        return builder -> {
+            CallbackMappingJackson2HttpMessageConverter converter = new CallbackMappingJackson2HttpMessageConverter();
+            converter.setDefaultCharset(Charset.forName("UTF-8"));
+            builder.withJsonConverter(converter);
+        };
+    }
 
 //        Iterator<HttpMessageConverter<?>> iterator = converters.iterator();
 //        while(iterator.hasNext()){
@@ -114,6 +130,4 @@ public class ActionInterceptorConfig implements WebMvcConfigurer {
 //        //将fastjson添加到视图消息转换器列表内
 //        converters.add(0,converter);
 
-
-    }
 }

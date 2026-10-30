@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.master.menu;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.master.menu.MMenuRedirectEntity;
 import com.xinyirun.scm.core.system.mapper.master.menu.MMenuRedirectMapper;
 import com.xinyirun.scm.core.system.service.master.menu.IMMenuRedirectService;

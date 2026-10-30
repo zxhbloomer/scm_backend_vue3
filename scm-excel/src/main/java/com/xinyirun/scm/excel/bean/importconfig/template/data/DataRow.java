@@ -31,7 +31,6 @@ public class DataRow implements Serializable {
      */
     @Getter
     @Setter
-    @JSONField
     private List<DataCol> dataCols = new ArrayList<DataCol>();
 
     /**
@@ -39,7 +38,6 @@ public class DataRow implements Serializable {
      */
     @Getter
     @Setter
-    @JSONField
     private DataRowValidators dataRowValidators;
 
     /**

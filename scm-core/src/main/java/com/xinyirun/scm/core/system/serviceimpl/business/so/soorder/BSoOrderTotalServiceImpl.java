@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.so.soorder;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.so.soorder.BSoOrderTotalEntity;
 import com.xinyirun.scm.core.system.mapper.business.so.soorder.BSoOrderTotalMapper;
 import com.xinyirun.scm.core.system.service.business.so.soorder.IBSoOrderTotalService;

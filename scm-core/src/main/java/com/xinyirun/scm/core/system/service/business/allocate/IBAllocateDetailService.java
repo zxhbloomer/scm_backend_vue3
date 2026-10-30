@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.business.allocate;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.ao.result.UpdateResultAo;
 import com.xinyirun.scm.bean.entity.business.allocate.BAllocateDetailEntity;

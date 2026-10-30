@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class SmsCodeAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -13,7 +14,7 @@ public class SmsCodeAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal;
 
     SmsCodeAuthenticationToken(String mobile) {
-        super(null);
+        super(Collections.emptyList());
         this.principal = mobile;
         setAuthenticated(false);
     }

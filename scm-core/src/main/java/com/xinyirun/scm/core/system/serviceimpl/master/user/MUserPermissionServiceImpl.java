@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.serviceimpl.master.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.master.user.MUserPermissionEntity;
 import com.xinyirun.scm.core.system.mapper.master.user.MUserPermissionMapper;
 import com.xinyirun.scm.core.system.service.master.user.IMUserPermissionService;

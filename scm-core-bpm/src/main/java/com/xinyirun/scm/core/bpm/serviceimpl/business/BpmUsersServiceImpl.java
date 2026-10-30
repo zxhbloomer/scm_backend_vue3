@@ -2,7 +2,7 @@ package com.xinyirun.scm.core.bpm.serviceimpl.business;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.bpm.BpmUsersEntity;
 import com.xinyirun.scm.bean.entity.master.user.MStaffEntity;
 import com.xinyirun.scm.bean.entity.master.user.MUserEntity;

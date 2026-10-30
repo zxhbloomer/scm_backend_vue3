@@ -1,7 +1,7 @@
 package com.xinyirun.scm.ai.core.service.rag;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.ai.bean.entity.rag.AiKnowledgeBaseQaRefGraphEntity;
 import com.xinyirun.scm.ai.bean.vo.rag.RefGraphVo;
 import com.xinyirun.scm.ai.core.mapper.rag.AiKnowledgeBaseQaRefGraphMapper;

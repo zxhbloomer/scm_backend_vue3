@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.service.master.inventory.V2;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.master.inventory.MInventoryAccountEntity;
 import com.xinyirun.scm.bean.entity.master.inventory.v2.MInventoryAccountV2Entity;
 import com.xinyirun.scm.bean.system.vo.master.inventory.MInventoryAccountExportVo;

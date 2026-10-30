@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.po.aprefundpay;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.po.aprefundpay.BApReFundPayAttachEntity;
 import com.xinyirun.scm.core.system.mapper.business.po.aprefundpay.BApReFundPayAttachMapper;
 import com.xinyirun.scm.core.system.service.business.po.aprefundpay.IBApReFundPayAttachService;

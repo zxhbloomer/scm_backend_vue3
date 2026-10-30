@@ -1,6 +1,6 @@
 package com.xinyirun.scm.ai.core.service.workflow;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.ai.bean.entity.workflow.AiWorkflowEdgeEntity;
 import com.xinyirun.scm.ai.bean.vo.workflow.AiWorkflowEdgeVo;
 import com.xinyirun.scm.ai.core.mapper.workflow.AiWorkflowEdgeMapper;

@@ -25,7 +25,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class TokenProvider implements InitializingBean , AuthenticationProvider 
    private final long tokenValidityInMilliseconds;
 //   private final long tokenValidityInMillisecondsForRememberMe;
 
-   private Key key;
+   private SecretKey key;
 
    public TokenProvider(
            @Value("${scm.security.jwt.base64-secret}") String base64Secret,
@@ -76,10 +76,10 @@ public class TokenProvider implements InitializingBean , AuthenticationProvider 
 
       bean.setToken_expires_at(LocalDateTimeUtils.convertDateToLDT(validity));
       String token = Jwts.builder()
-              .setSubject(JSON.toJSONString(bean))
+              .subject(JSON.toJSONString(bean))
               .claim(AUTHORITIES_KEY, authorities)
-              .signWith(key, SignatureAlgorithm.HS256)
-              .setExpiration(validity)
+              .signWith(key, Jwts.SIG.HS256)
+              .expiration(validity)
               .compact();
 
       AppMUserJwtTokenVo vo = new AppMUserJwtTokenVo();
@@ -95,10 +95,10 @@ public class TokenProvider implements InitializingBean , AuthenticationProvider 
    }
 
    public Authentication getAuthentication(String token) {
-      Claims claims = Jwts.parserBuilder()
-              .setSigningKey(key).build()
-              .parseClaimsJws(token)
-              .getBody();
+      Claims claims = Jwts.parser()
+              .verifyWith(key).build()
+              .parseSignedClaims(token)
+              .getPayload();
 
       Collection<? extends GrantedAuthority> authorities =
               Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -112,7 +112,7 @@ public class TokenProvider implements InitializingBean , AuthenticationProvider 
 
    public boolean validateToken(String authToken) {
       try {
-         Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(authToken);
+         Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
          return true;
       } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
          log.debug("JWT 签名无效。");

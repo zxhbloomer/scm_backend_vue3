@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.tenant.serviceimpl.business.login;
 
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.tenant.manager.user.SLoginUserEntity;
 import com.xinyirun.scm.bean.system.bo.tenant.manager.user.SLoginUserBo;
 import com.xinyirun.scm.core.tenant.mapper.business.login.SLoginUserMapper;

@@ -1,81 +1,47 @@
 package com.xinyirun.scm.ai.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * JSON 工具类（Jackson 3 / tools.jackson 实现）
+ *
+ * <p>迁移说明：Jackson 3 的 {@link JsonMapper} 不可变且线程安全，
+ * 因此统一在静态初始化处用 Builder 装配一次；{@code JavaTimeModule}、{@code Jdk8Module}
+ * 在 Jackson 3 已内建，无需注册。</p>
+ */
 @Slf4j
 public class JsonUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    static {
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, Boolean.FALSE);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.registerModules(new JavaTimeModule(), new Jdk8Module());
-    }
+    private static final ObjectMapper objectMapper = JsonMapper.builder()
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .configure(SerializationFeature.INDENT_OUTPUT, Boolean.FALSE)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .build();
 
     public static final ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 
     public static String toJson(Object obj) {
-        String resp = null;
         try {
-            resp = objectMapper.writeValueAsString(obj);
-        } catch (IOException e) {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JacksonException e) {
             log.error("JsonUtil error", e);
-        }
-        return resp;
-    }
-
-
-    /**
-     * 创建JSON处理器的静态方法
-     *
-     * @param content JSON字符串
-     * @return
-     */
-    private static JsonParser getParser(String content) {
-        if (StringUtils.isNotBlank(content)) {
-            try {
-                return objectMapper.getFactory().createParser(content);
-            } catch (IOException ioe) {
-                log.error("JsonUtil getParser error", ioe);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 创建JSON生成器的静态方法, 使用标准输出
-     *
-     * @return
-     */
-    private static JsonGenerator getGenerator(StringWriter sw) {
-        try {
-            return objectMapper.getFactory().createGenerator(sw);
-        } catch (IOException e) {
-            log.error("JsonUtil getGenerator error", e);
         }
         return null;
     }
@@ -88,14 +54,9 @@ public class JsonUtil {
             return null;
         }
         try {
-            JsonParser jp = getParser(json);
-            if (null == jp) {
-                log.error("json parser is null");
-                return null;
-            }
-            return jp.readValueAs(clazz);
-        } catch (IOException ioe) {
-            log.error("反序列化失败", ioe);
+            return objectMapper.readValue(json, clazz);
+        } catch (JacksonException e) {
+            log.error("反序列化失败", e);
         }
         return null;
     }
@@ -103,7 +64,7 @@ public class JsonUtil {
     public static <T> T fromJson(JsonNode jsonNode, Class<T> clazz) {
         try {
             return objectMapper.treeToValue(jsonNode, clazz);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("反序列化失败", e);
         }
         return null;
@@ -116,7 +77,7 @@ public class JsonUtil {
             for (JsonNode jsonNode : arrayNode) {
                 result.add(objectMapper.treeToValue(jsonNode, clazz));
             }
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("反序列化失败", e);
         }
         return result;
@@ -125,7 +86,7 @@ public class JsonUtil {
     public static JsonNode toJsonNode(String json) {
         try {
             return objectMapper.readTree(json);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("反序列化失败", e);
         }
         return null;
@@ -134,8 +95,9 @@ public class JsonUtil {
     public static Map<String, Object> toMap(String json) {
         Map<String, Object> result;
         try {
-            result = objectMapper.readValue(json, Map.class);
-        } catch (JsonProcessingException e) {
+            result = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (JacksonException e) {
             throw new RuntimeException(e);
         }
         return result;
@@ -144,7 +106,7 @@ public class JsonUtil {
     public static <T> List<T> toList(String json, Class<T> clazz) {
         try {
             return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("反序列化失败", e);
         }
         return null;

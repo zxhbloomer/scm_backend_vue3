@@ -42,6 +42,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- RestTemplate 支持（Boot 4：RestTemplateBuilder 迁至 org.springframework.boot.restclient）-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-restclient</artifactId>
+        </dependency>
+
         <!-- WebSocket支持 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -77,23 +83,10 @@
             <groupId>io.github.ollama4j</groupId>
             <artifactId>ollama4j</artifactId>
         </dependency>
-        <!-- Spring AI Alibaba Graph - 工作流编排引擎(基于DAG) -->
+        <!-- ARGI Graph（原 Spring AI Alibaba Graph）- 工作流编排引擎(基于DAG) -->
         <dependency>
-            <groupId>com.alibaba.cloud.ai</groupId>
-            <artifactId>spring-ai-alibaba-graph-core</artifactId>
-            <exclusions>
-                <!-- 排除旧版本MCP SDK，避免与Spring AI 1.1.0的MCP SDK 0.16.0冲突 -->
-                <exclusion>
-                    <groupId>io.modelcontextprotocol.sdk</groupId>
-                    <artifactId>mcp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- MCP SDK - 由父pom统一管理版本 -->
-        <dependency>
-            <groupId>io.modelcontextprotocol.sdk</groupId>
-            <artifactId>mcp</artifactId>
+            <groupId>io.github.agentic-ai-java</groupId>
+            <artifactId>argi-graph-core</artifactId>
         </dependency>
 
         <!-- ModelMapper -->
@@ -118,6 +111,8 @@
 
         <!-- JSON处理 -->
         <dependency>
+            <!-- fastjson2 边界（doc26 §2.9）：仅限 ①DB JSON 文本 ②MyBatis TypeHandler ③外部响应解析 ④MQ 存量消息与生产端；禁止新增 @RestController 出参 / @RequestBody 入参 / Redis 序列化用法 -->
+            <!-- fastjson2 仅限 DB JSON 文本 / 外部响应解析 / MQ 存量消息与生产端 / MyBatis TypeHandler；禁止新增 HTTP 出入口用法 -->
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2-extension-spring6</artifactId>
         </dependency>
@@ -125,7 +120,7 @@
         <!-- MyBatis Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
         </dependency>
 
 
@@ -194,11 +189,6 @@
         <dependency>
             <groupId>org.ansj</groupId>
             <artifactId>ansj_seg</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension-spring6</artifactId>
         </dependency>
 
         <dependency>

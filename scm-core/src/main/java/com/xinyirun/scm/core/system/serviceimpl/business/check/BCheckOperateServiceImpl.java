@@ -2,7 +2,7 @@ package com.xinyirun.scm.core.system.serviceimpl.business.check;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.check.BCheckOperateDetailEntity;
 import com.xinyirun.scm.bean.entity.business.check.BCheckOperateEntity;
 import com.xinyirun.scm.bean.entity.business.check.BCheckResultDetailEntity;

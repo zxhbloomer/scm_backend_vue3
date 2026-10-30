@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.app.service.master.user.jwt;
 
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.app.ao.result.AppUpdateResultAo;
 import com.xinyirun.scm.bean.app.bo.jwt.user.AppUserBo;
 import com.xinyirun.scm.bean.entity.master.user.jwt.MUserJwtTokenEntity;

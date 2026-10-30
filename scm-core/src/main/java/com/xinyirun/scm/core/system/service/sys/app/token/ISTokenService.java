@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.sys.app.token;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.system.bo.user.api.ApiKeyAndSecretKeyBo;
 import com.xinyirun.scm.bean.entity.sys.config.config.SAppConfigEntity;
 import org.springframework.security.core.userdetails.UserDetails;

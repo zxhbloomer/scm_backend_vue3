@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.bpm.service.common.config;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.sys.config.config.SConfigEntity;
 import com.xinyirun.scm.bean.system.vo.sys.config.config.SConfigVo;
 

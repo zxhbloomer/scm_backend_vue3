@@ -1,6 +1,7 @@
 package com.xinyirun.scm.ai.bean.vo.workflow;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class AiWfNodeInputConfigVo implements Serializable {
      * 使用 @JSONField 注解实现 JSON 序列化时驼峰转下划线
      */
     @JSONField(name = "user_inputs")
+    @JsonProperty("user_inputs")
     private List<AiWfNodeIOVo> userInputs = new ArrayList<>();
 
     /**
@@ -31,5 +33,6 @@ public class AiWfNodeInputConfigVo implements Serializable {
      * 使用 @JSONField 注解实现 JSON 序列化时驼峰转下划线
      */
     @JSONField(name = "ref_inputs")
+    @JsonProperty("ref_inputs")
     private List<AiWfNodeParamRefVo> refInputs = new ArrayList<>();
 }

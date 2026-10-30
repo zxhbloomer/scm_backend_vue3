@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.xinyirun.scm.core.bpm.service.business.IBpmInstanceSummaryService;
 import com.xinyirun.scm.core.bpm.mapper.business.BpmInstanceSummaryMapper;
 import com.xinyirun.scm.bean.entity.bpm.BpmInstanceSummaryEntity;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 /**
  * <p>
  * 审批流实例-摘要 服务实现类

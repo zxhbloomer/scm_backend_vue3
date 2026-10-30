@@ -59,9 +59,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
@@ -69,7 +70,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -173,7 +174,7 @@ public class SystemSecurityConfig {
             // 此处说明按这个路径来匹配安全策略
             return http.securityMatcher(PATTERN_SQUARE)
                     .addFilterBefore(new SystemRequestIdFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class)
+                    .addFilterBefore(new CorsFilter(), SecurityContextHolderFilter.class)
                     /** 短信验证码校验 */
                     .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                     /** 添加图形证码校验过滤器 */
@@ -256,9 +257,7 @@ public class SystemSecurityConfig {
 
         @Bean
         public DaoAuthenticationProvider userPasswordAuthenticationProvider() {
-            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-            authProvider.setUserDetailsService(userDetailService);
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailService);
             authProvider.setPasswordEncoder(passwordEncoder());
 
             return authProvider;
@@ -361,7 +360,7 @@ public class SystemSecurityConfig {
                     .addFilterAfter(new ApiRequestIdFilter(), BasicAuthenticationFilter.class)
                     .addFilterAfter(new TokenAuthenticationFilter(), BasicAuthenticationFilter.class)
                     .addFilterAfter(new ResultExceptionTranslationFilter(), ExceptionTranslationFilter.class)
-                    .authorizeRequests(authorizeRequests -> authorizeRequests
+                    .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                             /** 其他请求  都需要认证 */
                             .anyRequest().authenticated()
                     )
@@ -539,7 +538,7 @@ public class SystemSecurityConfig {
          */
         @Bean
         public AbstractAuthenticationProcessingFilter ssoLoginFilter() throws Exception {
-            SsoLoginFilter ssoLoginFilter = new SsoLoginFilter(new AntPathRequestMatcher("/api/sso/v1/user/username/token/get", "POST"));
+            SsoLoginFilter ssoLoginFilter = new SsoLoginFilter(PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/api/sso/v1/user/username/token/get"));
             ssoLoginFilter.setAuthenticationManager(ssoAuthenticationManager);
             ssoLoginFilter.setAuthenticationSuccessHandler(ssoAuthenticationSucessHandler);
             ssoLoginFilter.setAuthenticationFailureHandler(ssoAuthenticationFailureHandler);
@@ -554,7 +553,7 @@ public class SystemSecurityConfig {
             // 此处说明按这个路径来匹配安全策略
             return http.securityMatcher(PATTERN_SQUARE)
                     .addFilterBefore(ssoLoginFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                    .authorizeRequests(authorizeRequests -> authorizeRequests
+                    .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                             .requestMatchers(anonResourcesUrl).permitAll()
                             .requestMatchers("/api/sso/v1/user/username/token/get").permitAll()
                             /** 其他请求  都需要认证 */

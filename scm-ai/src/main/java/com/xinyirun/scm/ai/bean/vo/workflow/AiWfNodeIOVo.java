@@ -1,6 +1,7 @@
 package com.xinyirun.scm.ai.bean.vo.workflow;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xinyirun.scm.ai.workflow.data.NodeIOData;
 import com.xinyirun.scm.ai.workflow.data.NodeIODataTextContent;
 import com.xinyirun.scm.ai.workflow.data.NodeIODataNumberContent;
@@ -55,6 +56,7 @@ public class AiWfNodeIOVo implements Serializable {
      * 使用 @JSONField 注解实现 JSON 序列化时驼峰转下划线
      */
     @JSONField(name = "max_length")
+    @JsonProperty("max_length")
     private Integer maxLength;
 
     /**

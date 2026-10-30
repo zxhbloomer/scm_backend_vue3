@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.service.business.ownerchange;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.ownerchange.BOwnerChangeEntity;
 import com.xinyirun.scm.bean.system.vo.business.ownerchange.BOwnerChangeVo;
 

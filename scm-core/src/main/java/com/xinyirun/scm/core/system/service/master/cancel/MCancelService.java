@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.service.master.cancel;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.master.cancel.MCancelEntity;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.vo.master.cancel.MCancelVo;

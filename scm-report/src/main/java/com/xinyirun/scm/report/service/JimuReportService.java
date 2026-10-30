@@ -1,6 +1,6 @@
 package com.xinyirun.scm.report.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.report.entity.JimuReport;
 import com.xinyirun.scm.report.vo.ReportQueryVo;
 import com.xinyirun.scm.report.vo.ReportResultVo;

@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.master.rbac.permission.dept;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.master.rbac.permission.MPermissionEntity;
 import com.xinyirun.scm.bean.system.vo.master.rbac.permission.MPermissionMenuOperationVo;
 import com.xinyirun.scm.bean.system.vo.master.rbac.permission.operation.OperationMenuDataVo;

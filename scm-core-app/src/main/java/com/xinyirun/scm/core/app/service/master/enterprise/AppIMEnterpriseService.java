@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.app.service.master.enterprise;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.app.ao.result.AppCheckResultAo;
 import com.xinyirun.scm.bean.app.vo.master.enterprise.AppMEnterpriseVo;
 import com.xinyirun.scm.bean.entity.master.enterprise.MEnterpriseEntity;

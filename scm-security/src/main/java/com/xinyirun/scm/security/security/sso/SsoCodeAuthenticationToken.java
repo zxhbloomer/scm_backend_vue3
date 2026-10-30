@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class SsoCodeAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
@@ -13,7 +14,7 @@ public class SsoCodeAuthenticationToken extends AbstractAuthenticationToken {
     private Object credentials;
 
     SsoCodeAuthenticationToken(String username) {
-        super(null);
+        super(Collections.emptyList());
         this.principal = username;
         this.credentials = null;
         setAuthenticated(false);

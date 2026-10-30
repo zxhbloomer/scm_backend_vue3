@@ -1,6 +1,6 @@
 //package com.xinyirun.scm.core.system.service.base.v1.common.inventory;
 //
-//import com.baomidou.mybatisplus.extension.service.IService;
+//import com.baomidou.mybatisplus.spring.service.IService;
 //import com.xinyirun.scm.bean.entity.master.inventory.MInventoryEntity;
 //import com.xinyirun.scm.bean.entity.master.inventory.v2.MInventoryV2Entity;
 //import com.xinyirun.scm.bean.system.bo.inventory.commonlogic.adjust.StockAdjustBo;

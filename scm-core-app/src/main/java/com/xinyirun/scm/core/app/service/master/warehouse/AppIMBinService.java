@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.app.service.master.warehouse;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.master.warehouse.MBinEntity;
 
 /**

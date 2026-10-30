@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.business.order;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.order.BOrderInvertedEntity;
 import com.xinyirun.scm.bean.system.vo.business.order.BOrderInvertedExportVo;
 import com.xinyirun.scm.bean.system.vo.business.order.BOrderInvertedVo;

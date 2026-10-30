@@ -1,7 +1,8 @@
 package com.xinyirun.scm.quartz.util;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.xinyirun.scm.bean.entity.quartz.SJobEntity;
 import com.xinyirun.scm.bean.system.vo.business.ai.KnowledgeBaseStatisticsParamVo;
 import com.xinyirun.scm.bean.system.bo.tenant.manager.quartz.SJobManagerBo;
@@ -144,7 +145,7 @@ public class ScheduleUtils {
 
         // 构建参数对象（JSON格式）
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = JsonMapper.builder().build();
             KnowledgeBaseStatisticsParamVo paramVo = new KnowledgeBaseStatisticsParamVo();
             paramVo.setKbUuid(kbUuid);
             paramVo.setTenantCode(tenantCode);
@@ -218,7 +219,7 @@ public class ScheduleUtils {
 
         // 构建参数对象（JSON格式）
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = JsonMapper.builder().build();
             TempKbCleanupParamVo paramVo = new TempKbCleanupParamVo();
             paramVo.setKbUuid(kbUuid);
             paramVo.setTenantCode(tenantCode);

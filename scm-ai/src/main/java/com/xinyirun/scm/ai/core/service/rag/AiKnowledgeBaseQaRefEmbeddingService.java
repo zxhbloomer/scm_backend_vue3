@@ -1,6 +1,6 @@
 package com.xinyirun.scm.ai.core.service.rag;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.ai.bean.entity.rag.AiKnowledgeBaseQaRefEmbeddingEntity;
 import com.xinyirun.scm.ai.bean.vo.rag.QaRefEmbeddingVo;
 import com.xinyirun.scm.ai.bean.vo.rag.RefEmbeddingVo;

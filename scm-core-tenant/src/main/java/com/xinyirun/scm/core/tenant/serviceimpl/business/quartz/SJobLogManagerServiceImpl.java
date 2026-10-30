@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.tenant.serviceimpl.business.quartz;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.tenant.manager.quartz.SJobLogManagerEntity;
 import com.xinyirun.scm.bean.entity.tenant.manager.quartz.SJobManagerEntity;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;

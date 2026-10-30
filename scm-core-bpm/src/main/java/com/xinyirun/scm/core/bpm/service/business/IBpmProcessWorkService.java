@@ -1,7 +1,7 @@
 //package com.xinyirun.scm.core.bpm.service.business;
 //
 //import com.baomidou.mybatisplus.core.metadata.IPage;
-//import com.baomidou.mybatisplus.extension.service.IService;
+//import com.baomidou.mybatisplus.spring.service.IService;
 //import com.xinyirun.scm.bean.bpm.dto.HandleDataDTO;
 //import com.xinyirun.scm.bean.bpm.vo.HandleDataVO;
 //import com.xinyirun.scm.bean.bpm.vo.HistoryProcessInstanceVO;

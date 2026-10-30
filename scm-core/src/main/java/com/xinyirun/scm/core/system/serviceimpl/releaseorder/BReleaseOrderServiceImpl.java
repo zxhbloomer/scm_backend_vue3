@@ -2,7 +2,7 @@ package com.xinyirun.scm.core.system.serviceimpl.releaseorder;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.releaseorder.BReleaseOrderDetailEntity;
 import com.xinyirun.scm.bean.entity.business.releaseorder.BReleaseOrderEntity;
 import com.xinyirun.scm.bean.entity.sys.config.config.SConfigEntity;

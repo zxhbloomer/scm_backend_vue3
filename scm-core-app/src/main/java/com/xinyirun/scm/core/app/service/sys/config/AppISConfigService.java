@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.app.service.sys.config;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.app.vo.sys.config.AppSConfigVo;
 import com.xinyirun.scm.bean.entity.sys.config.config.SConfigEntity;
 import com.xinyirun.scm.bean.system.ao.result.DeleteResultAo;

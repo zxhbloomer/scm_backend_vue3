@@ -15,13 +15,12 @@ import com.xinyirun.scm.framework.base.controller.system.v1.SystemBaseController
 import com.xinyirun.scm.security.code.ValidateCode;
 import com.xinyirun.scm.security.code.ValidateCodeGenerator;
 import com.xinyirun.scm.security.code.sms.SmsCodeSender;
+import com.xinyirun.scm.security.code.ScmSessionStrategy;
 // import io.swagger.annotations.Api;
 // import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
-import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -39,7 +38,7 @@ import jakarta.servlet.http.HttpServletResponse;
 // @Api(tags = "短信验证码")
 public class SysSmsCodeController extends SystemBaseController {
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    private final ScmSessionStrategy sessionStrategy = new ScmSessionStrategy();
 
     @Autowired
     private ValidateCodeGenerator smsCodeGenerator;

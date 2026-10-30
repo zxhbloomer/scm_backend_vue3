@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.bkmonitor.v2;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.bkmonitor.BBkMonitorLogDetailEntity;
 import com.xinyirun.scm.bean.system.vo.business.bkmonitor.v2.BBkMonitorLogDetailVo;
 import com.xinyirun.scm.bean.system.vo.business.bkmonitor.v2.BBkMonitorVo;

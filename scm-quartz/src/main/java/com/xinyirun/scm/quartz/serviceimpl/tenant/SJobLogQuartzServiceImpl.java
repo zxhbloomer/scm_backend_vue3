@@ -1,6 +1,6 @@
 package com.xinyirun.scm.quartz.serviceimpl.tenant;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.quartz.SJobLogEntity;
 import com.xinyirun.scm.bean.system.vo.clickhouse.log.quartz.SJobLogClickHouseVo;
 import com.xinyirun.scm.common.utils.bean.BeanUtilsSupport;

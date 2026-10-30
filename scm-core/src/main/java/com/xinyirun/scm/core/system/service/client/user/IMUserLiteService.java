@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.client.user;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.master.user.MUserLiteEntity;
 import com.xinyirun.scm.bean.system.vo.master.user.MUserLiteVo;
 

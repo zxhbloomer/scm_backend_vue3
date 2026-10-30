@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.so.ar;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.so.ar.BArSourceEntity;
 import com.xinyirun.scm.core.system.mapper.business.so.ar.BArSourceMapper;
 import com.xinyirun.scm.core.system.service.business.so.ar.IBArSourceService;

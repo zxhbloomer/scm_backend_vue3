@@ -1,6 +1,7 @@
 package com.xinyirun.scm.bean.app.result.utils.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.common.enums.ResultEnum;
 import com.xinyirun.scm.common.exception.system.ValidateCodeException;
@@ -30,7 +31,7 @@ public class AppResponseResultUtil {
 //    }
 
     public static void responseWriteOK(Object data, HttpServletResponse response) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JsonMapper.builder().build();
 
         response.getWriter().write(objectMapper.writeValueAsString(
             AppResultUtil.OK(data)
@@ -55,7 +56,7 @@ public class AppResponseResultUtil {
                                             ResultEnum system_code,
                                             String errorMessage
                                         ) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JsonMapper.builder().build();
         response.setContentType(SystemConstants.JSON_UTF8);
         if(exception instanceof BadCredentialsException || exception instanceof UsernameNotFoundException){
             response.getWriter().write(objectMapper.writeValueAsString(

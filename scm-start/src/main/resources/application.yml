@@ -16,6 +16,11 @@ spring:
   #中林环境
 #    active: zlprod
 # 版本
+flowable:
+  # 统一建表策略：表由 00_doc/sql/flowable-8.0.0-ddl/ 下的脚本创建，启动时不自动建表/升级
+  # 覆盖所有 profile（dev / centos-ys / prod / zlprod）；Flowable 默认值为 true，必须显式置 false
+  database-schema-update: false
+
 project:
   version: v1.0.39
   description:

@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.sys.areas;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.system.vo.common.component.NameAndValueVo;
 import com.xinyirun.scm.bean.system.vo.sys.areas.SAreaCitiesVo;
 import com.xinyirun.scm.bean.system.vo.sys.areas.SAreaProvincesVo;

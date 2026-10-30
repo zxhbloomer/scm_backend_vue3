@@ -37,12 +37,10 @@ public class ExcelTemplate implements Serializable {
 
     @Setter
     @Getter
-    @JSONField
     private DataRow dataRows;
 
     @Setter
     @Getter
-    @JSONField
     private String name;
 
     /**

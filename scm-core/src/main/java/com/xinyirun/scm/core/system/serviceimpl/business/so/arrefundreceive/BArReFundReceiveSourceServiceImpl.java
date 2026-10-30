@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.so.arrefundreceive;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.so.arrefundreceive.BArReFundReceiveSourceEntity;
 import com.xinyirun.scm.bean.system.vo.business.so.arrefundreceive.BArReFundReceiveSourceVo;
 import com.xinyirun.scm.core.system.mapper.business.so.arrefundreceive.BArReFundReceiveSourceMapper;

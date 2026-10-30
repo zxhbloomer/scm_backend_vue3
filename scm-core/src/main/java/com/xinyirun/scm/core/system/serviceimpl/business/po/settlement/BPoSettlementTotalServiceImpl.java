@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.po.settlement;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.po.settlement.BPoSettlementTotalEntity;
 import com.xinyirun.scm.core.system.mapper.business.po.settlement.BPoSettlementTotalMapper;
 import com.xinyirun.scm.core.system.service.business.po.settlement.IBPoSettlementTotalService;

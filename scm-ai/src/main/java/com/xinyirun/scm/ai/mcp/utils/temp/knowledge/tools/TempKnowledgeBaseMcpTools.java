@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONWriter;
 import com.xinyirun.scm.ai.mcp.utils.temp.knowledge.service.TempKnowledgeBaseAiService;
 import com.xinyirun.scm.common.utils.datasource.DataSourceHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.springaicommunity.mcp.annotation.McpTool;
-import org.springaicommunity.mcp.annotation.McpToolParam;
+import org.springframework.ai.mcp.annotation.McpTool;
+import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.serviceimpl.sys.table;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.sys.table.STableColumnConfigDetailEntity;
 import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnConfigDetailVo;
 import com.xinyirun.scm.common.utils.bean.BeanUtilsSupport;

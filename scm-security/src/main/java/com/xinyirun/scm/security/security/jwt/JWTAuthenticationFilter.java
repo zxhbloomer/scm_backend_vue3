@@ -1,7 +1,8 @@
 package com.xinyirun.scm.security.security.jwt;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.xinyirun.scm.common.exception.jwt.JWTAuthException;
 import com.xinyirun.scm.common.exception.jwt.JWTAuthGetException;
 import com.xinyirun.scm.security.handler.jwt.JWTAuthenticationFailureHandler;
@@ -60,8 +61,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         try {
             log.debug("app验证登录，并颁发token");
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+            ObjectMapper objectMapper = JsonMapper.builder().configure(StreamReadFeature.AUTO_CLOSE_SOURCE, true).build();
             Map<String, String> authenticationBean = objectMapper.readValue(request.getInputStream(), Map.class);
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                     authenticationBean.get(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY),

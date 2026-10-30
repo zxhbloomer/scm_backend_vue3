@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.business.materialconvert;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.materialconvert.BMaterialConvertDetailEntity;
 import com.xinyirun.scm.bean.system.vo.business.materialconvert.BMaterialConvertDetailVo;
 import com.xinyirun.scm.bean.system.vo.business.materialconvert.BMaterialConvertVo;

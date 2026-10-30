@@ -1,17 +1,14 @@
 package com.xinyirun.scm.redis.config;
 
-import com.alibaba.fastjson2.JSONFactory;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.xinyirun.scm.common.properies.SystemConfigProperies;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -25,14 +22,17 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
 @Configuration
-@AutoConfigureAfter(RedisAutoConfiguration.class)
+@AutoConfigureAfter(DataRedisAutoConfiguration.class)
 @Slf4j
 public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
 
@@ -50,7 +50,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
     @Bean
     public CacheManager cacheManager(
         @Qualifier("scm_lettuce_connection_factory") LettuceConnectionFactory lettuceConnectionFactory,
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer) {
+        JacksonJsonRedisSerializer<Object> jackson2JsonRedisSerializer) {
 
         RedisSerializationContext.SerializationPair keyPair =
             RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer());
@@ -76,17 +76,28 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
      * 并注入到cacheManager和redisTemplate
      */
     @Bean
-    public Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        // 注册JavaTimeModule以支持Java 8日期时间类型（LocalDateTime等）
-        om.registerModule(new JavaTimeModule());
-        // 禁用将日期写为时间戳
-        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-        return jackson2JsonRedisSerializer;
+    public JacksonJsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+        // Jackson 3 内置 java.time / jdk8 支持，无需再注册 JavaTimeModule；
+        // 日期默认即为 ISO-8601（不再是时间戳），等价于旧配置 disable(WRITE_DATES_AS_TIMESTAMPS)。
+        //
+        // 类型信息（多态）策略：
+        // 1) 白名单收敛到本项目与 JDK 常用包，避免 allowIfSubType(Object.class) 把整棵类型树放开（安全面）；
+        // 2) 写回格式显式指定 WRAPPER_ARRAY（形如 ["com.xinyirun...Xxx",{...}]），与升级前
+        //    Jackson 2 的 enableDefaultTyping(NON_FINAL) 默认格式一致 —— 这样存量缓存可读，
+        //    且升级若回滚，旧版本也能读新写入的值（双向兼容）。
+        BasicPolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType("com.xinyirun.")
+                .allowIfSubType("java.util.")
+                .allowIfSubType("java.lang.")
+                .allowIfSubType("java.math.")
+                .allowIfSubType("java.time.")
+                .allowIfSubTypeIsArray()
+                .build();
+        JsonMapper om = JsonMapper.builder()
+                .changeDefaultVisibility(vc -> vc.withVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY))
+                .activateDefaultTyping(ptv, DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY)
+                .build();
+        return new JacksonJsonRedisSerializer<>(om, Object.class);
     }
 
     /**
@@ -99,7 +110,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
     @Bean
     public RedisTemplate redisTemplate(
         @Qualifier("scm_lettuce_connection_factory") LettuceConnectionFactory lettuceConnectionFactory,
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer) {
+        JacksonJsonRedisSerializer<Object> jackson2JsonRedisSerializer) {
         RedisTemplate redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
@@ -108,7 +119,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
         // ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
         // 建议使用这种方式，小范围指定白名单
 //        ParserConfig.getGlobalInstance().addAccept("com.xinyirun.scm.");
-        JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept("com.xinyirun.scm.");
+        // fastjson2 的 AutoType 白名单随 FastJsonRedisSerializer 一起停用，Redis 序列化已改为 Jackson 3
 
         // 设置键（key）的序列化采用StringRedisSerializer。
         redisTemplate.setKeySerializer(new StringRedisSerializer());

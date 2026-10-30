@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.track.gsh56;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.track.BTrackEntity;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.result.utils.v1.InsertResultUtil;

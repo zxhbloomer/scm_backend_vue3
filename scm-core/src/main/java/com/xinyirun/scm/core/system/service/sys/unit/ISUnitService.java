@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.service.sys.unit;
 
 import com.xinyirun.scm.bean.entity.sys.unit.SUnitEntity;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.system.vo.sys.unit.SUnitVo;
 
 /**

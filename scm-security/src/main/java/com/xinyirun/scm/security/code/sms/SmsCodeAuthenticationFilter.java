@@ -5,7 +5,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.util.Assert;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
     private boolean postOnly = true;
 
     public SmsCodeAuthenticationFilter(SystemSecurityProperties systemSecurityProperties) {
-        super(new AntPathRequestMatcher(systemSecurityProperties.getCode().getSms().getLoginProcessingUrl(), HttpMethod.POST.toString()));
+        super(PathPatternRequestMatcher.pathPattern(HttpMethod.POST, systemSecurityProperties.getCode().getSms().getLoginProcessingUrl()));
     }
 
     @Override

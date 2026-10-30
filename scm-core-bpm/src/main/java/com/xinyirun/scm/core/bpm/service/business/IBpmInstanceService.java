@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.bpm.service.business;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.bpm.BpmInstanceEntity;
 import com.xinyirun.scm.bean.system.vo.business.bpm.BBpmInstanceVo;
 import org.flowable.engine.runtime.ProcessInstance;

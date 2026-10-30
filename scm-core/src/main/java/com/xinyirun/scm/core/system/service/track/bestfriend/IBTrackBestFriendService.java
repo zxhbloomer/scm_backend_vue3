@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.track.bestfriend;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.track.BTrackGsh56Entity;
 import com.xinyirun.scm.bean.system.vo.business.track.BTrackVo;
 import com.xinyirun.scm.bean.system.vo.sys.log.STrackValidateTestVo;

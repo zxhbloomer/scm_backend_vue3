@@ -5,8 +5,7 @@ import com.xinyirun.scm.redis.listener.SystemHttpSessionListener;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.autoconfigure.session.RedisSessionProperties;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ import jakarta.servlet.http.HttpSessionListener;
 import java.time.Duration;
 
 @Configuration
-@EnableConfigurationProperties({RedisSessionProperties.class, RedisProperties.class})
+@EnableConfigurationProperties(DataRedisProperties.class)
 public class RedisSessionConfiguration {
 
     @Value("${spring.data.redis.lettuce.pool.max-active}")
@@ -37,7 +36,7 @@ public class RedisSessionConfiguration {
     private Long commandTimeOut;
 
     @Autowired
-    RedisProperties redisProperties;
+    DataRedisProperties redisProperties;
 
     @Bean
     public GenericObjectPoolConfig localPoolConfig() {
@@ -50,7 +49,7 @@ public class RedisSessionConfiguration {
     }
 
     @Bean
-    public RedisStandaloneConfiguration redisStandaloneConfiguration(RedisProperties redisProperties) {
+    public RedisStandaloneConfiguration redisStandaloneConfiguration(DataRedisProperties redisProperties) {
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setDatabase(redisProperties.getDatabase());

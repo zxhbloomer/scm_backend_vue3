@@ -70,7 +70,7 @@ public class ScmChatMessageChatMemory implements ChatMemory {
 
             return contents.stream()
                     .map(conversationContent -> {
-                        MessageType type = MessageType.fromValue(conversationContent.getType());
+                        MessageType type = MessageTypeSupport.fromValue(conversationContent.getType());
                         String content = conversationContent.getContent();
                         Message message = switch (type) {
                             case USER -> new UserMessage(content);

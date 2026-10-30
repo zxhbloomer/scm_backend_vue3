@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.base.v1.common.fund;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.fund.BFundUsageEntity;
 import com.xinyirun.scm.bean.system.bo.fund.monit.in.FundInBo;
 

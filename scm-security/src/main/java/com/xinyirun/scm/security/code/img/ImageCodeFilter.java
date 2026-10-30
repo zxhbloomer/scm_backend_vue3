@@ -4,11 +4,10 @@ import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.common.exception.system.ValidateCodeException;
 import com.xinyirun.scm.common.utils.CommonUtil;
 import com.xinyirun.scm.security.properties.SystemSecurityProperties;
+import com.xinyirun.scm.security.code.ScmSessionStrategy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
-import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -28,7 +27,7 @@ public class ImageCodeFilter extends OncePerRequestFilter implements Initializin
 
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    private final ScmSessionStrategy sessionStrategy = new ScmSessionStrategy();
 
     private Set<String> url = new HashSet<>();
 

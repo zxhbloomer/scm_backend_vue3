@@ -1,6 +1,5 @@
 package com.xinyirun.scm.excel.bean.importconfig.template.title;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +17,6 @@ public class TitleRow {
 	 */
 	@Setter
 	@Getter
-	@JSONField
 	private List<TitleCol> cols = new ArrayList<>();
 
 	/**

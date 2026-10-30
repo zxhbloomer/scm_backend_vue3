@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.po.appay;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.po.appay.BApPayAttachEntity;
 import com.xinyirun.scm.core.system.mapper.business.po.appay.BApPayAttachMapper;
 import com.xinyirun.scm.core.system.service.business.po.appay.IBApPayAttachService;

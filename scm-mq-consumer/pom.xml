@@ -26,6 +26,8 @@
     </dependency>
     <!-- fastjson -->
     <dependency>
+      <!-- fastjson2 边界（doc26 §2.9）：仅限 ①DB JSON 文本 ②MyBatis TypeHandler ③外部响应解析 ④MQ 存量消息与生产端；禁止新增 @RestController 出参 / @RequestBody 入参 / Redis 序列化用法 -->
+      <!-- fastjson2 仅限 DB JSON 文本 / 外部响应解析 / MQ 存量消息与生产端 / MyBatis TypeHandler；禁止新增 HTTP 出入口用法 -->
       <groupId>com.alibaba.fastjson2</groupId>
       <artifactId>fastjson2-extension-spring6</artifactId>
     </dependency>

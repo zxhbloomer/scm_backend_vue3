@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.check;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.check.BCheckResultDetailEntity;
 import com.xinyirun.scm.core.system.mapper.business.check.BCheckResultDetailMapper;
 import com.xinyirun.scm.core.system.service.business.check.IBCheckResultDetailService;

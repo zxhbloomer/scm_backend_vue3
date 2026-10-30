@@ -242,7 +242,7 @@ spring:
       master:
         url: jdbc:mysql://127.0.0.1:3306/scm_manager?tinyInt1isBit=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false&&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
         username: root
-        password: Abcd@1234
+        password: 123456
         type: com.alibaba.druid.pool.xa.DruidXADataSource
         driverClassName: com.mysql.cj.jdbc.Driver
         tenent_sql: SELECT * FROM s_tenant_manager WHERE status = 0
@@ -328,9 +328,21 @@ spring:
   
   #-----------------------Spring AI配置---------------------------
   ai:
-    # 禁用自动配置（所有AI配置从数据库 ai_config 表读取）
+    # ============ Spring AI 2.0.1 自动配置开关 ============
+    # 本项目所有 AI 模型参数都来自数据库 ai_config 表，由 AiModelProvider 自行构建，
+    # 因此把自动配置的模型全部关掉。
+    # 注意：Spring AI 2.0.1 已不存在 `spring.ai.openai.*.enabled` 开关
+    #       （openai autoconfigure 元数据共 240 个属性，带 .enabled 的为 0），
+    #       旧写法是死配置。正确开关是 spring.ai.model.* = none。
+    # 依据：reviewer-ai 评审 BLOCKER-2（2026-10-28）
     model:
-      embedding: none  # 禁用embedding自动配置
+      chat: none
+      embedding: none
+      image: none
+      audio:
+        speech: none
+        transcription: none
+      moderation: none
     # Milvus向量存储配置
     vectorstore:
       milvus:
@@ -344,28 +356,25 @@ spring:
         metric-type: COSINE
         initialize-schema: true
 
-    # 禁用OpenAI自动配置（保留依赖但不自动创建Bean）
+    # OpenAI 兼容端点坐标（仅保留依赖与占位 key，不自动创建 Bean）
     openai:
-      api-key: dummy-key  # 提供dummy值避免自动配置报错
-      chat:
-        enabled: false
-      embedding:
-        enabled: false
-      audio:
-        speech:
-          enabled: false
-        transcription:
-          enabled: false
-      image:
-        enabled: false
+      api-key: dummy-key  # 占位值，避免自动配置做非空校验时抛错
 
-    # MCP Client 配置 - 模型上下文协议客户端
+    # MCP 配置 - 模型上下文协议
     mcp:
       client:
         # 禁用 MCP Client 工具回调自动配置
         # 原因: 我们使用自定义的McpToolConfig来处理本地@McpTool注解的工具
         # 避免与自动配置的mcpToolCallbacks Bean冲突
         toolcallback:
+          enabled: false
+      server:
+        # 禁用 MCP Server 的注解扫描器（2.0.1 默认为 true）
+        # 原因: 框架扫描器会把同一批 26 个 @McpTool 再注册一遍到 MCP Server 端点，
+        #       且它不剔除 tenantCode/staffId 参数（只有 McpToolCallbackAdapter 会剔），
+        #       与 McpToolConfig 手工注册并存属于双注册 + 参数外泄面。
+        # 依据: reviewer-ai 评审 HIGH-5（2026-10-28）
+        annotation-scanner:
           enabled: false
 
 logging:

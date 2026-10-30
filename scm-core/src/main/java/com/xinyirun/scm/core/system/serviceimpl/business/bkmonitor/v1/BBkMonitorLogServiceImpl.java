@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.bkmonitor.v1;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.bkmonitor.BBkMonitorLogEntity;
 import com.xinyirun.scm.bean.system.vo.business.bkmonitor.v1.BBkMonitorVo;
 import com.xinyirun.scm.core.system.mapper.business.bkmonitor.v1.BBkMonitorLogMapper;

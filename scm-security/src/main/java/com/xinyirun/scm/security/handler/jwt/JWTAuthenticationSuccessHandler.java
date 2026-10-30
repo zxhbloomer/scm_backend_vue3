@@ -1,6 +1,7 @@
 package com.xinyirun.scm.security.handler.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.xinyirun.scm.bean.app.bo.jwt.user.AppJwtBaseBo;
 import com.xinyirun.scm.bean.system.result.utils.v1.ResultUtil;
 import com.xinyirun.scm.bean.system.vo.master.user.MUserVo;

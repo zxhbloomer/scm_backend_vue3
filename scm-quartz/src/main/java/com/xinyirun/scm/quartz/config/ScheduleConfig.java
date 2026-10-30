@@ -4,8 +4,7 @@ import com.xinyirun.scm.quartz.config.listener.SystemJobListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
+import org.springframework.boot.quartz.autoconfigure.SchedulerFactoryBeanCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -27,13 +26,18 @@ import java.util.Properties;
 public class ScheduleConfig {
 
 
+    /**
+     * Boot 4 起 Druid 的自动配置在本项目条件下不生效（spring.datasource.type 为
+     * DruidXADataSource，不等于 DruidDataSource），因此 Boot 的 DataSourceProperties
+     * 不再是可用 bean。Quartz 直接复用容器里已有的数据源（dynamic-datasource 的
+     * 主数据源，默认路由到 master），不再自行新建连接池。
+     */
     @Autowired
-    private DataSourceProperties dataSourceProperties;
+    private DataSource dataSource;
 
     @Order(1)
     @Bean
     public SchedulerFactoryBeanCustomizer schedulerFactoryBeanCustomizer() {
-        DataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().build();
         return schedulerFactoryBean -> {
             schedulerFactoryBean.setDataSource(dataSource);
             schedulerFactoryBean.setTransactionManager(new DataSourceTransactionManager(dataSource));

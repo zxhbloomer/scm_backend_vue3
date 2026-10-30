@@ -1,6 +1,6 @@
 package com.xinyirun.scm.ai.core.service.rag;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.ai.bean.entity.rag.AiKnowledgeBaseGraphSegmentEntity;
 import com.xinyirun.scm.ai.core.mapper.rag.AiKnowledgeBaseGraphSegmentMapper;
 import lombok.extern.slf4j.Slf4j;

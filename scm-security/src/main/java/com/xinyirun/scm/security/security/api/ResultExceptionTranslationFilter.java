@@ -1,6 +1,7 @@
 package com.xinyirun.scm.security.security.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.xinyirun.scm.bean.system.result.utils.v1.ApiResultUtil;
 import com.xinyirun.scm.common.enums.api.ApiResultEnum;
 import com.xinyirun.scm.common.exception.api.ApiAuthException;
@@ -29,7 +30,7 @@ public class ResultExceptionTranslationFilter extends GenericFilterBean {
         } catch (ApiAuthException ex){
             response.setContentType("application/json; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = JsonMapper.builder().build();
             response.getWriter().write(objectMapper.writeValueAsString(
                             ApiResultUtil.NG(
                                     ex.getEnumData(),
@@ -40,7 +41,7 @@ public class ResultExceptionTranslationFilter extends GenericFilterBean {
         } catch (Exception ex) {
             response.setContentType("application/json; charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = JsonMapper.builder().build();
 //            response.getWriter().println(JsonUtil.toJson(Response.of(ex)));
             response.getWriter().write(objectMapper.writeValueAsString(
                             ApiResultUtil.NG(

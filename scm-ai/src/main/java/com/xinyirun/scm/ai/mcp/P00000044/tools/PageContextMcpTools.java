@@ -1,10 +1,11 @@
 package com.xinyirun.scm.ai.mcp.P00000044.tools;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springaicommunity.mcp.annotation.McpTool;
-import org.springaicommunity.mcp.annotation.McpToolParam;
+import org.springframework.ai.mcp.annotation.McpTool;
+import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import java.util.Map;
 @Component
 public class PageContextMcpTools {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = JsonMapper.builder().build();
 
     /**
      * 获取用户当前所在页面的上下文信息
@@ -84,7 +85,7 @@ public class PageContextMcpTools {
 
             try {
                 return objectMapper.writeValueAsString(result);
-            } catch (JsonProcessingException jsonEx) {
+            } catch (JacksonException jsonEx) {
                 return "{\"success\":false,\"message\":\"JSON序列化失败\"}";
             }
         }

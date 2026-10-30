@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.system.serviceimpl.sys.unit;
 
 import com.xinyirun.scm.bean.entity.sys.unit.SUnitEntity;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.system.vo.master.goods.MUnitVo;
 import com.xinyirun.scm.bean.system.vo.sys.unit.SUnitVo;
 import com.xinyirun.scm.core.system.mapper.sys.unit.SUnitMapper;

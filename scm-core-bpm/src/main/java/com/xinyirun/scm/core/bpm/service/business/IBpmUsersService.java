@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.bpm.service.business;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.bpm.BpmUsersEntity;
 import com.xinyirun.scm.bean.entity.master.user.MStaffEntity;
 import com.xinyirun.scm.bean.entity.master.user.MUserEntity;

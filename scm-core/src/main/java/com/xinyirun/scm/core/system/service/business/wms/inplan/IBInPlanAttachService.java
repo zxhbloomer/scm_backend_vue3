@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.business.wms.inplan;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.business.wms.inplan.BInPlanAttachEntity;
 
 /**

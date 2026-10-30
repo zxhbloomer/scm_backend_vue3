@@ -1,7 +1,8 @@
 package com.xinyirun.scm.security.security.sso;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,8 +29,7 @@ public class SsoLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+        ObjectMapper objectMapper = JsonMapper.builder().configure(StreamReadFeature.AUTO_CLOSE_SOURCE, true).build();
         Map<String, String> authenticationBean = objectMapper.readValue(request.getInputStream(), Map.class);
 
         String username = authenticationBean.get("username");

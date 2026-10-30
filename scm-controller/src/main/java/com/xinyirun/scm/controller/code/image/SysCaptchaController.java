@@ -5,11 +5,10 @@ import com.xinyirun.scm.framework.base.controller.system.v1.SystemBaseController
 import com.xinyirun.scm.security.code.ValidateCodeGenerator;
 import com.xinyirun.scm.security.code.img.ImageCode;
 import com.xinyirun.scm.security.code.sms.SmsCodeSender;
+import com.xinyirun.scm.security.code.ScmSessionStrategy;
 // import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
-import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +31,7 @@ import java.io.IOException;
 // @Api(tags = "图片验证码（支持算术形式）")
 public class SysCaptchaController extends SystemBaseController {
 
-    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+    private final ScmSessionStrategy sessionStrategy = new ScmSessionStrategy();
 
     @Autowired
     private ValidateCodeGenerator imageCodeGenerator;

@@ -1,7 +1,7 @@
 package com.xinyirun.scm.core.api.serviceimpl.base.v1;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.core.api.service.base.v1.ApiIBaseService;
 
 /**

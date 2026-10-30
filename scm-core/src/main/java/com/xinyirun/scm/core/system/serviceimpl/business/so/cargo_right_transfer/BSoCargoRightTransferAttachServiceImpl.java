@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.so.cargo_right_transfer;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.so.cargo_right_transfer.BSoCargoRightTransferAttachEntity;
 import com.xinyirun.scm.core.system.mapper.business.so.cargo_right_transfer.BSoCargoRightTransferAttachMapper;
 import com.xinyirun.scm.core.system.service.business.so.cargo_right_transfer.IBSoCargoRightTransferAttachService;

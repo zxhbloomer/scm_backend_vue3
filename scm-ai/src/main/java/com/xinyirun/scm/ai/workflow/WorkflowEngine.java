@@ -1,6 +1,6 @@
 package com.xinyirun.scm.ai.workflow;
 
-import com.alibaba.cloud.ai.graph.exception.GraphStateException;
+import io.github.agentic.ai.graph.exception.GraphStateException;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.xinyirun.scm.ai.bean.entity.workflow.*;
@@ -22,12 +22,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.Disposable;
 
-import com.alibaba.cloud.ai.graph.*;
-import com.alibaba.cloud.ai.graph.action.AsyncMultiCommandAction;
-import com.alibaba.cloud.ai.graph.action.AsyncEdgeAction;
-import com.alibaba.cloud.ai.graph.state.strategy.ReplaceStrategy;
-import static com.alibaba.cloud.ai.graph.StateGraph.END;
-import static com.alibaba.cloud.ai.graph.StateGraph.START;
+import io.github.agentic.ai.graph.*;
+import io.github.agentic.ai.graph.action.AsyncMultiCommandAction;
+import io.github.agentic.ai.graph.action.AsyncEdgeAction;
+import io.github.agentic.ai.graph.state.strategy.ReplaceStrategy;
+import static io.github.agentic.ai.graph.StateGraph.END;
+import static io.github.agentic.ai.graph.StateGraph.START;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -692,7 +692,7 @@ public class WorkflowEngine {
             // 检查resultValue，如果是InterruptionMetadata则处理中断
             if (graphResponse.resultValue().isPresent()) {
                 Object result = graphResponse.resultValue().get();
-                if (result instanceof com.alibaba.cloud.ai.graph.action.InterruptionMetadata) {
+                if (result instanceof io.github.agentic.ai.graph.action.InterruptionMetadata) {
                     // 人机交互中断，需要发送等待事件
                     log.debug("检测到人机交互中断信号");
                     return handleInterruption(graphResponse);
@@ -795,7 +795,7 @@ public class WorkflowEngine {
         String nextInterruptNode = null;
         if (graphResponse.resultValue().isPresent()) {
             Object result = graphResponse.resultValue().get();
-            if (result instanceof com.alibaba.cloud.ai.graph.action.InterruptionMetadata interruptionMeta) {
+            if (result instanceof io.github.agentic.ai.graph.action.InterruptionMetadata interruptionMeta) {
                 String metaNode = interruptionMeta.node();
                 log.info("从InterruptionMetadata获取节点: {}", metaNode);
                 // interruptsBefore语义：metaNode是已完成节点，真正的中断节点是其出边中的HumanFeedback节点

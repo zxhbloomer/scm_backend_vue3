@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.bpm.service.base.v1;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.api.bo.steel.ApiInPlanResultBo;
 import com.xinyirun.scm.bean.api.bo.steel.ApiOutPlanResultBo;
 import com.xinyirun.scm.bean.api.vo.sync.ApiDeliveryPlanIdCodeVo;

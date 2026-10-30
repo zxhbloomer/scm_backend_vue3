@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.bpm.BpmInstanceSummaryEntity;
 import com.xinyirun.scm.bean.entity.business.wms.in.BInAttachEntity;
 import com.xinyirun.scm.bean.entity.business.wms.in.BInEntity;

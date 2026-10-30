@@ -1,6 +1,6 @@
 package com.xinyirun.scm.framework.config.resttemplate;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.xinyirun.scm.common.utils.json.ScmJsonMapperFactory;
 import com.xinyirun.scm.framework.config.messageconverter.CallbackMappingJackson2HttpMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -11,7 +11,6 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -53,11 +52,10 @@ public class RestTemplateConfiguration {
             /*if(converter instanceof GsonHttpMessageConverter || converter instanceof MappingJackson2HttpMessageConverter){
                 iterator.remove();
             }*/
-            if (converter instanceof MappingJackson2HttpMessageConverter) {
-                ((MappingJackson2HttpMessageConverter) converter).getObjectMapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);;
-            }
         }
-        CallbackMappingJackson2HttpMessageConverter fastJsonConvert = new CallbackMappingJackson2HttpMessageConverter();
+        // 出站复用与入站同一套日期口径（yyyy-MM-dd HH:mm:ss），避免调用第三方时日期格式漂移
+        CallbackMappingJackson2HttpMessageConverter fastJsonConvert =
+                new CallbackMappingJackson2HttpMessageConverter(ScmJsonMapperFactory.mvcMapper());
         List<MediaType> supportMediaTypeList = new ArrayList<>();
         supportMediaTypeList.add(MediaType.APPLICATION_JSON);
 //        supportMediaTypeList.add(MediaType.APPLICATION_JSON_UTF8);

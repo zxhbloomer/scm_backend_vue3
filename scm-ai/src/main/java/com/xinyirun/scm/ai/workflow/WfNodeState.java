@@ -5,7 +5,7 @@ import com.xinyirun.scm.common.utils.UuidUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import com.alibaba.cloud.ai.graph.OverAllState;
+import io.github.agentic.ai.graph.OverAllState;
 
 import java.io.Serial;
 import java.io.Serializable;

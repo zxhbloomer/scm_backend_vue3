@@ -28,21 +28,17 @@ public class DataCol implements Serializable {
     /**
      * 列名
      */
-    @JSONField
     private String name;
     /**
      * 列号
      */
-    @JSONField
     private int index;
 
     /**
      * 转换类
      */
-    @JSONField
     private String convertor;
 
-    @JSONField
     private List<ValidatorBean> listValidators;
 
     /**

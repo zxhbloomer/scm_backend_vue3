@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.master.rbac.permission.role;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.sys.rbac.role.MRolePositionEntity;
 
 import java.util.List;

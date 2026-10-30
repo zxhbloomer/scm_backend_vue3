@@ -1,7 +1,7 @@
 package com.xinyirun.scm.quartz.serviceimpl.tenant;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.quartz.SJobEntity;
 import com.xinyirun.scm.quartz.mapper.tenant.SJobQuartzMapper;
 import com.xinyirun.scm.quartz.service.tenant.ISJobQuartzService;

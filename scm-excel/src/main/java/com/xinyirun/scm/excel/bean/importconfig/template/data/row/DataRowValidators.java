@@ -1,6 +1,5 @@
 package com.xinyirun.scm.excel.bean.importconfig.template.data.row;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import com.xinyirun.scm.excel.bean.importconfig.template.validator.ValidatorBean;
 import lombok.*;
 
@@ -20,6 +19,5 @@ public class DataRowValidators implements Serializable {
     /**
      * 行级check
      */
-    @JSONField
     private List<ValidatorBean> listValidators;
 }

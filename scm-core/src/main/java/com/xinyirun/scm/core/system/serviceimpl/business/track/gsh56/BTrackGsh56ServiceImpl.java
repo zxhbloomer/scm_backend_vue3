@@ -2,7 +2,7 @@ package com.xinyirun.scm.core.system.serviceimpl.business.track.gsh56;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 //import com.xinyirun.scm.bean.app.vo.master.vehicle.AppMVehicleVo;
 import com.xinyirun.scm.bean.entity.business.track.BTrackGsh56Entity;
 import com.xinyirun.scm.bean.system.vo.business.track.*;

@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.base.v1.common.total;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.po.ap.BApSourceAdvanceEntity;
 import com.xinyirun.scm.bean.entity.business.po.ap.BApTotalEntity;
 import com.xinyirun.scm.bean.entity.business.wms.inplan.BInPlanDetailEntity;

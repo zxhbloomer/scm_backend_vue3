@@ -1,18 +1,22 @@
 package com.xinyirun.scm.ai.config;
 
+import com.openai.client.OpenAIClient;
 import com.xinyirun.scm.ai.bean.vo.config.AiModelConfigVo;
 import com.xinyirun.scm.ai.core.service.config.AiModelConfigService;
 import com.xinyirun.scm.common.utils.datasource.DataSourceHelper;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.ai.openai.setup.OpenAiSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,6 +69,17 @@ public class AiModelProvider {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    /**
+     * OpenAI 客户端默认超时时间
+     */
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(60);
+
+    /**
+     * 观测注册表（可选注入；缺失时使用 NOOP，不影响独立使用场景）
+     */
+    @Autowired(required = false)
+    private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
 
     /**
      * 租户级ChatModel缓存（默认模型）
@@ -196,21 +211,37 @@ public class AiModelProvider {
      * @return ChatModel实例
      */
     private ChatModel buildChatModel(AiModelConfigVo config) {
-        // 使用 OpenAI 兼容 API 创建 ChatModel
-        // 大部分 AI provider（SiliconFlow、DeepSeek、Moonshot、智谱AI等）都兼容 OpenAI API
-        OpenAiApi openAiApi = OpenAiApi.builder()
-            .apiKey(config.getApiKey())
-            .baseUrl(config.getBaseUrl())
-            .build();
+        // Spring AI 2.0.1 起：OpenAI 兼容端点不再使用 OpenAiApi，
+        // 改为官方 OpenAI SDK 的 OpenAIClient（由 OpenAiSetup 统一构建）。
+        // 大部分 AI provider（SiliconFlow、DeepSeek、Moonshot、智谱AI等）都兼容 OpenAI API。
+        OpenAIClient openAiClient = OpenAiSetup.setupSyncClient(
+            config.getBaseUrl(),      // baseUrl
+            config.getApiKey(),       // apiKey
+            null,                     // credential（非 Azure 场景走 apiKey）
+            null,                     // azureDeploymentName
+            null,                     // azureOpenAIServiceVersion
+            null,                     // organizationId
+            false,                    // isAzure
+            false,                    // isGitHubModels
+            config.getModelName(),    // modelName
+            DEFAULT_TIMEOUT,          // timeout
+            3,                        // maxRetries
+            null,                     // proxy
+            null,                     // customHeaders
+            observationRegistry,      // observationRegistry
+            null,                     // meterRegistry
+            List.of()                 // httpClientCustomizers
+        );
+
+        OpenAiChatOptions.Builder optionsBuilder = OpenAiChatOptions.builder();
+        optionsBuilder.model(config.getModelName())
+            .temperature(config.getTemperature().doubleValue())
+            .maxTokens(config.getMaxTokens())
+            .topP(config.getTopP().doubleValue());
 
         return OpenAiChatModel.builder()
-            .openAiApi(openAiApi)
-            .defaultOptions(OpenAiChatOptions.builder()
-                .model(config.getModelName())
-                .temperature(config.getTemperature().doubleValue())
-                .maxTokens(config.getMaxTokens())
-                .topP(config.getTopP().doubleValue())
-                .build())
+            .openAiClient(openAiClient)
+            .options(optionsBuilder.build())
             .build();
     }
 

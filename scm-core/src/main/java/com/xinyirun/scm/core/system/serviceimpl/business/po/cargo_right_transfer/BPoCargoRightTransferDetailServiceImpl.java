@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.po.cargo_right_transfer;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.po.cargo_right_transfer.BPoCargoRightTransferDetailEntity;
 import com.xinyirun.scm.bean.system.vo.business.po.cargo_right_transfer.BPoCargoRightTransferDetailVo;
 import com.xinyirun.scm.core.system.mapper.business.po.cargo_right_transfer.BPoCargoRightTransferDetailMapper;

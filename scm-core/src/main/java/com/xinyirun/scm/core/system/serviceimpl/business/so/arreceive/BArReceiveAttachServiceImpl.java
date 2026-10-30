@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.business.so.arreceive;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.business.so.arreceive.BArReceiveAttachEntity;
 import com.xinyirun.scm.core.system.mapper.business.so.arreceive.BArReceiveAttachMapper;
 import com.xinyirun.scm.core.system.service.business.so.arreceive.IBArReceiveAttachService;

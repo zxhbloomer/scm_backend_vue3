@@ -70,7 +70,7 @@ public class ScmWorkflowMessageChatMemory implements ChatMemory {
 
             List<Message> messages = contents.stream()
                     .map(conversationContent -> {
-                        MessageType type = MessageType.fromValue(conversationContent.getType());
+                        MessageType type = MessageTypeSupport.fromValue(conversationContent.getType());
                         String content = conversationContent.getContent();
                         return switch (type) {
                             case USER -> new UserMessage(content);

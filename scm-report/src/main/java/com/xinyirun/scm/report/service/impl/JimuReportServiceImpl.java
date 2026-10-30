@@ -1,6 +1,6 @@
 package com.xinyirun.scm.report.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.report.entity.JimuReport;
 import com.xinyirun.scm.report.mapper.JimuReportMapper;
 import com.xinyirun.scm.report.service.JimuReportService;

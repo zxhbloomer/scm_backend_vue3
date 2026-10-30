@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.sys.workbench;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.sys.workbench.SSysWorkbenchEntity;
 import com.xinyirun.scm.bean.system.vo.workbench.BpmMatterVo;
 import com.xinyirun.scm.bean.system.vo.workbench.BpmNoticeVo;

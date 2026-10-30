@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.master.org;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.master.org.MOrgCompanyDeptEntity;
 import com.xinyirun.scm.core.system.mapper.master.org.MOrgCompanyDeptMapper;
 import com.xinyirun.scm.core.system.service.master.org.IMOrgCompanyDeptService;

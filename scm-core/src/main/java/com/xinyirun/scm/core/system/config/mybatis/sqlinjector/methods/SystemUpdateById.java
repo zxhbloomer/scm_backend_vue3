@@ -27,7 +27,7 @@ public class SystemUpdateById extends UpdateById {
         boolean logicDelete = tableInfo.isLogicDelete();
         SqlMethod sqlMethod = SqlMethod.UPDATE_BY_ID;
         final String additional = optlockVersion(tableInfo) + tableInfo.getLogicDeleteSql(true, false);
-        String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
+        String sql = sqlMethod.format(tableInfo.getTableName(),
             sqlSet(logicDelete, false, tableInfo, false, ENTITY, ENTITY_DOT),
             tableInfo.getKeyColumn(), ENTITY_DOT + tableInfo.getKeyProperty(), additional);
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);

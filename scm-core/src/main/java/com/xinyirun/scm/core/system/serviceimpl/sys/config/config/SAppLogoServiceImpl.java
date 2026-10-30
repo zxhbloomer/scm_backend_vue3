@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.serviceimpl.sys.config.config;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.sys.config.config.SAppLogoEntity;
 import com.xinyirun.scm.core.system.mapper.sys.app.SAppLogoMapper;
 import com.xinyirun.scm.core.system.service.sys.config.config.ISAppLogoService;

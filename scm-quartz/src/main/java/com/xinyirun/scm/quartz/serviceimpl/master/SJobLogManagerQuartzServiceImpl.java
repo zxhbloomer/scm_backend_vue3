@@ -1,7 +1,7 @@
 package com.xinyirun.scm.quartz.serviceimpl.master;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.tenant.manager.quartz.SJobLogManagerEntity;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.bo.tenant.manager.quartz.SJobLogManagerBo;

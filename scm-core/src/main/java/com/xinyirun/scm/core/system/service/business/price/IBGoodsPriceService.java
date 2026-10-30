@@ -1,6 +1,6 @@
 package com.xinyirun.scm.core.system.service.business.price;
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.api.vo.business.price.ApiGoodsPriceVo;
 import com.xinyirun.scm.bean.entity.business.price.BGoodsPriceEntity;
 

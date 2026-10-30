@@ -2,8 +2,8 @@ package com.xinyirun.scm.ai.mcp.P00000025.tools;
 
 import com.xinyirun.scm.ai.mcp.P00000025.service.LocationAiService;
 import lombok.extern.slf4j.Slf4j;
-import org.springaicommunity.mcp.annotation.McpTool;
-import org.springaicommunity.mcp.annotation.McpToolParam;
+import org.springframework.ai.mcp.annotation.McpTool;
+import org.springframework.ai.mcp.annotation.McpToolParam;
 import com.xinyirun.scm.common.utils.datasource.DataSourceHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

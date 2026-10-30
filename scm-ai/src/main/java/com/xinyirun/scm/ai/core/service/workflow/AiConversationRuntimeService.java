@@ -2,7 +2,7 @@ package com.xinyirun.scm.ai.core.service.workflow;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.ai.bean.entity.workflow.AiConversationRuntimeEntity;
 import com.xinyirun.scm.ai.bean.entity.workflow.AiWorkflowEntity;
 import com.xinyirun.scm.ai.bean.vo.workflow.AiConversationRuntimeVo;

@@ -1,8 +1,9 @@
 package com.xinyirun.scm.core.bpm.utils.bpm;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.util.ast.Document;
@@ -439,7 +440,7 @@ public class MarkDownNotice {
      */
     private static String parseSummaryJson(String jsonStr) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = JsonMapper.builder().build();
             Map<String, String> map = mapper.readValue(jsonStr,  new TypeReference<Map<String, String>>() {});
 
             StringBuilder md = new StringBuilder("\n#### 审批摘要信息 \n");
@@ -449,7 +450,7 @@ public class MarkDownNotice {
             });
             return md.toString();
 
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             return "\n#### 审批摘要信息 \n（数据格式异常）";
         }
     }
