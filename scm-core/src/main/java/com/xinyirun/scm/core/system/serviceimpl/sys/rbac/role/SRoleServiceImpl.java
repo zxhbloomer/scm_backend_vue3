@@ -146,7 +146,8 @@ public class SRoleServiceImpl extends BaseServiceImpl<SRoleMapper, SRoleEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE, allEntries=true)
+    @CacheEvict(value = {SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE,
+        SystemConstants.CACHE_PC.CACHE_USER_PERMISSION}, allEntries=true)
     public void deleteByIdsIn(List<SRoleVo> searchCondition) {
         List<SRoleEntity> list = sRoleMapper.selectIdsIn(searchCondition);
         list.forEach(

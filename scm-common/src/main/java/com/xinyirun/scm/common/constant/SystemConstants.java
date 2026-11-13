@@ -372,6 +372,8 @@ public class SystemConstants  {
 
         /**菜单查询权限*/
         public static final String CACHE_SYSTEM_MENU_SEARCH_TYPE = "CACHE_SYSTEM_MENU_SEARCH_TYPE";
+        /** 用户权限数据：当前员工可用的路由、菜单节点、按钮操作权限 */
+        public static final String CACHE_USER_PERMISSION = "CACHE_USER_PERMISSION";
         /** 菜单查询 历史记录 */
         public static final String CACHE_SYSTEM_MENU_SEARCH_HISTORY = "CACHE_SYSTEM_MENU_SEARCH_HISTORY";
         /** 组织统计 */

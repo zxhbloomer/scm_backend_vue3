@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xinyirun.scm.bean.entity.master.rbac.permission.MPermissionRoleEntity;
 import com.xinyirun.scm.core.system.mapper.master.rbac.permission.MPermissionRoleMapper;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.IMPermissionRoleService;
+import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class MPermissionRoleServiceImpl extends BaseServiceImpl<MPermissionRoleM
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public boolean saveRolePermissions(Long roleId, List<Integer> permissionIds) {
         if (roleId == null) {
             throw new IllegalArgumentException("角色ID不能为空");

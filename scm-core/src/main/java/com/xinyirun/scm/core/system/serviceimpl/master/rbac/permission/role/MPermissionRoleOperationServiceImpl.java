@@ -206,7 +206,8 @@ public class MPermissionRoleOperationServiceImpl extends BaseServiceImpl<MPermis
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE, allEntries=true)
+    @CacheEvict(value = {SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE,
+        SystemConstants.CACHE_PC.CACHE_USER_PERMISSION}, allEntries=true)
     public boolean savePermission(MPermissionMenuOperationVo condition) {
         // 获取菜单权限数据
         List<MPermissionMenuVo> menu_data = condition.getMenu_data();

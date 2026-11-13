@@ -175,7 +175,8 @@ public class MPermissionServiceImpl extends BaseServiceImpl<MPermissionMapper, M
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE, allEntries=true)
+    @CacheEvict(value = {SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE,
+        SystemConstants.CACHE_PC.CACHE_USER_PERMISSION}, allEntries=true)
     public void deleteByIdsIn(List<MPermissionVo> searchCondition) {
         // 提取权限ID列表
         List<Long> permissionIds = searchCondition.stream()
@@ -259,6 +260,7 @@ public class MPermissionServiceImpl extends BaseServiceImpl<MPermissionMapper, M
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public void refresh(MPermissionVo mPermissionVo) {
         // 查询旧数据
         List<MPermissionMenuVo> originalPermissionMenuVos = mapper.selectPermissionMenu(mPermissionVo.getId());

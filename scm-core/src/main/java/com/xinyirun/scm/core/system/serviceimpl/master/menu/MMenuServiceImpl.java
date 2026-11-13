@@ -189,6 +189,7 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public InsertResultAo<MMenuDataVo> addMenuGroup(MMenuDataVo vo) {
 
         MMenuEntity entity = (MMenuEntity)BeanUtilsSupport.copyProperties(vo, MMenuEntity.class);
@@ -238,6 +239,7 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public InsertResultAo<MMenuDataVo> addTopNav(MMenuDataVo vo) {
         MMenuEntity entity = (MMenuEntity)BeanUtilsSupport.copyProperties(vo, MMenuEntity.class);
         entity.setVisible(false);
@@ -287,6 +289,7 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public InsertResultAo<MMenuDataVo> addSubNode(MMenuDataVo vo) {
 
         MMenuEntity entity = (MMenuEntity)BeanUtilsSupport.copyProperties(vo, MMenuEntity.class);
@@ -349,6 +352,7 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public InsertResultAo<MMenuDataVo> addSubMenu(MMenuDataVo vo) {
 
         MMenuEntity entity = (MMenuEntity)BeanUtilsSupport.copyProperties(vo, MMenuEntity.class);
@@ -408,6 +412,7 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public UpdateResultAo<MMenuDataVo> update(MMenuEntity entity) {
         switch (entity.getType()) {
             case DictConstant.DICT_SYS_MENU_TYPE_TOPNAV:
@@ -442,7 +447,8 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE, allEntries=true)
+    @CacheEvict(value = {SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE,
+        SystemConstants.CACHE_PC.CACHE_USER_PERMISSION}, allEntries=true)
     public DeleteResultAo<String> realDeleteByCode(MMenuDataVo searchCondition) {
         // 删除菜单时需要判断是否存在重定向，如果存在，需要先删除重定向数据
         delRedirect(searchCondition);
@@ -511,7 +517,8 @@ public class MMenuServiceImpl extends BaseServiceImpl<MMenuMapper, MMenuEntity> 
      * @return
      */
     @Override
-    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE, allEntries=true)
+    @CacheEvict(value = {SystemConstants.CACHE_PC.CACHE_SYSTEM_MENU_SEARCH_TYPE,
+        SystemConstants.CACHE_PC.CACHE_USER_PERMISSION}, allEntries=true)
     public Boolean dragsave(List<MMenuDataVo> beans) {
         List<MMenuEntity> entities = new ArrayList<>();
         int code = 0;

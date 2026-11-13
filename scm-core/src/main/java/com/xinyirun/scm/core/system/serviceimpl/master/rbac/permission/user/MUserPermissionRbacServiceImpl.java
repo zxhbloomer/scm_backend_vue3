@@ -12,6 +12,7 @@ import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.common.exception.system.BusinessException;
 import com.xinyirun.scm.core.system.mapper.master.menu.MMenuMapper;
 import com.xinyirun.scm.core.system.mapper.master.rbac.permission.user.MUserPermissionRbacMapper;
+import com.xinyirun.scm.core.system.service.master.rbac.permission.user.IMUserPermissionRbacCacheService;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.user.IMUserPermissionRbacService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class MUserPermissionRbacServiceImpl implements IMUserPermissionRbacServi
     @Autowired
     private MMenuMapper mMenuMapper;
 
+    @Autowired
+    private IMUserPermissionRbacCacheService userPermissionRbacCacheService;
+
     /**
      * 菜单权限数据，操作权限数据，顶部导航栏数据
      */
@@ -56,15 +60,15 @@ public class MUserPermissionRbacServiceImpl implements IMUserPermissionRbacServi
         permissionAndTopNavBo.setUser_permission_menu(permissionMenuBoList);
 
         /** 获取所有nodes的id，为页面上展开所有的菜单服务 */
-        List<String> allNodesId = getAllNodesId(menu_root_id);
+        List<String> allNodesId = userPermissionRbacCacheService.getAllNodesId(menu_root_id);
         permissionAndTopNavBo.setNodes_id(allNodesId.toArray(new String[allNodesId.size()]));
 
         /** 获取所有路由数据 */
-        List<PermissionMenuBo> all_routers = getAllRoutersBean(staff_id, menu_root_id);
+        List<PermissionMenuBo> all_routers = userPermissionRbacCacheService.getAllRouters(staff_id, menu_root_id);
         permissionAndTopNavBo.setAll_routers(all_routers);
 
         /** 获取操作权限数据 */
-        List<PermissionOperationBo> permissionOperationBoList = getPermissionOperation(staff_id);
+        List<PermissionOperationBo> permissionOperationBoList = userPermissionRbacCacheService.getPermissionOperation(staff_id);
         permissionAndTopNavBo.setUser_permission_operation(permissionOperationBoList);
 
         /** 获取redirect数据 */
@@ -75,24 +79,6 @@ public class MUserPermissionRbacServiceImpl implements IMUserPermissionRbacServi
         permissionAndTopNavBo.setStaff_id(SecurityUtil.getStaff_id());
 
         return permissionAndTopNavBo;
-    }
-
-    /**
-     * 获取所有路由数据
-     * @param menu_root_id
-     * @return
-     */
-    private List<PermissionMenuBo> getAllRoutersBean(Long staff_id, Long menu_root_id){
-        return mapper.getAllRouters(staff_id, menu_root_id);
-    }
-
-    /**
-     * 获取所有nodes的id，为页面上展开所有的菜单服务
-     * @param menu_root_id
-     * @return
-     */
-    private List<String> getAllNodesId(Long menu_root_id){
-        return mapper.getAllNodesId(menu_root_id);
     }
 
     /**
@@ -230,9 +216,8 @@ public class MUserPermissionRbacServiceImpl implements IMUserPermissionRbacServi
      */
     @Override
     public List<PermissionOperationBo> getPermissionOperation(Long staff_id) {
-        /** 获取操作权限数据 */
-        List<PermissionOperationBo> list = mapper.getPermissionOperation(staff_id);
-        return list;
+        /** 按钮操作权限码改走缓存组件，避免同一份数据出现「一条路径缓存、一条路径不缓存」 */
+        return userPermissionRbacCacheService.getPermissionOperation(staff_id);
     }
 
     /**

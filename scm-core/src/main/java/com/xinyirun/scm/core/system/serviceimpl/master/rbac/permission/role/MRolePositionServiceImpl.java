@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xinyirun.scm.bean.entity.sys.rbac.role.MRolePositionEntity;
 import com.xinyirun.scm.core.system.mapper.master.rbac.permission.role.MRolePositionMapper;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.role.IMRolePositionService;
+import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class MRolePositionServiceImpl extends BaseServiceImpl<MRolePositionMappe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public boolean savePositionRoles(Long positionId, List<Integer> roleIds) {
         if (positionId == null) {
             throw new IllegalArgumentException("岗位ID不能为空");

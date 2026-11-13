@@ -5,6 +5,7 @@ package com.xinyirun.scm.bean.system.bo.session.user.rbac;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 // @ApiModel(value = "权限页面操作表", description = "权限页面操作表")
 @EqualsAndHashCode(callSuper=false)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionOperationBo implements Serializable {
 
     private static final long serialVersionUID = 8300448389297059639L;

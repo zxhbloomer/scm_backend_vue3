@@ -45,6 +45,7 @@ import com.xinyirun.scm.core.system.mapper.sys.file.SFileInfoMapper;
 import com.xinyirun.scm.core.system.mapper.sys.file.SFileMapper;
 import com.xinyirun.scm.core.system.service.client.user.IMUserLiteService;
 import com.xinyirun.scm.core.system.service.master.org.IMOrgService;
+import com.xinyirun.scm.core.system.service.master.rbac.permission.user.IMUserPermissionRbacCacheService;
 import com.xinyirun.scm.core.system.service.master.user.IMStaffService;
 import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
 import com.xinyirun.scm.core.system.serviceimpl.common.autocode.MStaffAutoCodeServiceImpl;
@@ -87,6 +88,9 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
 
     @Autowired
     private MStaffOrgMapper mStaffOrgMapper;
+
+    @Autowired
+    private IMUserPermissionRbacCacheService userPermissionRbacCacheService;
 
     @Autowired
     private MOrgMapper mOrgMapper;
@@ -475,6 +479,8 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
             deptStaffEntity.setSerial_type(DictConstant.DICT_ORG_SETTING_TYPE_DEPT_SERIAL_TYPE);
             mStaffOrgMapper.insert(deptStaffEntity);
         }
+        // 员工所属企业与部门变了，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
 
     /**
@@ -502,6 +508,8 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
                 }
             }
         }
+        // 岗位关系变了，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
 
     /**
@@ -1162,6 +1170,8 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
             log.info("取消员工岗位关系，员工ID：{}，岗位ID：{}，删除记录数：{}", 
                     searchCondition.getId(), searchCondition.getPosition_id(), canceledCount);
         }
+        // 岗位关系变了，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
 
     /**
@@ -1320,6 +1330,8 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
             .filter(id -> id != null)  // 过滤null值
             .collect(Collectors.toList());
         syncAffectedStaffDefaultValues(affectedStaffIds);
+        // 员工的岗位关联被删除，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
 
     @Override
@@ -1385,6 +1397,8 @@ public class MStaffServiceImpl extends BaseServiceImpl<MStaffMapper, MStaffEntit
         // 由于逻辑删除员工已清空默认值，不需要重新同步
         // 注意：deleteByIdsFromOrg是逻辑删除，已经清空了company_id和dept_id
         log.info("逻辑删除完成，共处理员工数量：{}", staffList.size());
+        // 员工已从组织删除，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
     
     /**

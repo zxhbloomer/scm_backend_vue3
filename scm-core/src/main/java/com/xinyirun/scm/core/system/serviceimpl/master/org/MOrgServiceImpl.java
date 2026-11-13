@@ -39,6 +39,7 @@ import com.xinyirun.scm.core.system.mapper.master.org.MOrgMapper;
 import com.xinyirun.scm.core.system.mapper.master.org.MStaffOrgMapper;
 import com.xinyirun.scm.core.system.service.common.ICommonComponentService;
 import com.xinyirun.scm.core.system.service.master.org.IMOrgService;
+import com.xinyirun.scm.core.system.service.master.rbac.permission.user.IMUserPermissionRbacCacheService;
 import com.xinyirun.scm.core.system.service.master.user.IMStaffService;
 import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
 import com.xinyirun.scm.core.system.serviceimpl.log.operate.SLogOperServiceImpl;
@@ -105,6 +106,9 @@ public class MOrgServiceImpl extends BaseServiceImpl<MOrgMapper, MOrgEntity> imp
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private IMUserPermissionRbacCacheService userPermissionRbacCacheService;
 
     @Autowired
     public MOrgServiceImpl(@Lazy MOrgServiceImpl self) {
@@ -1037,6 +1041,9 @@ public class MOrgServiceImpl extends BaseServiceImpl<MOrgMapper, MOrgEntity> imp
         
         // 同步员工默认值
         mStaffService.syncAffectedStaffDefaultValues(Collections.singletonList(staffId));
+
+        // 岗位关系变了，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
     }
 
     /**
@@ -1213,6 +1220,9 @@ public class MOrgServiceImpl extends BaseServiceImpl<MOrgMapper, MOrgEntity> imp
 
         // 清理所有组织架构相关缓存（员工关系变更影响统计）
         clearAllOrgCaches();
+
+        // 员工岗位关系变了，菜单与按钮权限跟着变
+        userPermissionRbacCacheService.clearUserPermissionCache();
 
         // 同步受影响员工的默认值
         List<Long> affectedStaffIds = new ArrayList<>();
@@ -1517,6 +1527,10 @@ public class MOrgServiceImpl extends BaseServiceImpl<MOrgMapper, MOrgEntity> imp
             
             int deletedCount = mStaffOrgMapper.delete(deleteWrapper);
             log.info("删除员工组织关联关系完成，员工ID: {}，删除记录数: {}", staffId, deletedCount);
+
+            // 岗位关系被清空，菜单与按钮权限跟着变
+            userPermissionRbacCacheService.clearUserPermissionCache();
+
             
         } catch (Exception e) {
             log.error("删除员工组织关联关系失败，员工ID: {}，错误: {}", staffId, e.getMessage(), e);

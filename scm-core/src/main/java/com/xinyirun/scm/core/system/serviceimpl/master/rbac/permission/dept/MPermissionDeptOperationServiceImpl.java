@@ -22,8 +22,10 @@ import com.xinyirun.scm.core.system.service.master.rbac.permission.IMPermissionM
 import com.xinyirun.scm.core.system.service.master.rbac.permission.IMPermissionOperationService;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.IMPermissionService;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.dept.IMPermissionDeptOperationService;
+import com.xinyirun.scm.common.constant.SystemConstants;
 import com.xinyirun.scm.core.system.serviceimpl.base.v1.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -207,6 +209,7 @@ public class MPermissionDeptOperationServiceImpl extends BaseServiceImpl<MPermis
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
+    @CacheEvict(value = SystemConstants.CACHE_PC.CACHE_USER_PERMISSION, allEntries=true)
     public boolean savePermission(MPermissionMenuOperationVo condition) {
         // 获取菜单权限数据
         List<MPermissionMenuVo> menu_data = condition.getMenu_data();
