@@ -137,10 +137,13 @@ public interface SDictTypeMapper extends BaseMapper<SDictTypeEntity> {
 
     /**
      * 全部导出
-     * @param searchCondition
-     * @return
+     *
+     * 编码、名称、启用状态三个条件都是传了才参与过滤，与列表用同一套条件。
+     *
+     * @param searchCondition 查询条件
+     * @return 导出用的字典类型数据
      */
-    @Select("    "
+    @Select("   <script>   "
             + " select t.name,                                                                                          "
             + "        t.code,                                                                                          "
             + "        t.descr,                                                                                         "
@@ -150,10 +153,29 @@ public interface SDictTypeMapper extends BaseMapper<SDictTypeEntity> {
             + "   from s_dict_type t "
             + "   ,(select @row_num:=0) t3                                              "
             + "  where true "
-            + "    and (t.code like CONCAT ('%',#{p1.code,jdbcType=VARCHAR},'%') or #{p1.code,jdbcType=VARCHAR} is null) "
-            + "    and (t.name like CONCAT ('%',#{p1.name,jdbcType=VARCHAR},'%') or #{p1.name,jdbcType=VARCHAR} is null) "
-            + "    and (t.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-            + "      ")
+            + "        <if test='p1.code != null and p1.code.length() > 0'> and t.code like CONCAT('%', #{p1.code}, '%') </if> "
+            + "        <if test='p1.name != null and p1.name.length() > 0'> and t.name like CONCAT('%', #{p1.name}, '%') </if> "
+            + "        <if test='p1.is_del != null'> and t.is_del = #{p1.is_del} </if> "
+            + "  </script>    ")
     List<SDictTypeExportVo> selectAllExport(@Param("p1") SDictTypeVo searchCondition);
 
+    /**
+     * 按查询条件取导出用的主表数据
+     *
+     * 与列表用同一套筛选条件，排序按更新时间倒序，与列表默认顺序一致。
+     *
+     * @param searchCondition 查询条件
+     * @return 字典类型数据
+     */
+    @Select("   <script>   "
+            + " select t.id, t.code, t.name, t.descr, t.is_del, t.u_time, ms.name as u_name "
+            + "   from s_dict_type t "
+            + "   left join m_staff ms on ms.id = t.u_id "
+            + "  where true "
+            + "        <if test='p1.code != null and p1.code.length() > 0'> and t.code like CONCAT('%', #{p1.code}, '%') </if> "
+            + "        <if test='p1.name != null and p1.name.length() > 0'> and t.name like CONCAT('%', #{p1.name}, '%') </if> "
+            + "        <if test='p1.is_del != null'> and t.is_del = #{p1.is_del} </if> "
+            + "  order by t.u_time desc, t.id desc "
+            + "  </script>    ")
+    List<SDictTypeVo> selectForExport(@Param("p1") SDictTypeVo searchCondition);
 }

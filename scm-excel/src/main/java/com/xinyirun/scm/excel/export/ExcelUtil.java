@@ -638,4 +638,114 @@ public class ExcelUtil<T> {
         }
         return val;
     }
+
+    /**
+     * 按调用方给出的表头与行数据写出一个或多个工作表，并推给浏览器下载
+     *
+     * 与按注解反射导出不同，这里的列由调用方决定：表头文字与每一行的取值都在运行时给定，
+     * 适用于用户在弹窗里勾选列、调整列顺序的场景，列顺序就是表头数组的顺序。
+     * 文件写完后交给浏览器下载，临时文件在下载结束时删除。
+     *
+     * @param exportFileName 下载的文件名，不带后缀
+     * @param sheetNames 每个工作表的名字，数量与表头、数据行保持一致
+     * @param headers 每个工作表的表头
+     * @param sheetRows 每个工作表的数据行，每行的值按表头顺序给出，可以为空
+     * @param response 响应对象
+     */
+    public static void writeSheets(String exportFileName, List<String> sheetNames,
+                                   List<List<String>> headers, List<List<List<Object>>> sheetRows,
+                                   HttpServletResponse response) throws IOException {
+        if (sheetNames.size() != headers.size() || sheetNames.size() != sheetRows.size()) {
+            throw new IllegalArgumentException("工作表名称、表头与数据行的数量必须一致");
+        }
+        Workbook workbook = new SXSSFWorkbook(500);
+        try {
+            CellStyle headStyle = createPlainHeadStyle(workbook);
+            CellStyle bodyStyle = createPlainBodyStyle(workbook);
+            for (int i = 0; i < sheetNames.size(); i++) {
+                List<String> header = headers.get(i);
+                List<List<Object>> rows = sheetRows.get(i);
+                // 一列都没有的表不建工作表，免得导出一个空白页签
+                if (header == null || header.isEmpty()) {
+                    continue;
+                }
+                Sheet sheet = workbook.createSheet(sheetNames.get(i));
+
+                Row headRow = sheet.createRow(0);
+                for (int column = 0; column < header.size(); column++) {
+                    Cell cell = headRow.createCell(column);
+                    cell.setCellValue(header.get(column));
+                    cell.setCellStyle(headStyle);
+                    // 列宽按表头长度估算，最短 12 个字符、最长 40 个字符，避免出现挤在一起或过宽的列
+                    int width = Math.min(Math.max(header.get(column).length() * 2 + 6, 12), 40);
+                    sheet.setColumnWidth(column, width * 256);
+                }
+                for (int r = 0; r < rows.size(); r++) {
+                    Row row = sheet.createRow(r + 1);
+                    List<Object> values = rows.get(r);
+                    for (int column = 0; column < values.size(); column++) {
+                        Cell cell = row.createCell(column);
+                        Object value = values.get(column);
+                        // 数字仍按数字写进单元格，用 Excel 打开后可以直接求和、排序；其余按文本
+                        if (value instanceof Number) {
+                            cell.setCellValue(((Number) value).doubleValue());
+                        } else if (value instanceof Boolean) {
+                            cell.setCellValue((Boolean) value);
+                        } else {
+                            cell.setCellValue(value == null ? "" : String.valueOf(value));
+                        }
+                        cell.setCellStyle(bodyStyle);
+                    }
+                }
+            }
+            File tempFile = TempFile.createTempFile(UUID.randomUUID().toString() + exportFileName, SystemConstants.XLSX_SUFFIX);
+            tempFile.deleteOnExit();
+            try (OutputStream out = new FileOutputStream(tempFile.getAbsolutePath())) {
+                workbook.write(out);
+            }
+            // 下载结束时由下载方法删除临时文件
+            CommonUtil.download(tempFile.getAbsolutePath(), exportFileName, response);
+        } finally {
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                log.error("导出结束后关闭工作簿失败", e);
+            }
+        }
+    }
+
+    /**
+     * 导出用的表头样式：浅灰底、居中、加粗、四周细边框
+     */
+    private static CellStyle createPlainHeadStyle(Workbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        Font font = workbook.createFont();
+        font.setFontName("微软雅黑");
+        font.setBold(true);
+        cellStyle.setFont(font);
+        return cellStyle;
+    }
+
+    /**
+     * 导出用的数据样式：左对齐、自动换行、四周细边框
+     */
+    private static CellStyle createPlainBodyStyle(Workbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.LEFT);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setWrapText(true);
+        return cellStyle;
+    }
 }

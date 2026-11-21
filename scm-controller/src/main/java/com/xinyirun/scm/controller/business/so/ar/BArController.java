@@ -1,7 +1,7 @@
 package com.xinyirun.scm.controller.business.so.ar;
 
-import cn.idev.excel.EasyExcel;
-import cn.idev.excel.write.metadata.WriteSheet;
+import org.apache.fesod.sheet.EasyExcel;
+import org.apache.fesod.sheet.write.metadata.WriteSheet;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xinyirun.scm.bean.system.ao.result.CheckResultAo;

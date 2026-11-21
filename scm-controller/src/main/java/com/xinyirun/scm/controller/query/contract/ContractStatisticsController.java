@@ -1,7 +1,7 @@
 package com.xinyirun.scm.controller.query.contract;
 
-import cn.idev.excel.EasyExcel;
-import cn.idev.excel.write.metadata.WriteSheet;
+import org.apache.fesod.sheet.EasyExcel;
+import org.apache.fesod.sheet.write.metadata.WriteSheet;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xinyirun.scm.bean.system.ao.result.JsonResultAo;
 import com.xinyirun.scm.bean.system.result.utils.v1.ResultUtil;

@@ -56,7 +56,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.jdk>${java.version}</project.build.jdk>
         <project.build.springbootversion>4.1.2</project.build.springbootversion>
-        <poi.version>5.2.4</poi.version>
+        <poi.version>5.5.1</poi.version>
         <fastjson.version>2.0.66</fastjson.version>
         <mybatis-plus.version>3.5.18</mybatis-plus.version>
         <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
@@ -236,11 +236,11 @@
                 <artifactId>fastjson2-extension-spring6</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-            <!--阿里巴巴 excel-->
+            <!--Apache fesod，原 EasyExcel 的 Apache 分支 -->
             <dependency>
-                <groupId>cn.idev.excel</groupId>
-                <artifactId>fastexcel</artifactId>
-                <version>1.2.0</version>
+                <groupId>org.apache.fesod</groupId>
+                <artifactId>fesod-sheet</artifactId>
+                <version>2.1.0-incubating</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -403,7 +403,7 @@
             <dependency>
                 <groupId>org.apache.xmlbeans</groupId>
                 <artifactId>xmlbeans</artifactId>
-                <version>5.2.0</version>
+                <version>5.3.0</version>
             </dependency>
             <!-- csv -->
             <dependency>

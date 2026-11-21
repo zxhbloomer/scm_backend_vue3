@@ -1,9 +1,9 @@
 package com.xinyirun.scm.bean.system.vo.business.po.aprefund;
 
-import cn.idev.excel.annotation.ExcelIgnore;
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.format.DateTimeFormat;
-import cn.idev.excel.annotation.write.style.ColumnWidth;
+import org.apache.fesod.sheet.annotation.ExcelIgnore;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.format.DateTimeFormat;
+import org.apache.fesod.sheet.annotation.write.style.ColumnWidth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

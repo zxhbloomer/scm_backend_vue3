@@ -1,12 +1,12 @@
 package com.xinyirun.scm.excel.config;
 
-import cn.idev.excel.enums.CellDataTypeEnum;
-import cn.idev.excel.metadata.Head;
-import cn.idev.excel.metadata.data.CellData;
-import cn.idev.excel.metadata.data.WriteCellData;
-import cn.idev.excel.write.metadata.holder.WriteSheetHolder;
-import cn.idev.excel.write.style.column.AbstractColumnWidthStyleStrategy;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.fesod.sheet.enums.CellDataTypeEnum;
+import org.apache.fesod.sheet.metadata.Head;
+import org.apache.fesod.sheet.metadata.data.CellData;
+import org.apache.fesod.sheet.metadata.data.WriteCellData;
+import org.apache.fesod.sheet.write.metadata.holder.WriteSheetHolder;
+import org.apache.fesod.sheet.write.style.column.AbstractColumnWidthStyleStrategy;
 import org.apache.poi.ss.usermodel.Cell;
 import java.util.HashMap;
 import java.util.List;

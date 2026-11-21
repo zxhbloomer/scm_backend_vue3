@@ -99,14 +99,14 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param searchCondition
      * @return
      */
-    @Select("    "
+            @Select("    <script>    "
         + common_select
         + "  where true "
-        + "    and (t2.code like CONCAT ('%',#{p1.dictTypeCode,jdbcType=VARCHAR},'%') or #{p1.dictTypeCode,jdbcType=VARCHAR} is null) "
-        + "    and (t2.name like CONCAT ('%',#{p1.dictTypeName,jdbcType=VARCHAR},'%') or #{p1.dictTypeName,jdbcType=VARCHAR} is null) "
-        + "    and (t1.label like CONCAT ('%',#{p1.label,jdbcType=VARCHAR},'%') or #{p1.label,jdbcType=VARCHAR} is null) "
-        + "    and (t1.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-        + "      ")
+        + "        <if test='p1.dictTypeCode != null and p1.dictTypeCode.length() > 0'> and t2.code like CONCAT('%', #{p1.dictTypeCode}, '%') </if> "
+        + "        <if test='p1.dictTypeName != null and p1.dictTypeName.length() > 0'> and t2.name like CONCAT('%', #{p1.dictTypeName}, '%') </if> "
+        + "        <if test='p1.label != null and p1.label.length() > 0'> and t1.label like CONCAT('%', #{p1.label}, '%') </if> "
+        + "        <if test='p1.is_del != null'> and t1.is_del = #{p1.is_del} </if> "
+        + "  </script>    ")
     IPage<SDictDataVo> selectPage(Page page, @Param("p1") SDictDataVo searchCondition );
 
     /**
@@ -114,14 +114,14 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param searchCondition
      * @return
      */
-    @Select("    "
+        @Select("    <script>    "
         + common_select
         + "  where true "
-        + "    and (t2.code like CONCAT ('%',#{p1.dictTypeCode,jdbcType=VARCHAR},'%') or #{p1.dictTypeCode,jdbcType=VARCHAR} is null) "
-        + "    and (t2.name like CONCAT ('%',#{p1.dictTypeName,jdbcType=VARCHAR},'%') or #{p1.dictTypeName,jdbcType=VARCHAR} is null) "
-        + "    and (t1.label like CONCAT ('%',#{p1.label,jdbcType=VARCHAR},'%') or #{p1.label,jdbcType=VARCHAR} is null) "
-        + "    and (t2.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-        + "      ")
+        + "        <if test='p1.dictTypeCode != null and p1.dictTypeCode.length() > 0'> and t2.code like CONCAT('%', #{p1.dictTypeCode}, '%') </if> "
+        + "        <if test='p1.dictTypeName != null and p1.dictTypeName.length() > 0'> and t2.name like CONCAT('%', #{p1.dictTypeName}, '%') </if> "
+        + "        <if test='p1.label != null and p1.label.length() > 0'> and t1.label like CONCAT('%', #{p1.label}, '%') </if> "
+        + "        <if test='p1.is_del != null'> and t2.is_del = #{p1.is_del} </if> "
+        + "  </script>    ")
     List<SDictDataVo> select(@Param("p1") SDictDataVo searchCondition );
 
     /**
@@ -143,14 +143,14 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param dict_value
      * @return
      */
-    @Select("    "
+            @Select("    <script>    "
         + " select t.* "
         + "   from s_dict_data t "
         + "  where true "
         + "    and t.dict_value =  #{p1}  "
         + "    and t.dict_type_id =  #{p2}  "
-        + "    and (t.id  <>  #{p3} or #{p3} is null)   "
-        + "      ")
+        + "        <if test='p3 != null'> and t.id != #{p3} </if> "
+        + "  </script>    ")
     List<SDictDataEntity> selectByDictValue(@Param("p1") String dict_value, @Param("p2") Long dict_type_id, @Param("p3") Long equal_id);
 
     /**
@@ -158,14 +158,14 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param label
      * @return
      */
-    @Select("    "
+        @Select("    <script>    "
         + " select t.* "
         + "   from s_dict_data t "
         + "  where true "
         + "    and t.label =  #{p1}                    "
         + "    and t.dict_type_id =  #{p2}             "
-        + "    and (t.id  =  #{p3} or #{p3} is null)   "
-        + "      ")
+        + "        <if test='p3 != null'> and t.id  =  #{p3} </if> "
+        + "  </script>    ")
     List<SDictDataEntity> selectByLabel(@Param("p1") String label, @Param("p2") Long dict_type_id, @Param("p3") Long equal_id);
 
     /**
@@ -196,15 +196,16 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param searchCondition
      * @return
      */
-    @Select("    "
+            @Select("    <script>    "
             + common_select
             + "  where true "
-            + "    and (t2.code like CONCAT ('%',#{p1.dictTypeCode,jdbcType=VARCHAR},'%') or #{p1.dictTypeCode,jdbcType=VARCHAR} is null) "
-            + "    and (t2.name like CONCAT ('%',#{p1.dictTypeName,jdbcType=VARCHAR},'%') or #{p1.dictTypeName,jdbcType=VARCHAR} is null) "
-            + "    and (t1.dict_value = #{p1.table_name,jdbcType=VARCHAR} or #{p1.table_name,jdbcType=VARCHAR} is null) "
-            + "    and (t2.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-            + "    and (t2.code = '" + DictConstant.DICT_SYS_TABLE_TYPE + "') "
-            + "   order by t1.sort             ")
+            + "        <if test='p1.dictTypeCode != null and p1.dictTypeCode.length() > 0'> and t2.code like CONCAT('%', #{p1.dictTypeCode}, '%') </if> "
+            + "        <if test='p1.dictTypeName != null and p1.dictTypeName.length() > 0'> and t2.name like CONCAT('%', #{p1.dictTypeName}, '%') </if> "
+            + "        <if test='p1.table_name != null and p1.table_name.length() > 0'> and t1.dict_value = #{p1.table_name} </if> "
+            + "        <if test='p1.is_del != null'> and t2.is_del = #{p1.is_del} </if> "
+            + "        and (t2.code = '" + DictConstant.DICT_SYS_TABLE_TYPE + "') "
+            + "  order by t1.sort "
+            + "  </script>    ")
     List<SDictDataVo> selectColumnComment(@Param("p1") SDictDataVo searchCondition );
 
     /**
@@ -226,14 +227,14 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @param searchCondition
      * @return
      */
-    @Select("    "
+        @Select("    <script>    "
             + common_select_export
             + "  where true "
-            + "    and (t2.code like CONCAT ('%',#{p1.dictTypeCode,jdbcType=VARCHAR},'%') or #{p1.dictTypeCode,jdbcType=VARCHAR} is null) "
-            + "    and (t2.name like CONCAT ('%',#{p1.dictTypeName,jdbcType=VARCHAR},'%') or #{p1.dictTypeName,jdbcType=VARCHAR} is null) "
-            + "    and (t1.label like CONCAT ('%',#{p1.label,jdbcType=VARCHAR},'%') or #{p1.label,jdbcType=VARCHAR} is null) "
-            + "    and (t2.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-            + "      ")
+            + "        <if test='p1.dictTypeCode != null and p1.dictTypeCode.length() > 0'> and t2.code like CONCAT('%', #{p1.dictTypeCode}, '%') </if> "
+            + "        <if test='p1.dictTypeName != null and p1.dictTypeName.length() > 0'> and t2.name like CONCAT('%', #{p1.dictTypeName}, '%') </if> "
+            + "        <if test='p1.label != null and p1.label.length() > 0'> and t1.label like CONCAT('%', #{p1.label}, '%') </if> "
+            + "        <if test='p1.is_del != null'> and t2.is_del = #{p1.is_del} </if> "
+            + "  </script>    ")
     List<SDictDataExportVo> selectAllExport(@Param("p1") SDictDataVo searchCondition);
 
     @Select("    "
@@ -280,6 +281,7 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
     /**
      * 按字典类型 id 批量取明细，供列表一次取回当页所有字典类型下的键值
      *
+     * 带上说明与更新时间，导出时按勾选的字段直接取用；
      * 不过滤删除标记，已停用的键值也要带给页面，由页面决定怎么显示；按字典类型与排序号排列，
      * 页面拿到的顺序就是字典自身定义的顺序。
      *
@@ -287,7 +289,7 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
      * @return 明细，每行带所属字典类型 id
      */
     @Select("   <script>   "
-        + " select t.dict_type_id, t.dict_value, t.label, t.is_del, t.sort "
+        + " select t.dict_type_id, t.dict_value, t.label, t.descr, t.is_del, t.sort, t.u_time "
         + "   from s_dict_data t "
         + "  where t.dict_type_id in "
         + "        <foreach collection='p1' item='item' open='(' separator=',' close=')'>    "

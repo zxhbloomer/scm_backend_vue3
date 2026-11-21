@@ -1,10 +1,10 @@
 package com.xinyirun.scm.bean.system.vo.business.pp;
 
-import cn.idev.excel.annotation.ExcelIgnore;
-import cn.idev.excel.annotation.ExcelIgnoreUnannotated;
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.format.DateTimeFormat;
-import cn.idev.excel.annotation.write.style.ColumnWidth;
+import org.apache.fesod.sheet.annotation.ExcelIgnore;
+import org.apache.fesod.sheet.annotation.ExcelIgnoreUnannotated;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.format.DateTimeFormat;
+import org.apache.fesod.sheet.annotation.write.style.ColumnWidth;
 import com.xinyirun.scm.bean.system.config.base.BaseVo;
 import com.xinyirun.scm.bean.system.vo.common.condition.PageCondition;
 import lombok.AllArgsConstructor;

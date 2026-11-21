@@ -271,4 +271,30 @@ public class SPagesServiceImpl extends ServiceImpl<SPagesMapper, SPagesEntity> i
         }
         return mapper.selectExportList(searchCondition);
     }
+
+    /**
+     * 取某个页面设置里的一支配置
+     *
+     * @param code 页面编码
+     * @param jsonPath 读取时传完整路径，形如 .pop.dicttypeExport
+     * @return 这一支配置的 json 文本，没有时返回 null
+     */
+    @Override
+    public String selectSettingJson(String code, String jsonPath) {
+        return mapper.selectSettingJsonByCode(code, jsonPath);
+    }
+
+    /**
+     * 写入某个页面设置里的一支配置
+     *
+     * @param code 页面编码
+     * @param jsonPath 写入时传 pop 下面的一级相对路径，形如 .dicttypeExport；读取时可以用完整路径，形如 .pop.dicttypeExport
+     * @param jsonValue 这一支的 json 文本
+     * @return 更新行数
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int saveSettingJson(String code, String jsonPath, String jsonValue) {
+        return mapper.updateSettingJsonByCode(code, jsonPath, jsonValue);
+    }
 }

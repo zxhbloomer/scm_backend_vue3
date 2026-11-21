@@ -4,8 +4,8 @@ package com.xinyirun.scm.bean.system.vo.business.wms.inventory;
  * @author Wang Qianfeng
  * @date 2022/8/31 15:35
  */
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.write.style.ColumnWidth;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.write.style.ColumnWidth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

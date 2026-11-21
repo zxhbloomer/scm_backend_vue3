@@ -1,7 +1,7 @@
 package com.xinyirun.scm.excel.merge;
 
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.format.NumberFormat;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.format.NumberFormat;
 import com.xinyirun.scm.excel.export.EasyExcelUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -115,7 +115,7 @@ public class ProjectMergeStrategyTest {
                 excelUtil.withMergeStrategy(mergeStrategy);
                 
                 // 构建EasyExcel写入器并导出
-                var writerBuilder = cn.idev.excel.EasyExcel.write(fileOutputStream, ProjectTestData.class)
+                var writerBuilder = org.apache.fesod.sheet.EasyExcel.write(fileOutputStream, ProjectTestData.class)
                         .registerWriteHandler(mergeStrategy)
                         .registerWriteHandler(EasyExcelUtil.getStyleStrategy())
                         .registerWriteHandler(new EasyExcelUtil.FinalMergeHandler(mergeStrategy));
@@ -161,7 +161,7 @@ public class ProjectMergeStrategyTest {
             
             // 导出测试
             try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
-                var writerBuilder = cn.idev.excel.EasyExcel.write(fileOutputStream, ProjectTestData.class)
+                var writerBuilder = org.apache.fesod.sheet.EasyExcel.write(fileOutputStream, ProjectTestData.class)
                         .registerWriteHandler(mergeStrategy)
                         .registerWriteHandler(EasyExcelUtil.getStyleStrategy())
                         .registerWriteHandler(new EasyExcelUtil.FinalMergeHandler(mergeStrategy));

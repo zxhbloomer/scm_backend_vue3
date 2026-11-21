@@ -1,8 +1,8 @@
 package com.xinyirun.scm.bean.system.vo.business.project;
 
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.format.DateTimeFormat;
-import cn.idev.excel.annotation.format.NumberFormat;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.format.DateTimeFormat;
+import org.apache.fesod.sheet.annotation.format.NumberFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

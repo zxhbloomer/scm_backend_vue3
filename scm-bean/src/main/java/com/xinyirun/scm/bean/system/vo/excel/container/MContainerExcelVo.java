@@ -1,7 +1,7 @@
 package com.xinyirun.scm.bean.system.vo.excel.container;
 
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.write.style.ColumnWidth;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.write.style.ColumnWidth;
 import lombok.Data;
 
 import java.time.LocalDateTime;

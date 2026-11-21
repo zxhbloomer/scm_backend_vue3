@@ -116,4 +116,25 @@ public interface ISPagesService extends IService<SPagesEntity> {
      * @return
      */
     List<SPagesExportVo> selectExportList(SPagesVo searchCondition);
+
+    /**
+     * 取某个页面设置里的一支配置
+     *
+     * @param code 页面编码
+     * @param jsonPath 配置在 setting_json 里的位置，形如 .pop.dicttypeExport
+     * @return 这一支配置的 json 文本，没有时返回 null
+     */
+    String selectSettingJson(String code, String jsonPath);
+
+    /**
+     * 写入某个页面设置里的一支配置
+     *
+     * 只覆盖指定的这一支，同页面的其它设置不受影响。
+     *
+     * @param code 页面编码
+     * @param jsonPath 配置在 setting_json 里的位置，形如 .pop.dicttypeExport
+     * @param jsonValue 这一支的 json 文本
+     * @return 更新行数
+     */
+    int saveSettingJson(String code, String jsonPath, String jsonValue);
 }

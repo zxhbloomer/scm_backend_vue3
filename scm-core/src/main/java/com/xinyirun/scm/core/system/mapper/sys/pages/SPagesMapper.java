@@ -52,6 +52,42 @@ public interface SPagesMapper extends BaseMapper<SPagesEntity> {
     IPage<SPagesVo> selectPage(Page page, @Param("p1") SPagesVo searchCondition);
 
     /**
+     * 取某个页面设置里的一支配置
+     *
+     * setting_json 整列存的是这个页面所有个性设置的集合，这里只取其中一支，
+     * 例如 .pop.dicttypeExport。整列为空时按空对象取，取不到就返回 null。
+     *
+     * @param code 页面编码
+     * @param jsonPath 配置在 setting_json 里的位置，形如 .pop.dicttypeExport
+     * @return 这一支配置的 json 文本，没有时返回 null
+     */
+    @Select("                                                                                       "
+        + "  select JSON_UNQUOTE(JSON_EXTRACT(coalesce(setting_json, JSON_OBJECT()), CONCAT('$', #{p2}))) "
+        + "    from s_pages                                                                        "
+        + "   where code = #{p1}                                                                   "
+        + "   limit 1                                                                              ")
+    String selectSettingJsonByCode(@Param("p1") String code, @Param("p2") String jsonPath);
+
+    /**
+     * 写入某个页面设置里的一支配置
+     *
+     * 整列为空时先按空对象处理，只覆盖指定的这一支，同页面的其它设置不受影响。
+     *
+     * @param code 页面编码
+     * @param jsonPath 配置在 setting_json 中 pop 下面的一级键，形如 .dicttypeExport
+     *                 多级路径在赋值时不会自动创建中间的 pop 一层，所以外层单独写一次。
+     * @param jsonValue 这一支的 json 文本
+     * @return 更新行数
+     */
+    @Update("                                                                                                        "
+        + "  update s_pages                                                                                    "
+        + "     set setting_json = JSON_SET(coalesce(setting_json, JSON_OBJECT()), '$.pop',                     "
+        + "                         JSON_SET(coalesce(JSON_EXTRACT(setting_json, '$.pop'), JSON_OBJECT()),       "
+        + "                                  CONCAT('$', #{p2}), CAST(#{p3} AS JSON)))                         "
+        + "   where code = #{p1}                                                                               ")
+    int updateSettingJsonByCode(@Param("p1") String code, @Param("p2") String jsonPath, @Param("p3") String jsonValue);
+
+    /**
      * 根据code获取明细
      * @param searchCondition
      * @return

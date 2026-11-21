@@ -1,6 +1,7 @@
 package com.xinyirun.scm.bean.system.vo.sys.config.dict;
 
 import com.xinyirun.scm.bean.system.ao.fs.UploadFileResultAo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xinyirun.scm.bean.system.vo.common.condition.PageCondition;
 
 // import io.swagger.annotations.ApiModel;
@@ -74,6 +75,13 @@ public class SDictTypeVo extends UploadFileResultAo implements Serializable {
      * 最后修改人的姓名，来自员工表的姓名列，只在列表展示时使用，不对应字典类型表的字段
      */
     private String u_name;
+
+    /**
+     * 导出弹窗上次的偏好设置
+     * 只在读取导出弹窗初始值时返回，为空时不参与接口出参
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private SDictTypeSettingVo setting;
 
     /**
      * 换页条件

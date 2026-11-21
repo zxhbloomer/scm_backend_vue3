@@ -261,6 +261,17 @@ public class SDictTypeServiceImpl extends BaseServiceImpl<SDictTypeMapper, SDict
     }
 
     /**
+     * 按查询条件取导出用的主表数据
+     *
+     * @param searchCondition 查询条件
+     * @return 字典类型数据，每行带出未删除的键值条数
+     */
+    @Override
+    public List<SDictTypeVo> selectForExport(SDictTypeVo searchCondition) {
+        return mapper.selectForExport(searchCondition);
+    }
+
+    /**
      * 查询字典类型当前已经进缓存的编码。
      *
      * 一个缓存项在存储里的键由三段组成：缓存名、当前租户的数据源名、字典类型编码。

@@ -1,8 +1,8 @@
 package com.xinyirun.scm.bean.system.vo.clickhouse.monitor.v1;
 
-import cn.idev.excel.annotation.ExcelProperty;
-import cn.idev.excel.annotation.format.DateTimeFormat;
-import cn.idev.excel.annotation.write.style.ColumnWidth;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.format.DateTimeFormat;
+import org.apache.fesod.sheet.annotation.write.style.ColumnWidth;
 import com.xinyirun.scm.common.convert.excel.ValidateVehicleConvertor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

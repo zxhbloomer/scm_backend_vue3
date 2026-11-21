@@ -1,7 +1,7 @@
 package com.xinyirun.scm.excel.export;
 
-import cn.idev.excel.metadata.Head;
-import cn.idev.excel.write.merge.AbstractMergeStrategy;
+import org.apache.fesod.sheet.metadata.Head;
+import org.apache.fesod.sheet.write.merge.AbstractMergeStrategy;
 import com.xinyirun.scm.bean.system.vo.business.wo.BWoExportUtilVo;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

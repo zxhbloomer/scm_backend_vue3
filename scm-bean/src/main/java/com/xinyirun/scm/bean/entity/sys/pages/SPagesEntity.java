@@ -115,6 +115,14 @@ public class SPagesEntity implements Serializable {
     @TableField("page_json")
     private String page_json;
 
+    /**
+     * 页面个性设置-json
+     * 只保存当前操作人自己调整过的界面偏好，例如导出弹窗上次选的导出范围与列。
+     * 未设置过的页面该列为空，读取时按默认值处理。
+     */
+    @TableField("setting_json")
+    private String setting_json;
+
     @TableField("product_daily_processing")
     private String product_daily_processing;
 

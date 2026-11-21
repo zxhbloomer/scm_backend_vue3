@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.xinyirun.scm.bean.entity.master.rbac.permission.MPermissionStaffExcludeEntity;
 import com.xinyirun.scm.core.system.mapper.master.rbac.permission.MPermissionStaffExcludeMapper;
 import com.xinyirun.scm.core.system.service.master.rbac.permission.IMPermissionStaffExcludeService;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

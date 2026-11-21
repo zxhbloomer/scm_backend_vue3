@@ -79,8 +79,8 @@
         </dependency>
         <!--阿里巴巴 excel-->
         <dependency>
-            <groupId>cn.idev.excel</groupId>
-            <artifactId>fastexcel</artifactId>
+            <groupId>org.apache.fesod</groupId>
+            <artifactId>fesod-sheet</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.poi</groupId>

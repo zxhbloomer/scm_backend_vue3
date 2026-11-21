@@ -1,6 +1,6 @@
 package com.xinyirun.scm.bean.system.vo.report.contract;
 
-import cn.idev.excel.annotation.ExcelProperty;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
 import lombok.Builder;
 import lombok.Data;
 

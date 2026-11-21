@@ -105,6 +105,16 @@ public interface ISDictTypeService extends IService<SDictTypeEntity> {
     List<SDictTypeExportVo> selectAllExport(SDictTypeVo searchCondition);
 
     /**
+     * 按查询条件取导出用的主表数据
+     *
+     * 与列表用同一套筛选条件。
+     *
+     * @param searchCondition 查询条件
+     * @return 字典类型数据
+     */
+    List<SDictTypeVo> selectForExport(SDictTypeVo searchCondition);
+
+    /**
      * 查询已经进缓存的字典类型编码
      *
      * @return 已缓存的字典类型编码

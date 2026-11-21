@@ -1,7 +1,7 @@
 package com.xinyirun.scm.excel.merge;
 
-import cn.idev.excel.metadata.Head;
-import cn.idev.excel.write.merge.AbstractMergeStrategy;
+import org.apache.fesod.sheet.metadata.Head;
+import org.apache.fesod.sheet.write.merge.AbstractMergeStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
