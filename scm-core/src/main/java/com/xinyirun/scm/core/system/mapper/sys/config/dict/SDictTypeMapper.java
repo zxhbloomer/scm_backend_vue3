@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xinyirun.scm.bean.entity.sys.config.dict.SDictTypeEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeExportVo;
+import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeStatisticsVo;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -24,34 +25,65 @@ import java.util.List;
 public interface SDictTypeMapper extends BaseMapper<SDictTypeEntity> {
     /**
      * 页面查询列表
-     * @param page
-     * @param searchCondition
-     * @return
+     *
+     * 连接员工表取最后修改人的姓名，让列表可以直接显示是谁改的，不必再单独查一次员工信息。
+     * 编码、名称、启用状态三个条件都是传了才参与过滤，不传就当没有这个条件。
+     *
+     * @param page 分页参数
+     * @param searchCondition 查询条件
+     * @return 分页后的字典类型数据
      */
-    @Select("    "
-        + " select t.* "
+    @Select("   <script>   "
+        + " select t.*, ms.name as u_name "
         + "   from s_dict_type t "
+        + "   left join m_staff ms on ms.id = t.u_id "
         + "  where true "
-        + "    and (t.code like CONCAT ('%',#{p1.code,jdbcType=VARCHAR},'%') or #{p1.code,jdbcType=VARCHAR} is null) "
-        + "    and (t.name like CONCAT ('%',#{p1.name,jdbcType=VARCHAR},'%') or #{p1.name,jdbcType=VARCHAR} is null) "
-        + "    and (t.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-        + "      ")
-    IPage<SDictTypeEntity> selectPage(Page page, @Param("p1") SDictTypeVo searchCondition );
+        + "        <if test=\"p1.code != null and p1.code != ''\"> and t.code like CONCAT('%', #{p1.code}, '%') </if> "
+        + "        <if test=\"p1.name != null and p1.name != ''\"> and t.name like CONCAT('%', #{p1.name}, '%') </if> "
+        + "        <if test=\"p1.is_del != null\"> and t.is_del = #{p1.is_del} </if> "
+        + "  </script>    ")
+    IPage<SDictTypeVo> selectPage(Page page, @Param("p1") SDictTypeVo searchCondition );
 
     /**
      * 按条件获取所有数据，没有分页
-     * @param searchCondition
-     * @return
+     *
+     * 与分页查询用同一套条件，同样带出最后修改人的姓名。
+     *
+     * @param searchCondition 查询条件
+     * @return 字典类型数据
      */
-    @Select("    "
-        + " select t.* "
+    @Select("   <script>   "
+        + " select t.*, ms.name as u_name "
+        + "   from s_dict_type t "
+        + "   left join m_staff ms on ms.id = t.u_id "
+        + "  where true "
+        + "        <if test=\"p1.code != null and p1.code != ''\"> and t.code like CONCAT('%', #{p1.code}, '%') </if> "
+        + "        <if test=\"p1.name != null and p1.name != ''\"> and t.name like CONCAT('%', #{p1.name}, '%') </if> "
+        + "        <if test=\"p1.is_del != null\"> and t.is_del = #{p1.is_del} </if> "
+        + "  </script>    ")
+    List<SDictTypeVo> select(@Param("p1") SDictTypeVo searchCondition );
+
+    /**
+     * 按查询条件统计总条数、正常使用条数、已停用条数
+     *
+     * 编码、名称、启用状态三个条件都是传了才参与过滤，与分页查询用同一套条件，
+     * 这样页面上的统计数字对应当前的查询结果，不会一直是全部数据的汇总。
+     * 一行数据都没有时合计值为 null，用 coalesce 转成零，避免页面显示空白。
+     *
+     * @param searchCondition 查询条件
+     * @return 三个统计数字
+     */
+    @Select("   <script>   "
+        + " select count(*) as total, "
+        + "        coalesce(sum(case when t.is_del = 0 then 1 else 0 end), 0) as normal, "
+        + "        coalesce(sum(case when t.is_del = 1 then 1 else 0 end), 0) as disabled "
         + "   from s_dict_type t "
         + "  where true "
-        + "    and (t.code like CONCAT ('%',#{p1.code,jdbcType=VARCHAR},'%') or #{p1.code,jdbcType=VARCHAR} is null) "
-        + "    and (t.name like CONCAT ('%',#{p1.name,jdbcType=VARCHAR},'%') or #{p1.name,jdbcType=VARCHAR} is null) "
-        + "    and (t.is_del =#{p1.is_del,jdbcType=VARCHAR} or #{p1.is_del,jdbcType=VARCHAR} is null) "
-        + "      ")
-    List<SDictTypeEntity> select(@Param("p1") SDictTypeVo searchCondition );
+        + "        <if test=\"p1.code != null and p1.code != ''\"> and t.code like CONCAT('%', #{p1.code}, '%') </if> "
+        + "        <if test=\"p1.name != null and p1.name != ''\"> and t.name like CONCAT('%', #{p1.name}, '%') </if> "
+        + "        <if test=\"p1.is_del != null\"> and t.is_del = #{p1.is_del} </if> "
+        + "  </script>    ")
+    SDictTypeStatisticsVo selectStatistics(@Param("p1") SDictTypeVo searchCondition );
 
     /**
      * 没有分页，按id筛选条件

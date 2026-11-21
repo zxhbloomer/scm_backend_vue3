@@ -117,4 +117,12 @@ public interface ISDictDataService extends IService<SDictDataEntity> {
      * 根据code和dict_value获取字典数据表信息
      */
     SDictDataVo get(SDictDataVo bean);
+
+    /**
+     * 按字典类型 id 批量取明细，供字典类型列表一次取回当页的键值
+     *
+     * @param dictTypeIds 字典类型 id 集合
+     * @return 明细列表
+     */
+    List<SDictDataVo> selectItemsByDictTypeIds(List<Long> dictTypeIds);
 }

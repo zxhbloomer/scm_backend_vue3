@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xinyirun.scm.bean.entity.sys.config.dict.SDictTypeEntity;
 import com.xinyirun.scm.bean.system.ao.result.JsonResultAo;
 import com.xinyirun.scm.bean.system.result.utils.v1.ResultUtil;
+import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictDataVo;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeExportVo;
+import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeStatisticsVo;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeVo;
 import com.xinyirun.scm.bean.system.vo.sys.rbac.role.SRoleVo;
 import com.xinyirun.scm.common.annotations.RepeatSubmitAnnotion;
@@ -12,6 +14,8 @@ import com.xinyirun.scm.common.annotations.SysLogAnnotion;
 import com.xinyirun.scm.common.enums.ResultEnum;
 import com.xinyirun.scm.common.exception.system.InsertErrorException;
 import com.xinyirun.scm.common.exception.system.UpdateErrorException;
+import com.xinyirun.scm.common.utils.bean.BeanUtilsSupport;
+import com.xinyirun.scm.core.system.service.sys.config.dict.ISDictDataService;
 import com.xinyirun.scm.core.system.service.sys.config.dict.ISDictTypeService;
 import com.xinyirun.scm.excel.export.ExcelUtil;
 import com.xinyirun.scm.excel.upload.SystemExcelReader;
@@ -25,7 +29,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangxh
@@ -38,6 +45,9 @@ public class DictTypeController extends SystemBaseController {
 
     @Autowired
     private ISDictTypeService isDictTypeService;
+
+    @Autowired
+    private ISDictDataService isDictDataService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -58,9 +68,48 @@ public class DictTypeController extends SystemBaseController {
     // @ApiOperation(value = "根据参数id，获取字典主表信息")
     @PostMapping("/list")
     @ResponseBody
-    public ResponseEntity<JsonResultAo<IPage<SDictTypeEntity>>> list(@RequestBody(required = false) SDictTypeVo searchCondition) {
-        IPage<SDictTypeEntity> entity = isDictTypeService.selectPage(searchCondition);
-        return ResponseEntity.ok().body(ResultUtil.OK(entity));
+    public ResponseEntity<JsonResultAo<IPage<SDictTypeVo>>> list(@RequestBody(required = false) SDictTypeVo searchCondition) {
+        IPage<SDictTypeVo> page = isDictTypeService.selectPage(searchCondition);
+        return ResponseEntity.ok().body(ResultUtil.OK(page));
+    }
+
+    @SysLogAnnotion("按编码与名称统计字典类型的数量")
+    // @ApiOperation(value = "统计总数、正常使用数、已停用数")
+    @PostMapping("/statistics")
+    @ResponseBody
+    public ResponseEntity<JsonResultAo<SDictTypeStatisticsVo>> statistics(@RequestBody(required = false) SDictTypeVo searchCondition) {
+        return ResponseEntity.ok().body(ResultUtil.OK(isDictTypeService.selectStatistics(searchCondition)));
+    }
+
+    @SysLogAnnotion("按字典类型 id 批量获取键值明细")
+    // @ApiOperation(value = "批量获取当页字典类型的键值明细")
+    @PostMapping("/items")
+    @ResponseBody
+    public ResponseEntity<JsonResultAo<Map<Long, List<SDictDataVo>>>> items(@RequestBody(required = false) List<Long> dictTypeIds) {
+        List<SDictDataVo> dataList = isDictDataService.selectItemsByDictTypeIds(dictTypeIds);
+        // 页面按字典类型分组渲染，分组在这里一次做完，避免前端再循环一遍
+        Map<Long, List<SDictDataVo>> grouped = new LinkedHashMap<>();
+        for (SDictDataVo item : dataList) {
+            grouped.computeIfAbsent(item.getDict_type_id(), key -> new ArrayList<>()).add(item);
+        }
+        return ResponseEntity.ok().body(ResultUtil.OK(grouped));
+    }
+
+    @SysLogAnnotion("查询已经进缓存的字典类型编码")
+    // @ApiOperation(value = "查询已缓存的字典类型编码")
+    @PostMapping("/cache/status")
+    @ResponseBody
+    public ResponseEntity<JsonResultAo<List<String>>> cacheStatus() {
+        return ResponseEntity.ok().body(ResultUtil.OK(isDictTypeService.selectCachedCodes()));
+    }
+
+    @SysLogAnnotion("清空字典类型缓存")
+    // @ApiOperation(value = "清空字典类型缓存")
+    @PostMapping("/cache/refresh")
+    @ResponseBody
+    @RepeatSubmitAnnotion
+    public ResponseEntity<JsonResultAo<Boolean>> refreshCache() {
+        return ResponseEntity.ok().body(ResultUtil.OK(isDictTypeService.refreshCache()));
     }
 
     @SysLogAnnotion("字典主表数据更新保存")
@@ -68,10 +117,11 @@ public class DictTypeController extends SystemBaseController {
     @PostMapping("/save")
     @ResponseBody
     @RepeatSubmitAnnotion
-    public ResponseEntity<JsonResultAo<SDictTypeEntity>> save(@RequestBody(required = false) SDictTypeEntity bean) {
+    public ResponseEntity<JsonResultAo<SDictTypeVo>> save(@RequestBody(required = false) SDictTypeEntity bean) {
 
         if(isDictTypeService.update(bean).isSuccess()){
-            return ResponseEntity.ok().body(ResultUtil.OK(isDictTypeService.getById(bean.getId()),"更新成功"));
+            SDictTypeVo vo = (SDictTypeVo) BeanUtilsSupport.copyProperties(isDictTypeService.getById(bean.getId()), SDictTypeVo.class);
+            return ResponseEntity.ok().body(ResultUtil.OK(vo,"更新成功"));
         } else {
             throw new UpdateErrorException("保存的数据已经被修改，请查询后重新编辑更新。");
         }
@@ -82,9 +132,10 @@ public class DictTypeController extends SystemBaseController {
     @PostMapping("/insert")
     @ResponseBody
     @RepeatSubmitAnnotion
-    public ResponseEntity<JsonResultAo<SDictTypeEntity>> insert(@RequestBody(required = false) SDictTypeEntity bean) {
+    public ResponseEntity<JsonResultAo<SDictTypeVo>> insert(@RequestBody(required = false) SDictTypeEntity bean) {
         if(isDictTypeService.insert(bean).isSuccess()){
-            return ResponseEntity.ok().body(ResultUtil.OK(isDictTypeService.getById(bean.getId()),"插入成功"));
+            SDictTypeVo vo = (SDictTypeVo) BeanUtilsSupport.copyProperties(isDictTypeService.getById(bean.getId()), SDictTypeVo.class);
+            return ResponseEntity.ok().body(ResultUtil.OK(vo,"插入成功"));
         } else {
             throw new InsertErrorException("新增保存失败。");
         }

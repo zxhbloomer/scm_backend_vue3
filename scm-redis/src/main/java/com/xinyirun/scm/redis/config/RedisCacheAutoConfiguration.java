@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.BatchStrategies;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -57,8 +58,10 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
         RedisSerializationContext.SerializationPair valuePair =
             RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer);
 
-        //以锁写入的方式创建RedisCacheWriter对象
-        RedisCacheWriter writer = RedisCacheWriter.lockingRedisCacheWriter(lettuceConnectionFactory);
+        // 以锁写入的方式创建RedisCacheWriter对象；清空缓存时用游标分批扫描，每批 1000 个键，
+        // 不走会把整个库的键一次取上来的做法，避免键多时长时间占住 Redis。
+        RedisCacheWriter writer = RedisCacheWriter.lockingRedisCacheWriter(
+            lettuceConnectionFactory, BatchStrategies.scan(1000));
 
         int redisCacheExpiredMin = systemConfigProperies.getRedisCacheExpiredMin();
         RedisCacheConfiguration cacheConfiguration =

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xinyirun.scm.bean.entity.sys.config.dict.SDictDataEntity;
-import com.xinyirun.scm.bean.entity.sys.config.dict.SDictTypeEntity;
 import com.xinyirun.scm.bean.system.ao.result.CheckResultAo;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.ao.result.UpdateResultAo;
@@ -53,8 +52,8 @@ public class SDictDataServiceImpl extends BaseServiceImpl<SDictDataMapper, SDict
     @Override
     public IPage<SDictDataVo> selectPage(SDictDataVo searchCondition) {
         // 分页条件
-        Page<SDictTypeEntity> pageCondition =
-            new Page(searchCondition.getPageCondition().getCurrent(), searchCondition.getPageCondition().getSize());
+        Page<SDictDataVo> pageCondition =
+            new Page<>(searchCondition.getPageCondition().getCurrent(), searchCondition.getPageCondition().getSize());
         // 通过page进行排序
         PageUtil.setSort(pageCondition, searchCondition.getPageCondition().getSort());
         return mapper.selectPage(pageCondition, searchCondition);
@@ -401,5 +400,19 @@ public class SDictDataServiceImpl extends BaseServiceImpl<SDictDataMapper, SDict
             return null;
         }
         return mapper.getDetailByCodeAndDictValue(bean.getCode(), bean.getDict_value());
+    }
+
+    /**
+     * 按字典类型 id 批量取明细
+     *
+     * @param dictTypeIds 字典类型 id 集合
+     * @return 明细列表，空集合时直接返回空列表，不去查库
+     */
+    @Override
+    public List<SDictDataVo> selectItemsByDictTypeIds(List<Long> dictTypeIds) {
+        if (dictTypeIds == null || dictTypeIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return mapper.selectItemsByDictTypeIds(dictTypeIds);
     }
 }

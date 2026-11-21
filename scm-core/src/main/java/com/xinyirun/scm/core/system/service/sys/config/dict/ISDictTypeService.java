@@ -6,6 +6,7 @@ import com.xinyirun.scm.bean.entity.sys.config.dict.SDictTypeEntity;
 import com.xinyirun.scm.bean.system.ao.result.InsertResultAo;
 import com.xinyirun.scm.bean.system.ao.result.UpdateResultAo;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeExportVo;
+import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeStatisticsVo;
 import com.xinyirun.scm.bean.system.vo.sys.config.dict.SDictTypeVo;
 
 import java.util.List;
@@ -21,13 +22,29 @@ import java.util.List;
 public interface ISDictTypeService extends IService<SDictTypeEntity> {
     /**
      * 获取列表，页面查询
+     *
+     * 返回值用视图对象承接，实体类只用于新增、修改、删除。
+     *
+     * @param searchCondition 查询条件
+     * @return 分页后的字典类型数据，每行带最后修改人的姓名
      */
-    IPage<SDictTypeEntity> selectPage(SDictTypeVo searchCondition) ;
+    IPage<SDictTypeVo> selectPage(SDictTypeVo searchCondition) ;
 
     /**
      * 获取所有数据
+     *
+     * @param searchCondition 查询条件
+     * @return 字典类型数据，每行带最后修改人的姓名
      */
-    List<SDictTypeEntity> select(SDictTypeVo searchCondition) ;
+    List<SDictTypeVo> select(SDictTypeVo searchCondition) ;
+
+    /**
+     * 统计总条数、正常使用条数、已停用条数
+     *
+     * @param searchCondition 查询条件，只使用编码与名称，不使用启用状态
+     * @return 三个统计数字
+     */
+    SDictTypeStatisticsVo selectStatistics(SDictTypeVo searchCondition);
 
     /**
      * 获取所选id的数据
@@ -86,4 +103,18 @@ public interface ISDictTypeService extends IService<SDictTypeEntity> {
      * @return
      */
     List<SDictTypeExportVo> selectAllExport(SDictTypeVo searchCondition);
+
+    /**
+     * 查询已经进缓存的字典类型编码
+     *
+     * @return 已缓存的字典类型编码
+     */
+    List<String> selectCachedCodes();
+
+    /**
+     * 清空字典类型缓存
+     *
+     * @return 是否清理成功
+     */
+    boolean refreshCache();
 }

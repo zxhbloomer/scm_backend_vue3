@@ -276,4 +276,24 @@ SDictDataMapper extends BaseMapper<SDictDataEntity> {
             + "    and t.is_del = false "
             + "      ")
     SDictDataVo getDetailByCodeAndDictLabel(@Param("code") String code, @Param("label") String label) ;
+
+    /**
+     * 按字典类型 id 批量取明细，供列表一次取回当页所有字典类型下的键值
+     *
+     * 不过滤删除标记，已停用的键值也要带给页面，由页面决定怎么显示；按字典类型与排序号排列，
+     * 页面拿到的顺序就是字典自身定义的顺序。
+     *
+     * @param dictTypeIds 字典类型 id 集合
+     * @return 明细，每行带所属字典类型 id
+     */
+    @Select("   <script>   "
+        + " select t.dict_type_id, t.dict_value, t.label, t.is_del, t.sort "
+        + "   from s_dict_data t "
+        + "  where t.dict_type_id in "
+        + "        <foreach collection='p1' item='item' open='(' separator=',' close=')'>    "
+        + "         #{item}  "
+        + "        </foreach>    "
+        + "  order by t.dict_type_id, t.sort "
+        + "  </script>    ")
+    List<SDictDataVo> selectItemsByDictTypeIds(@Param("p1") List<Long> dictTypeIds);
 }

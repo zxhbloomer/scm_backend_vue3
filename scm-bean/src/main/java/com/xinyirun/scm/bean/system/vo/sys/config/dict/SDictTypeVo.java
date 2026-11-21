@@ -71,6 +71,11 @@ public class SDictTypeVo extends UploadFileResultAo implements Serializable {
     private Integer dbversion;
 
     /**
+     * 最后修改人的姓名，来自员工表的姓名列，只在列表展示时使用，不对应字典类型表的字段
+     */
+    private String u_name;
+
+    /**
      * 换页条件
      */
     private PageCondition pageCondition;
