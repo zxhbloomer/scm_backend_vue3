@@ -1,0 +1,310 @@
+{
+  "name": "scm-boot4-fix-review",
+  "id": "scm-boot4-fix-review",
+  "description": "评审 SCM 后端 Spring Boot 4.1.2 升级\"代码层剩余项\"修复方案（00_doc/17 号文档 §1-§7），三个不同角色独立评审，只评审不改代码。",
+  "captainSessionId": "session-2f58f782-e90a-4c7a-8494-0876326e5458",
+  "createdAt": 1793238256863,
+  "members": [
+    {
+      "id": "fce4016b-3232-468d-8977-3feba163ce59",
+      "name": "reviewer-build",
+      "role": "构建与依赖评审（Maven 插件 / BOM / 依赖版本冲突）",
+      "provider": "bt2",
+      "model": "deepseek-v4.1-flash",
+      "reasoningEffort": "high",
+      "joinedAt": 1793238256863,
+      "status": "idle",
+      "runtimeSetup": {
+        "persona": "You are reviewer-build, a member of the multi-agent team \"scm-boot4-fix-review\" running inside DeepSeek Harness AgentTeams. The captain leads the team; you are a worker member with the role: 构建与依赖评审（Maven 插件 / BOM / 依赖版本冲突）.\n\nTeam context:\n- Team id: scm-boot4-fix-review\n- Your name inside the team (use it as `from`/identity): reviewer-build\n- Team goal: 评审 SCM 后端 Spring Boot 4.1.2 升级\"代码层剩余项\"修复方案（00_doc/17 号文档 §1-§7），三个不同角色独立评审，只评审不改代码。\n- Profile protocol: (none)\n- The team state lives under .agent-teams/scm-boot4-fix-review/ (team.json and inbox/*.jsonl). You may inspect these files read-only for diagnostics, but never edit them directly; use the agent_teams_* tools so JSON escaping and concurrent updates stay safe.\n- The captain and your teammates reach you through messages. Coordination arrives at your nearest model step. Apply it to your current attempt; a task assignment starts a separate turn.\nWhen you receive a task, treat the assignment prompt's dependency results as source material. Do not ignore them.\n\nWorking rules:\n1. When you receive a task assignment, call agent_teams_claim_task with the task id. Keep the returned attempt_id: include it in every agent_teams_update_task call for that execution attempt. Then mark the task in_progress.\n2. Work thoroughly with your available tools; do not cut corners.\n3. When finishing a task:\n   - use status=completed only when the task's success criteria are satisfied;\n   - use status=failed when blocking findings or validation failures mean downstream work must not proceed;\n   - include a concise output in either case;\n   - a stale-attempt rejection means the captain reassigned or took over the task; stop touching that task and wait for new work.\n   claimed cannot jump to completed. Mark in_progress first, then completed or failed.\n   Include attempt_id on every update. Then report once as described below and become idle.\n4. Send one short report with agent_teams_send_message (to=captain) when you complete a task or hit a blocker. Include source_task_id and source_attempt_id in task reports; a stale source rejection means stop, never relabel an old result with a new attempt. The captain is also your parent: this single message satisfies both reporting duties. Do not repeat it through the native send_message tool or send acknowledgments that add no new information.\n5. To ask a teammate something, use agent_teams_send_message with to=<teammate name>; the message lands in their mailbox and wakes them directly — teammates talk to each other without the captain in the loop. The same applies to the captain (to=captain).\n6. After your turn becomes idle, the shared task scheduler may assign your next ready task automatically. Never claim a second task while you still own unfinished work.\n7. If you already own an open attempt (claimed or in_progress) and receive mail, treat it as guidance for that same attempt_id unless the mail explicitly tells you to stop or fail. Do not claim a new task in that turn.\n8. Do not start a teammate's assigned task. Do not privately tell the next-stage member to start; the scheduler assigns unlocked work after you become idle.\n9. You are a worker: do not create or delete teams, reassign tasks, or add/remove members — that is the captain's job.\n10. Quality-gate kinds carry a contract (kind, objective, inScope, acceptance, verify). Stay inside inScope. Do not mark your own implementation as review pass. Review/requirements complete only with verdict=pass; needs_revision/reject must fail with findings. Mail is not a formal next review. Completed work must not be repeated to attach late evidence: call update_task on the original task with its attempt_id and acceptanceResults/commandsRun/evidence_note; supplements are append-only and cannot change its verdict.",
+        "toolFilter": {
+          "deny": [
+            "agent_teams_create",
+            "agent_teams_approve",
+            "agent_teams_edit_plan",
+            "agent_teams_add_member",
+            "agent_teams_remove_member",
+            "agent_teams_create_task",
+            "agent_teams_reassign_task",
+            "agent_teams_amend_task",
+            "agent_teams_resume",
+            "agent_teams_delete"
+          ]
+        }
+      }
+    },
+    {
+      "id": "e59cbc98-6f04-4e31-ba3c-3272545201d0",
+      "name": "reviewer-web",
+      "role": "Web 容器与序列化评审（jakarta 迁移 / 消息转换器 / Jackson 双栈）",
+      "provider": "bt2",
+      "model": "deepseek-v4.1-flash",
+      "reasoningEffort": "high",
+      "joinedAt": 1793238256863,
+      "status": "idle",
+      "runtimeSetup": {
+        "persona": "You are reviewer-web, a member of the multi-agent team \"scm-boot4-fix-review\" running inside DeepSeek Harness AgentTeams. The captain leads the team; you are a worker member with the role: Web 容器与序列化评审（jakarta 迁移 / 消息转换器 / Jackson 双栈）.\n\nTeam context:\n- Team id: scm-boot4-fix-review\n- Your name inside the team (use it as `from`/identity): reviewer-web\n- Team goal: 评审 SCM 后端 Spring Boot 4.1.2 升级\"代码层剩余项\"修复方案（00_doc/17 号文档 §1-§7），三个不同角色独立评审，只评审不改代码。\n- Profile protocol: (none)\n- The team state lives under .agent-teams/scm-boot4-fix-review/ (team.json and inbox/*.jsonl). You may inspect these files read-only for diagnostics, but never edit them directly; use the agent_teams_* tools so JSON escaping and concurrent updates stay safe.\n- The captain and your teammates reach you through messages. Coordination arrives at your nearest model step. Apply it to your current attempt; a task assignment starts a separate turn.\nWhen you receive a task, treat the assignment prompt's dependency results as source material. Do not ignore them.\n\nWorking rules:\n1. When you receive a task assignment, call agent_teams_claim_task with the task id. Keep the returned attempt_id: include it in every agent_teams_update_task call for that execution attempt. Then mark the task in_progress.\n2. Work thoroughly with your available tools; do not cut corners.\n3. When finishing a task:\n   - use status=completed only when the task's success criteria are satisfied;\n   - use status=failed when blocking findings or validation failures mean downstream work must not proceed;\n   - include a concise output in either case;\n   - a stale-attempt rejection means the captain reassigned or took over the task; stop touching that task and wait for new work.\n   claimed cannot jump to completed. Mark in_progress first, then completed or failed.\n   Include attempt_id on every update. Then report once as described below and become idle.\n4. Send one short report with agent_teams_send_message (to=captain) when you complete a task or hit a blocker. Include source_task_id and source_attempt_id in task reports; a stale source rejection means stop, never relabel an old result with a new attempt. The captain is also your parent: this single message satisfies both reporting duties. Do not repeat it through the native send_message tool or send acknowledgments that add no new information.\n5. To ask a teammate something, use agent_teams_send_message with to=<teammate name>; the message lands in their mailbox and wakes them directly — teammates talk to each other without the captain in the loop. The same applies to the captain (to=captain).\n6. After your turn becomes idle, the shared task scheduler may assign your next ready task automatically. Never claim a second task while you still own unfinished work.\n7. If you already own an open attempt (claimed or in_progress) and receive mail, treat it as guidance for that same attempt_id unless the mail explicitly tells you to stop or fail. Do not claim a new task in that turn.\n8. Do not start a teammate's assigned task. Do not privately tell the next-stage member to start; the scheduler assigns unlocked work after you become idle.\n9. You are a worker: do not create or delete teams, reassign tasks, or add/remove members — that is the captain's job.\n10. Quality-gate kinds carry a contract (kind, objective, inScope, acceptance, verify). Stay inside inScope. Do not mark your own implementation as review pass. Review/requirements complete only with verdict=pass; needs_revision/reject must fail with findings. Mail is not a formal next review. Completed work must not be repeated to attach late evidence: call update_task on the original task with its attempt_id and acceptanceResults/commandsRun/evidence_note; supplements are append-only and cannot change its verdict.",
+        "toolFilter": {
+          "deny": [
+            "agent_teams_create",
+            "agent_teams_approve",
+            "agent_teams_edit_plan",
+            "agent_teams_add_member",
+            "agent_teams_remove_member",
+            "agent_teams_create_task",
+            "agent_teams_reassign_task",
+            "agent_teams_amend_task",
+            "agent_teams_resume",
+            "agent_teams_delete"
+          ]
+        }
+      }
+    },
+    {
+      "id": "d67a9fa6-8e71-46a6-b7de-2e7b727a3e59",
+      "name": "reviewer-dbops",
+      "role": "数据库与 Flowable 评审（schema 升级开关 / DDL 脚本 / 备份回滚）",
+      "provider": "bt2",
+      "model": "deepseek-v4.1-flash",
+      "reasoningEffort": "high",
+      "joinedAt": 1793238256863,
+      "status": "idle",
+      "runtimeSetup": {
+        "persona": "You are reviewer-dbops, a member of the multi-agent team \"scm-boot4-fix-review\" running inside DeepSeek Harness AgentTeams. The captain leads the team; you are a worker member with the role: 数据库与 Flowable 评审（schema 升级开关 / DDL 脚本 / 备份回滚）.\n\nTeam context:\n- Team id: scm-boot4-fix-review\n- Your name inside the team (use it as `from`/identity): reviewer-dbops\n- Team goal: 评审 SCM 后端 Spring Boot 4.1.2 升级\"代码层剩余项\"修复方案（00_doc/17 号文档 §1-§7），三个不同角色独立评审，只评审不改代码。\n- Profile protocol: (none)\n- The team state lives under .agent-teams/scm-boot4-fix-review/ (team.json and inbox/*.jsonl). You may inspect these files read-only for diagnostics, but never edit them directly; use the agent_teams_* tools so JSON escaping and concurrent updates stay safe.\n- The captain and your teammates reach you through messages. Coordination arrives at your nearest model step. Apply it to your current attempt; a task assignment starts a separate turn.\nWhen you receive a task, treat the assignment prompt's dependency results as source material. Do not ignore them.\n\nWorking rules:\n1. When you receive a task assignment, call agent_teams_claim_task with the task id. Keep the returned attempt_id: include it in every agent_teams_update_task call for that execution attempt. Then mark the task in_progress.\n2. Work thoroughly with your available tools; do not cut corners.\n3. When finishing a task:\n   - use status=completed only when the task's success criteria are satisfied;\n   - use status=failed when blocking findings or validation failures mean downstream work must not proceed;\n   - include a concise output in either case;\n   - a stale-attempt rejection means the captain reassigned or took over the task; stop touching that task and wait for new work.\n   claimed cannot jump to completed. Mark in_progress first, then completed or failed.\n   Include attempt_id on every update. Then report once as described below and become idle.\n4. Send one short report with agent_teams_send_message (to=captain) when you complete a task or hit a blocker. Include source_task_id and source_attempt_id in task reports; a stale source rejection means stop, never relabel an old result with a new attempt. The captain is also your parent: this single message satisfies both reporting duties. Do not repeat it through the native send_message tool or send acknowledgments that add no new information.\n5. To ask a teammate something, use agent_teams_send_message with to=<teammate name>; the message lands in their mailbox and wakes them directly — teammates talk to each other without the captain in the loop. The same applies to the captain (to=captain).\n6. After your turn becomes idle, the shared task scheduler may assign your next ready task automatically. Never claim a second task while you still own unfinished work.\n7. If you already own an open attempt (claimed or in_progress) and receive mail, treat it as guidance for that same attempt_id unless the mail explicitly tells you to stop or fail. Do not claim a new task in that turn.\n8. Do not start a teammate's assigned task. Do not privately tell the next-stage member to start; the scheduler assigns unlocked work after you become idle.\n9. You are a worker: do not create or delete teams, reassign tasks, or add/remove members — that is the captain's job.\n10. Quality-gate kinds carry a contract (kind, objective, inScope, acceptance, verify). Stay inside inScope. Do not mark your own implementation as review pass. Review/requirements complete only with verdict=pass; needs_revision/reject must fail with findings. Mail is not a formal next review. Completed work must not be repeated to attach late evidence: call update_task on the original task with its attempt_id and acceptanceResults/commandsRun/evidence_note; supplements are append-only and cannot change its verdict.",
+        "toolFilter": {
+          "deny": [
+            "agent_teams_create",
+            "agent_teams_approve",
+            "agent_teams_edit_plan",
+            "agent_teams_add_member",
+            "agent_teams_remove_member",
+            "agent_teams_create_task",
+            "agent_teams_reassign_task",
+            "agent_teams_amend_task",
+            "agent_teams_resume",
+            "agent_teams_delete"
+          ]
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "t1",
+      "profileSeedId": "r1",
+      "subject": "评审 §1.1/§1.2/§2.2/§2.3：surefire、HikariCP、restdocs、spring-social 四项收尾改法",
+      "description": "你是 SCM 后端项目的构建与依赖评审员。只做评审，禁止修改任何代码或 pom 文件。工作目录 D:\\2026_project\\00_scm\\backend\\scm_backend。输出中文，只写「问题」「方案」，表格清单，不长篇铺陈；每条结论必须附文件:行号或实测命令输出作为证据，不允许凭记忆断言。\n\n【背景】SCM 后端（25 个 Maven 模块）从 Spring Boot 3.5.5 升级到 4.1.2，代码已改完、能编译能启动，但还有收尾项未做。方案文档：00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md（同时看 00_doc/04-升级实施总清单-2026-10-28.md 的 §7、00_doc/05-代码变更登记册-2026-10-28.md 的「勘误」节）。\n\n【评审这四项改法是否成立】\n1) surefire（pom.xml:944-951，现 <version>2.19.1</version> + <skipTests>true</skipTests>）方案主张改成 <version>3.5.6</version> + skipTests=false。请核实：3.5.6 是否本机离线仓库可用、是否带 junit-platform provider、与 spring-boot-dependencies-4.1.2 托管的 junit-jupiter 6.0.3 是否兼容；兼容性若无法离线确认，给出可验证的判定方法和退路。\n2) HikariCP（pom.xml:789-793 硬钉 5.0.1）方案主张整块删除、交给 BOM。请核实：全仓是否真的 0 处使用 Hikari、删除后 Boot 4 BOM 给什么版本、有没有隐藏风险（某自动配置或 starter 是否依赖 Hikari 特有 API）。\n3) restdocs（根 pom.xml:46-47 + 5 个 controller 模块 pom 仍声明 spring-restdocs-mockmvc）方案主张删除。请核实这些声明是否真的没被用到、删掉会不会影响编译。\n4) spring-social（根 pom.xml:59 属性 + 262-280 四条 dependencyManagement）方案主张删除。请核实模块已无引用。\n\n【要求】逐项给结论：采纳 / 驳回 / 需补证，写清理由与证据；方案里若有错误（版本号、行号、判断）必须明确指出并给正确说法；不要修改任何文件，只允许新建 00_doc/19-review-build-2026-10-29.md 写评审结论。",
+      "status": "completed",
+      "assignee": "reviewer-build",
+      "dependencies": [],
+      "attempt": 1,
+      "createdAt": 1793238256863,
+      "updatedAt": 1793238753950,
+      "attemptId": "2cdffcdb-c4fe-4845-9ba9-057590577a87",
+      "reassigning": false,
+      "output": "评审结论已写入 00_doc/19-review-build-2026-10-29.md（唯一新增文件，未改动任何 pom/代码；git status 仍只显示原有 6 个 pom 的 M）。\n\n四项结论：\n1) surefire(944-951)：采纳 3.5.6 + skipTests=false。本地仓库 maven-surefire-plugin 有 3.5.6、surefire-junit-platform 有 3.2.5/3.5.3/3.5.6（无 2.19.1）⇒ 离线可用且带 platform provider；provider 引用的 24 个 engine/launcher 类与 28 个方法名在 junit 6.0.3 三 jar 中全部命中 ⇒ 无类/方法级断裂。需补 1 条：全仓 0 处声明 junit-platform-launcher，provider 自带 platform 1.12.2（surefire-3.5.6.pom:111 versions.junit5=5.12.2）与项目 2.0.3 混用，应在 7 个测试模块加 BOM 托管的 junit-platform-launcher。退路：属性覆盖 junit-jupiter.version=5.13.4（本地 5.13.4/platform 1.13.4 齐全）。验收命令须由 mvn -pl scm-bean test 改为 mvn -o -pl scm-core test（scm-bean 无测试依赖/无 src/test）。\n2) HikariCP(789-793)：采纳，行号正确。BOM hikaricp.version=7.0.2（BOM:73/821-825），本地仓库有 7.0.2，离线可解析。「0 处使用」过强：源码 0 引用，运行期 spring-boot-jdbc-4.1.2 有 11 类、dynamic-datasource 4.6.0 有 4 类引用 com/zaxxer；传递来源 mybatis-plus-spring-boot4-starter:71→spring-boot-starter-jdbc。隐藏风险实测排除：5.0.1→7.0.2 API diff 仅剩 ofMillis（Duration 方法）；7.0.2 class major=55、slf4j 2.0.17 与项目 2.0.20 兼容。\n3) restdocs：采纳改法、驳回行号。根 pom restdocs 命中 0（46-47 实为 <parent>），残留仅 5 个模块 pom（45-49/45-49/32-36/45-49/45-49，均 test scope）；java 0 引用、相关模块 src/test 文件数 0 ⇒ 删除不影响编译。\n4) spring-social：采纳改法、驳回行号。59 属性正确，4 条 depMgmt 实际 259-279（262-280 从第一条依赖的 artifactId 处切开并误伤 280 起注释块 ⇒ 残缺 XML）；不得连带 285-289 的 spring-plugin-core。剩余引用仅 ScmSessionStrategy.java:10 的 Javadoc。\n\n另勘误 6 处文档错误（17 §1.1「删版本交 BOM」错误/starter-parent 未托管 surefire；§7.3「platform 最低 3.5.6」实为 3.2.5；§7.2 排除项描述；§1.2「按 7.x 编译」不可证；§2.1 与 §2.2 行号）。\n\n环境限制：PATH 指向的 apache-maven-3.9.10 与 jdk-21.0.8 目录均不存在，mvn/java 不可执行 ⇒ 本轮无实跑，全部为静态取证（pom 逐行 + 本地仓库 pom/jar 解包 + 成品 jar BOOT-INF/lib 578 项清单）。",
+      "verdict": "pass"
+    },
+    {
+      "id": "t2",
+      "profileSeedId": "r2",
+      "subject": "评审 §1.4/§6：javax→jakarta 改法与转换器/fastjson2 结论是否与代码一致",
+      "description": "你是 SCM 后端项目的 Web 容器与序列化评审员。只做评审，禁止修改任何代码。工作目录 D:\\2026_project\\00_scm\\backend\\scm_backend。输出中文，只写「问题」「方案」，表格清单，不长篇铺陈；每条结论必须附文件:行号或实测命令输出作为证据，不允许凭记忆断言。\n\n【背景】SCM 后端（25 个 Maven 模块）已从 Spring Boot 3.5.5 升级到 4.1.2（Spring Framework 7 + Tomcat 11，jakarta 命名空间），代码已改完、能编译能启动。方案文档：00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md（同时看 00_doc/05-代码变更登记册-2026-10-28.md 的「勘误」节、00_doc/15 号文档的 F3-01）。\n\n【评审这两项】\n1) javax 残留：方案主张把 scm-controller-bpm/src/main/java/com/xinyirun/scm/bpm/controller/TriggerController.java:10 的 import javax.servlet.http.HttpServletRequest 改成 jakarta.servlet.http.HttpServletRequest，并把验收标准定为「重新打包后 jar 内不再出现 javax.servlet-api」。请核实：全仓还有没有别的 javax.servlet / javax.* 残留（区分死代码与被注释代码）、改这一行够不够、验收标准是否可执行、这条 import 现在能编译通过的真正原因（方案说 classpath 里混进了 javax.servlet-api-3.1.0.jar 传递依赖）。\n2) 序列化与转换器：方案在 §6/§7.3 断言 MVC 主转换器是 CallbackMappingJackson2HttpMessageConverter（Jackson 3，注册在 ActionInterceptorConfig.java:81），并断言 04 号文档「fastjson2 仍是 MVC 主序列化器」已作废。请核实该断言与代码是否一致，以及 json_result_type 机制（STRING_EMPTY_BOOLEAN_FALSE 退化为 null）这个已知差异的严重程度判断是否合理。\n\n【要求】逐项给结论：采纳 / 驳回 / 需补证，附文件:行号证据；发现方案错误必须指出并给正确说法；不要修改任何代码，只允许新建 00_doc/19-review-web-2026-10-29.md 写评审结论。",
+      "status": "failed",
+      "assignee": "reviewer-web",
+      "dependencies": [],
+      "attempt": 1,
+      "createdAt": 1793238256863,
+      "updatedAt": 1793239053249,
+      "attemptId": "b9b80981-749a-4213-a36b-c91114a45fc6",
+      "reassigning": false,
+      "output": "§1.4 改法采纳、但验收标准不可达；§6 转换器/fastjson2 结论采纳（行号订正 :81→:85），但 json_result_type 严重程度判断错误（影响全站而非两个接口）。评审报告：00_doc/19-review-web-2026-10-29.md（117 行，仅新增此文件，未改任何代码）。",
+      "verdict": "needs_revision",
+      "findings": [
+        {
+          "id": "W-04",
+          "severity": "blocker",
+          "problem": "验收标准「重新打包后 jar 内不再出现 javax.servlet-api」（§1.4:133、§5:188）不可达：javax.servlet-api-3.1.0 是 com.github.penggle:kaptcha:2.3.2 的传递依赖（实测 dependency:tree: scm-controller → kaptcha → javax.servlet:javax.servlet-api:jar:3.1.0:compile），与 TriggerController.java:10 的 import 无因果关系；且 §1.4:132 自己承认「是否还能删需 G1/G3 确认」，与 :133 把包消失写成硬验收自相矛盾。",
+          "requiredFix": "把两条验收拆开：①import 改动的验收改为源码/字节码断言（rg 无 javax.servlet 活引用；内嵌 scm-controller-bpm jar 内 TriggerController.class 不得含 javax/servlet）；②「jar 内无 javax.servlet-api」另立依赖排除项，在 pom.xml:472-473 的 kaptcha dependencyManagement 统一加 <exclusion>javax.servlet:javax.servlet-api</exclusion>（1 处覆盖 scm-controller/scm-controller-tenant/scm-security 三处声明），并写明排除为何安全：kaptcha 内仅 com/google/code/kaptcha/servlet/KaptchaServlet.class 引用 javax/servlet 且无 @WebServlet 注解，本项目只用 Producer/DefaultKaptcha/Config/Constants/DefaultTextCreator。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 133
+        },
+        {
+          "id": "W-05",
+          "severity": "high",
+          "problem": "验收项「mvn -pl scm-controller-bpm -am compile 通过」无区分力：现有发布包 scm-start-0.0.1-SNAPSHOT.jar(22:24:39) 内嵌 scm-controller-bpm jar 的 TriggerController.class 常量池实测含 javax/servlet/http/HttpServletRequest，即「带 javax 就是通过状态」，改前改后该命令都通过，不能作为已切 jakarta 的证据。",
+          "requiredFix": "保留该命令作回归门槛，但必须补可判别的断言（A1 源码 rg、A2 字节码 ASCII 扫描），如评审报告 §1.2 表。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 133
+        },
+        {
+          "id": "S-05",
+          "severity": "high",
+          "problem": "json_result_type 差异「仅影响 SystemAreaController#tree 与 MasterMenuController#tree 两个接口」严重程度判断错误：git show HEAD 的 fastjson2 实码显示 WriteNullBooleanAsFalse 在三个分支都开着（含 default/NORMAL），故 null Boolean → false 是全站默认行为；新实现 ScmJsonMapperFactory.java:49-51/64 用 Include.ALWAYS ⇒ 全站响应里 null Boolean 由 false 变 null。同一错误在 15:135、15:176、05:356、CallbackMappingJackson2HttpMessageConverter.java:42-45 四处未回填（15:42 H-1 已认定影响面写错）。",
+          "requiredFix": "把影响面改写为「全站 NORMAL 响应 null Boolean: false→null；2 个 STRING_EMPTY_BOOLEAN_FALSE 接口另有 null String: ''→null（前端 x.length 会 TypeError）；PrettyFormat 取消另记为格式差异」，并在 §6 给出决策选项（A 全站登记+2 VO 字段级 @JsonSerialize(nullsUsing) / B BeanSerializerModifier 恢复旧行为 / C 仅登记风险+前端回归清单），不要停在「待前端确认」。",
+          "file": "00_doc/05-代码变更登记册-2026-10-28.md",
+          "line": 356
+        },
+        {
+          "id": "W-09",
+          "severity": "medium",
+          "problem": "方案所有 mvn 验收命令在本机开箱不可执行：mvn 不在 PATH，Maven_Home=D:\\2025_project\\99_tools\\apache-maven-3.9.10 与 JAVA_HOME=D:\\2025_project\\99_tools\\jdk\\jdk-21.0.8 两个目录均不存在（实际 jdk-21.0.10）。",
+          "requiredFix": "验收命令写死可用组合：$env:JAVA_HOME='D:\\2025_project\\99_tools\\jdk\\jdk-21.0.10'; & 'D:\\2025_project\\99_github\\jimu-反编译\\apache-maven-3.9.9-bin\\apache-maven-3.9.9\\bin\\mvn.cmd' -o -B ...（本地仓库 D:\\2025_project\\99_mvnrepository）。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 133
+        },
+        {
+          "id": "S-07",
+          "severity": "medium",
+          "problem": "05 F-3 表两条已过期：F3-02(:357) 处置计划写「改为声明 HttpMessageConverter Bean」，实际实现是 ServerHttpMessageConvertersCustomizer.withJsonConverter（ActionInterceptorConfig:80-87）且已实施完毕；F3-03(:358) 写「RestTemplate 出口仍由 fastjson2 承担」，实际 RestTemplateConfiguration.java:57-58 已是 CallbackMappingJackson2HttpMessageConverter（Jackson 3），仅变量名残留 fastJsonConvert。",
+          "requiredFix": "订正 05:357 为「已改用 ServerHttpMessageConvertersCustomizer.withJsonConverter（:85）」并删「4.2 前必须替换」待办；订正 05:358 为「RestTemplate 出入站均为同一 Jackson 3 转换器，仅变量命名遗留」。",
+          "file": "00_doc/05-代码变更登记册-2026-10-28.md",
+          "line": 357
+        },
+        {
+          "id": "S-01",
+          "severity": "low",
+          "problem": "转换器结论正确但引用行号错：ActionInterceptorConfig.java:81 是 @Bean 方法签名行，真正注册调用 builder.withJsonConverter(converter) 在 :85；同一错行号已复制到 04:272。",
+          "requiredFix": "17:203 与 04:272 的 ActionInterceptorConfig.java:81 统一改为 :85。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 203
+        },
+        {
+          "id": "S-04",
+          "severity": "low",
+          "problem": "任务书把「§6/§7.3」并列评审，但 17 号 §7.3(:229) 是 surefire 2.19.1 危害，全文无转换器内容；转换器结论只在 :203-204。评审范围指代错位。",
+          "requiredFix": "转换器/序列化评审范围明确为 17 §6(193-209) 与所指代码；§7.3 归构建线（19-review-build），勿混评。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 229
+        },
+        {
+          "id": "W-02",
+          "severity": "low",
+          "problem": "「全仓 javax.servlet 剩余命中只有 scm-redis/.../SystemSpringHttpSessionListener.java」不全：实为 3 处，另漏 scm-security/src/main/java/com/xinyirun/scm/security/code/ScmSessionStrategy.java:10（javadoc 文字命中）。活代码仅 1 处的结论仍成立。",
+          "requiredFix": "清单补 ScmSessionStrategy.java:10（注释性质），并声明 javax.sql/javax.crypto/javax.imageio 等 JDK 包不在迁移范围，避免误删。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 132
+        },
+        {
+          "id": "W-06",
+          "severity": "low",
+          "problem": "「运行期拿不到参数对象」描述不准：javap spring-webmvc-7.0.10 显示 ServletRequestMethodArgumentResolver 只接受 jakarta 类型（常量池无 javax/servlet），javax 形参会落到 @ModelAttribute 路径并因接口不可实例化而失败，预期是请求期异常/500 而非参数为 null。",
+          "requiredFix": "改写为「不再注入 request，落到 ModelAttribute 解析后失败（预期 500）」，并把「实跑 /scm/ex/trigger/getRequest|postRequest 确认响应码」列为 G3 冒烟项（需 MySQL/Redis）。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 129
+        }
+      ],
+      "changedPaths": [
+        "00_doc/19-review-web-2026-10-29.md"
+      ]
+    },
+    {
+      "id": "t3",
+      "profileSeedId": "r3",
+      "subject": "评审 §1.5/§5：flowable.database-schema-update 统一与 DDL 脚本落地方案",
+      "description": "你是 SCM 后端项目的数据库与 Flowable 评审员。只做评审，禁止修改任何代码或配置；禁止对任何数据库做写操作（只允许 SELECT 查询 scm_manager 与 scm_tenant_20250519_001）。工作目录 D:\\2026_project\\00_scm\\backend\\scm_backend。输出中文，只写「问题」「方案」，表格清单，不长篇铺陈；每条结论必须附文件:行号、SQL 结果或文档章节作为证据，不允许凭记忆断言。\n\n【背景】Flowable 已升到 8.0.0；dev 两库（scm_manager、scm_tenant_20250519_001）的 act_ge_property.schema.version 都是 8.0.0.0（2026-10-28 清库后由 8.0 首启自动建表），act_re_procdef 等运行时表全 0 行。方案文档：00_doc/17 号文档 §1.5 与 §5，另看 00_doc/08 号、00_doc/09 号文档。\n\n【方案主张，用户已表示要「统一」但落地口径未确认】\n- 统一开关：公共 scm-start/src/main/resources/application.yml 加 flowable.database-schema-update: false，各 profile 不再覆盖；\n- 统一脚本：新建 00_doc/sql/flowable-8.0.0-ddl/，含 01-create-all.sql（空库全量建 32 张 ACT_*）与 02-upgrade-from-7.1.sql（增量 5 条 DDL）；\n- 顺序：必须先落脚本，再改开关。\n\n【评审要点】\n1) 这个「统一」口径是否最优？有无更简单/更安全的替代（生产交运维脚本、只对 dev 保留 upgrade、直接用 Flowable 官方 SQL 而非自建脚本）？\n2) 现在全仓 yml 无任何 flowable.database-schema-update 配置（默认 true，即启动自动建/升级表）。把默认改成 false 对 dev 的实际后果是什么？会不会清库后起不来？\n3) 只允许 SELECT 核实（mysqlsh：C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\mysqlsh.exe，root:123456@127.0.0.1:3306），严禁任何写操作。\n\n【要求】给结论：采纳 / 驳回 / 需补证，附证据；不要修改代码或配置，只允许新建 00_doc/19-review-dbops-2026-10-29.md 写评审结论。",
+      "status": "failed",
+      "assignee": "reviewer-dbops",
+      "dependencies": [],
+      "attempt": 1,
+      "createdAt": 1793238256863,
+      "updatedAt": 1793238755127,
+      "attemptId": "5bfe0086-18a4-46f3-a04c-089d26642fcb",
+      "reassigning": false,
+      "output": "评审结论：方向采纳、脚本方案驳回、整体需补证（needs_revision）。评审文档已落盘 00_doc/19-review-dbops-2026-10-29.md（未改任何代码/配置，DB 仅 SELECT）。\n\n1) 公共层 flowable.database-schema-update: false 的**方向采纳**：实测默认 true（autoconfigure jar 元数据），false 走 SchemaManager.schemaCheckVersion（javap 字节码），正是绕开 09 号文档「跨库元数据假阳性」的选项；true 才是清库后会崩的选项。\n2) 自建 01/02 脚本方案**驳回**：02 缺 3 条版本号 UPDATE（跑完 schema.version 仍 7.1.0.2，false 下启动必抛 FlowableWrongDbException）；01「32 张 ACT_*」口径错（实为 30 ACT_* + 2 FLW_*，DB 与 jar 双向实测一致）；自建摘录无法覆盖官方 create 的 98 条索引 + 4 条 ACT_GE_PROPERTY 初始行。\n3) §5「顺序不能反」表述需修正：硬约束是「清库/新环境首启之前脚本必须在场」，而非本次改动；当前 dev 两库表齐、schema.version=8.0.0.0，先改开关不会立刻坏。\n\n「改 false 的 dev 后果」四场景实测：现在改→不坏（版本校验通过）；清库后不跑 create→抛 No flowable tables in DB…；跑 02 漏 UPDATE→抛 FlowableWrongDbException(Expected 8.0.0.0)；保持 true→一旦清库重演 09 号事故。\n\n推荐替代（更简单/更安全）：脚本直接归档官方 8 份原文件（01~03 create common/engine/history + 11~15 upgrade），不自建；零脚本备选 C = dev 保留 true + 补 nullCatalogMeansCurrent=true（09 §9.2 三处，实测未落地）。\n\n另发现 3 处文档冲突未闭环：08 号 A3「DROP 后由启动自动重建」、09 号 §9 与新方案冲突且未标「已替代」、17 号 §1.5 未写 false 的实际行为与报错文本。生产侧 2 项必须补证：各环境 schema.version 现值（决定 02 是否适用）、生产租户库数量与执行人（每库一套 Flowable schema）。",
+      "verdict": "needs_revision",
+      "findings": [
+        {
+          "id": "DB-01",
+          "severity": "blocker",
+          "problem": "[blocker] 02-upgrade-from-7.1.sql 只规划 5 条 DDL，漏掉官方升级链的 3 条版本号 UPDATE（7102.to.7200.engine→'7.2.0.0'、7201.to.7202.engine→'7.2.0.2'、7202.to.8000.engine→'8.0.0.0'）。执行后 ACT_GE_PROPERTY.schema.version 仍是 7.1.0.2，在 database-schema-update=false 下启动必抛 FlowableWrongDbException（Expected 8.0.0.0）。证据：flowable-engine-8.0.0.jar!/org/flowable/db/upgrade/*.sql 原文（3/3 带 UPDATE）；javap ProcessDbSchemaManager.schemaCheckVersion 硬编码 ldc \"8.0.0.0\" 与 getDbVersion() 比对后 throw FlowableWrongDbException。",
+          "requiredFix": "02 脚本改为 8 条语句（4 alter + 1 create index + 3 update ACT_GE_PROPERTY SET VALUE_），文档中原文列出 3 条 UPDATE；或直接采用官方 5 份 upgrade 脚本（见 DB-03）。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 147,
+          "resolved": false
+        },
+        {
+          "id": "DB-02",
+          "severity": "blocker",
+          "problem": "[blocker] 口径「空库全量建 32 张 ACT_*」与事实不符：8.0 create 脚本共建 32 张表 = 30 张 ACT_* + 2 张 FLW_*（FLW_RU_BATCH、FLW_RU_BATCH_PART，位于 create.common.sql）。按该口径核对/抄写必漏 2 张 FLW 表，Flowable 批量（批量部署/批量删除）运行时报错。证据：jar create 脚本 create table 计数 7(engine)+5(history)+20(common)=32；DB 实测两库各 30 ACT_* + 2 FLW_*（information_schema.tables，2026-10-29）。",
+          "requiredFix": "17 号 §1.5 与脚本头注释统一改为「30 张 ACT_* + 2 张 FLW_* 共 32 张」，验收清单把 FLW_* 单列一项。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 146,
+          "resolved": false
+        },
+        {
+          "id": "DB-03",
+          "severity": "high",
+          "problem": "[high] 以「自建摘录」替代官方 SQL 风险不可控：官方 3 份 create 脚本共 98 条索引 + 4 条 ACT_GE_PROPERTY 初始行（common.schema.version='8.0.0.0'、next.dbid=1、schema.version='8.0.0.0'、schema.history='create(8.0.0.0)'）。手抄必漏，漏版本行即 DB-01 同类故障，漏索引则隐性唯一性/性能缺失。证据：索引计数 common 66/history 18/engine 14=98；insert 计数 common 2+engine 2=4；create.engine.sql L323-327。",
+          "requiredFix": "改为归档官方 8 份原文件（01/02/03=create common/engine/history，11~15=5 份 upgrade），注明 jar 坐标与校验和、禁止手改；若仍合并单文件，须逐条比对官方脚本并附 diff 证据。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 146,
+          "resolved": false
+        },
+        {
+          "id": "DB-04",
+          "severity": "high",
+          "problem": "[high] 开关写进公共 application.yml 会随 jar 进生产（仓库内只有 dev 一份 profile yml，生产 yml 外置），而方案未写「生产必须先逐库执行 02 再发版」的发布顺序与失败回退。生产库未升级即发布⇒启动失败；且 8.0 库不可回退 7.1，回退只能恢复备份。证据：application.yml 仅 22 行/596B，全仓 grep database-schema-update 命中 0；17 号 §3 T5.2 明确 8.0→7.1 不可回退。",
+          "requiredFix": "§1.5 增补发布顺序（备份→逐库执行 02→校验 schema.version=8.0.0.0→再发布含 false 的 jar）与回退口径（仅恢复备份，禁止降级 jar）；或改为运维注入的 profile 级配置，公共层只留说明注释。",
+          "file": "scm-start/src/main/resources/application.yml",
+          "line": 1,
+          "resolved": false
+        },
+        {
+          "id": "DB-05",
+          "severity": "high",
+          "problem": "[high] 多租户/多库覆盖面未写进方案：Flowable schema 每库独立一套（两库各自 30+2 表、schema.history=create(8.0.0.0)），方案只写 --target: scm_manager / scm_tenant_*，无「逐库执行+逐库校验」清单与执行人。证据：s_tenant_manager 仅 1 行(tenant=scm_tenant_20250519_001)；两库 schema.version 各自独立为 8.0.0.0。",
+          "requiredFix": "增补执行矩阵：库清单（由 s_tenant_manager 导出）、每库执行顺序、每库 SELECT 校验语句、执行人与留痕要求；生产租户库数量列为补证项。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 147,
+          "resolved": false
+        },
+        {
+          "id": "DB-06",
+          "severity": "medium",
+          "problem": "[medium] 与 08 号决策正面冲突未闭环：08 号 A3 写「允许 DROP 引擎表，由 8.0.0 启动时自动重建」；改 false 后不再自动重建，S0-02 清空脚本若再执行则 dev 必起不来；08 号 §3 五步时序无「建表」步骤。证据：08 号 L11 A3、§2 清空 71 ACT_+8 FLW_、§3 时序（③ 停应用→④ 清空→⑤ 校验→⑥ 启动）。",
+          "requiredFix": "改 08 号 A3 为「引擎表由 DDL 脚本重建，不依赖启动自动建表」，并在 §3 插入「④.5 执行 01~03 create 脚本」后再校验、启动。",
+          "file": "00_doc/08-S0-备份与清空规格-2026-10-28.md",
+          "line": 11,
+          "resolved": false
+        },
+        {
+          "id": "DB-07",
+          "severity": "medium",
+          "problem": "[medium] 与 09 号 §9 结论冲突未闭环：09 §9 推荐 nullCatalogMeansCurrent=true（application-dev.yml L194/L243 + s_tenant_manager.url 三处）且实测全仓未落地；17 号改 false 后该方案不再需要，但两文档并存会误导执行者重复修 URL。证据：全仓 grep nullCatalogMeansCurrent 仅命中 09 号文档 7 行，代码/配置 0 处；dev yml 两处 URL 无该参数。",
+          "requiredFix": "在 09 号 §9 顶部加「已被 17 号 §1.5 的 database-schema-update=false 方案替代，保留作根因记录」，并注明三处 nullCatalogMeansCurrent 是否保留由 17 号定稿决定。",
+          "file": "00_doc/09-启动报错调研-Flowable8空库schema.md",
+          "line": 297,
+          "resolved": false
+        },
+        {
+          "id": "DB-08",
+          "severity": "medium",
+          "problem": "[medium] §5「顺序不能反（脚本必须先落地）」表述过强：当前 dev 两库表齐、schema.version=8.0.0.0，先改开关不会立刻坏；真正硬约束是「清库/新环境首启之前脚本必须在场」。表述失准会让团队误判本次改动即可上线而忽略清库红线。证据：DB 实测两库 act_ge_property schema.version=8.0.0.0、30+2 表齐全、运行时表 0 行（2026-10-29）。",
+          "requiredFix": "改为「脚本与开关的绑定关系不是部署先后，而是清库/新环境首启的前置条件：false 期间任何清库动作必须紧跟 01~03 create 脚本，否则启动失败」。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 184,
+          "resolved": false
+        },
+        {
+          "id": "DB-09",
+          "severity": "low",
+          "problem": "[low] 02 脚本未声明版本基线：仅对 schema.version=7.1.0.2 成立；若环境停在 7.0.x 或 7.2.x 需另出路径，生产各环境现值方案未取证。证据：官方升级链仅 7102→7200→(7201)→7202→8000 五份 mysql 脚本；08 号 L3 记录基线 Flowable 7.1.0 / schema 7.1.0.2。",
+          "requiredFix": "02 脚本头写明「前置：schema.version=7.1.0.2；其他值须选对应官方脚本链」，并把各环境现值列为发布前必查项。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 147,
+          "resolved": false
+        },
+        {
+          "id": "DB-10",
+          "severity": "low",
+          "problem": "[low] §1.5 未说明 false 的真实行为与报错文本，排障易误判为「表不存在」：false 并非静默不做事，引擎仍构造 SchemaOperationsEngineBuild 并调用 schemaCheckVersion；缺表报 No flowable tables in DB. Set property \"databaseSchemaUpdate\" \"true\" or value=\"create-drop\"…。证据：javap AbstractEngineConfiguration + SchemaOperationsEngineBuild.executeSchemaUpdate（BootstrapMethods #192 REF_invokeInterface SchemaManager.schemaCheckVersion）；EngineSqlScriptBasedDbSchemaManager.schemaCheckVersion 字符串常量。",
+          "requiredFix": "§1.5 增补「false 的实际行为」段（仅做版本/表存在校验）并列出两类报错文本（No flowable tables / FlowableWrongDbException）作为排障索引。",
+          "file": "00_doc/17-代码层剩余项审计与收尾清单-2026-10-28.md",
+          "line": 146,
+          "resolved": false
+        }
+      ]
+    }
+  ],
+  "taskSeq": 3
+}

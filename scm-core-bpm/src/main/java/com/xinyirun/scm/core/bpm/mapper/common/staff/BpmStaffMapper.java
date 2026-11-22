@@ -1,18 +1,10 @@
 package com.xinyirun.scm.core.bpm.mapper.common.staff;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xinyirun.scm.bean.entity.master.user.MStaffEntity;
-import com.xinyirun.scm.bean.system.vo.master.org.MPositionVo;
-import com.xinyirun.scm.bean.system.vo.master.org.MStaffPositionCountsVo;
-import com.xinyirun.scm.bean.system.vo.master.org.MStaffPositionVo;
-import com.xinyirun.scm.bean.system.vo.master.user.MStaffExportVo;
 import com.xinyirun.scm.bean.system.vo.master.user.MStaffVo;
 import com.xinyirun.scm.common.constant.DictConstant;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
