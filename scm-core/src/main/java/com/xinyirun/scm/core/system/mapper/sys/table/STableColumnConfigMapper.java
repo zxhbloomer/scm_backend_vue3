@@ -2,6 +2,7 @@ package com.xinyirun.scm.core.system.mapper.sys.table;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xinyirun.scm.bean.entity.sys.table.STableColumnConfigEntity;
+import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnConfigDetailVo;
 import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnConfigVo;
 import com.xinyirun.scm.core.system.config.mybatis.typehandlers.TableColumnDetailListTypeHandler;
 import org.apache.ibatis.annotations.*;
@@ -30,33 +31,22 @@ public interface STableColumnConfigMapper extends BaseMapper<STableColumnConfigE
             t1.label,
             t1.sort,
             t1.fix,
+            t1.pin,
             t2.NAME table_name,
             t2.page_code,
             t2.type,
             t2.start_column_index,
             t1.is_enable,
             t1.is_delete,
-            t3.max_sort,
-            t3.min_sort,
-            t1.is_group
+            t1.is_group,
+            t1.column_type
         FROM 
             s_table_column_config t1
             INNER JOIN s_table_config t2 ON t1.table_code = t2.CODE
-            INNER JOIN (
-                SELECT 
-                    max(subt1.sort) AS max_sort,
-                    min(subt1.sort) AS min_sort,
-                    subt1.table_code
-                FROM 
-                    s_table_column_config subt1
-                    INNER JOIN s_table_config subt2 ON subt1.table_code = subt2.CODE
-                WHERE subt1.fix = FALSE
-                GROUP BY subt1.table_code
-            ) t3 ON t1.table_code = t3.table_code
         WHERE TRUE
             AND t2.page_code = #{p1.page_code,jdbcType=VARCHAR}
             AND (t1.is_enable = #{p1.is_enable,jdbcType=BOOLEAN} or #{p1.is_enable,jdbcType=BOOLEAN} is null)
-        ORDER BY t1.sort
+        ORDER BY t1.sort, t1.id
         """)
     List<STableColumnConfigVo> list(@Param("p1") STableColumnConfigVo searchCondition);
 
@@ -98,16 +88,15 @@ public interface STableColumnConfigMapper extends BaseMapper<STableColumnConfigE
             t1.label,
             t1.is_enable,
             t1.is_delete,
-            t1.sort
+            t1.sort,
+            t1.column_type
         FROM 
             s_table_column_config_detail t1
         WHERE 
             t1.config_id = #{configId,jdbcType=INTEGER}
-        ORDER BY t1.sort ASC
+        ORDER BY t1.sort ASC, t1.id ASC
         """)
-    List<STableColumnConfigVo> listGroupChildren(@Param("staffId") Integer staffId, 
-                                                 @Param("pageCode") String pageCode, 
-                                                 @Param("configId") Integer configId);
+    List<STableColumnConfigDetailVo> listGroupChildren(@Param("configId") Integer configId);
 
     /**
      * 查询页面列配置主表数据
@@ -120,20 +109,22 @@ public interface STableColumnConfigMapper extends BaseMapper<STableColumnConfigE
             t1.label,
             t1.sort,
             t1.fix,
+            t1.pin,
             t2.NAME table_name,
             t2.page_code,
             t2.type,
             t2.start_column_index,
             t1.is_enable,
             t1.is_delete,
-            t1.is_group
+            t1.is_group,
+            t1.column_type
         FROM 
             s_table_column_config t1
             INNER JOIN s_table_config t2 ON t1.table_code = t2.CODE
         WHERE TRUE
             AND t2.page_code = #{p1.page_code,jdbcType=VARCHAR}
             AND (t1.is_enable = #{p1.is_enable,jdbcType=BOOLEAN} or #{p1.is_enable,jdbcType=BOOLEAN} is null)
-        ORDER BY t1.sort
+        ORDER BY t1.sort, t1.id
         """)
     List<STableColumnConfigVo> listWithDetails(@Param("p1") STableColumnConfigVo searchCondition);
 

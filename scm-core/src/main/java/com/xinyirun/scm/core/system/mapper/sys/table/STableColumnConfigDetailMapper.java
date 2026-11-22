@@ -23,21 +23,21 @@ public interface STableColumnConfigDetailMapper extends BaseMapper<STableColumnC
     /**
      * 根据config_id查询详情列表
      */
-    @Select("SELECT id, config_id, table_code, table_id, name, label, is_enable, is_delete " +
+    @Select("SELECT id, config_id, table_code, table_id, name, label, is_enable, is_delete, sort, column_type " +
             "FROM s_table_column_config_detail " +
             "WHERE config_id = #{configId} " +
-            "ORDER BY id")
+            "ORDER BY sort, id")
     List<STableColumnConfigDetailVo> listByConfigId(@Param("configId") Integer configId);
 
     /**
      * 根据多个config_id查询详情列表
      */
-    @Select("SELECT id, config_id, table_code, table_id, name, label, is_enable, is_delete " +
+    @Select("SELECT id, config_id, table_code, table_id, name, label, is_enable, is_delete, sort, column_type " +
             "FROM s_table_column_config_detail " +
             "WHERE config_id IN " +
             "<foreach collection='configIds' item='configId' open='(' separator=',' close=')'>" +
             "#{configId}" +
             "</foreach> " +
-            "ORDER BY config_id, id")
+            "ORDER BY config_id, sort, id")
     List<STableColumnConfigDetailVo> listByConfigIds(@Param("configIds") List<Integer> configIds);
 }

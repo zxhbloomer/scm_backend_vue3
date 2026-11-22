@@ -3,6 +3,7 @@ package com.xinyirun.scm.controller.sys.table;
 
 import com.xinyirun.scm.bean.system.ao.result.JsonResultAo;
 import com.xinyirun.scm.bean.system.result.utils.v1.ResultUtil;
+import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnCheckVo;
 import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnConfigVo;
 import com.xinyirun.scm.common.annotations.SysLogAnnotion;
 import com.xinyirun.scm.core.system.service.sys.table.ISTableColumnConfigService;
@@ -48,12 +49,12 @@ public class STableColumnConfigController {
         return ResponseEntity.ok().body(ResultUtil.OK(resultList));
     }
 
-    @SysLogAnnotion("check用户数据是否与original数据一致")
+    @SysLogAnnotion("比对列配置与表格当前列")
     @PostMapping("/check")
     @ResponseBody
-    public ResponseEntity<JsonResultAo<Boolean>> check(@RequestBody(required = false) STableColumnConfigVo vo) {
-        Boolean flag = service.check(vo);
-        return ResponseEntity.ok().body(ResultUtil.OK(flag));
+    public ResponseEntity<JsonResultAo<STableColumnCheckVo>> check(@RequestBody(required = false) STableColumnCheckVo vo) {
+        STableColumnCheckVo result = service.check(vo);
+        return ResponseEntity.ok().body(ResultUtil.OK(result));
     }
 
     @SysLogAnnotion("根据查询条件，获取列表配置信息")

@@ -60,9 +60,14 @@ public class STableColumnConfigVo implements Serializable {
     private Integer min_sort;
 
     /**
-     * 不可排序
+     * 系统保留列：1 表示系统列（序号、操作），0 或空表示普通列
      */
     private Boolean fix;
+
+    /**
+     * 固定位置：left 靠左固定、right 靠右固定、空 不固定
+     */
+    private String pin;
 
     /**
      * 是否显示
@@ -128,6 +133,11 @@ public class STableColumnConfigVo implements Serializable {
      * 是否为分组：0-普通列，1-分组
      */
     private Integer is_group;
+
+    /**
+     * 列性质：0 数据列，可以从行数据取值，导出时带上；1 非数据列，操作按钮列、页面自己算出来的展示列、分组父列，导出时跳过
+     */
+    private String column_type;
 
     /**
      * 分组子项列表 - 当is_group=1时，包含该分组内的所有列配置

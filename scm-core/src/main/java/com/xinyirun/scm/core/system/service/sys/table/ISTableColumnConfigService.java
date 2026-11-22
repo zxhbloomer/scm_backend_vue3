@@ -2,6 +2,7 @@ package com.xinyirun.scm.core.system.service.sys.table;
 
 import com.baomidou.mybatisplus.spring.service.IService;
 import com.xinyirun.scm.bean.entity.sys.table.STableColumnConfigEntity;
+import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnCheckVo;
 import com.xinyirun.scm.bean.system.vo.sys.table.STableColumnConfigVo;
 
 import java.util.List;
@@ -41,10 +42,10 @@ public interface ISTableColumnConfigService extends IService<STableColumnConfigE
     List<STableColumnConfigVo> resetTableColumnsAndReturn(List<STableColumnConfigVo> configs, String pageCode);
 
     /**
-     * 重置表格配置信息
-     * @param vo
+     * 比对库里的列配置与前端表格当前的列
+     * 入参带页面编号和当前列名清单，出参给出新增、删除的列，以及整体是否有变化
      */
-    Boolean check(STableColumnConfigVo vo);
+    STableColumnCheckVo check(STableColumnCheckVo vo);
 
     /**
      * 修改表格配置信息

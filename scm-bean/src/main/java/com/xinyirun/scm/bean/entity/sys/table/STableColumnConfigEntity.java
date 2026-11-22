@@ -60,10 +60,16 @@ public class STableColumnConfigEntity implements Serializable {
     private Integer sort;
 
     /**
-     * 不可排序
+     * 系统保留列：1 表示系统列（序号、操作），0 或空表示普通列
      */
     @TableField("fix")
     private Boolean fix;
+
+    /**
+     * 固定位置：left 靠左固定、right 靠右固定、空 不固定
+     */
+    @TableField("pin")
+    private String pin;
 
     /**
      * 是否显示
@@ -82,4 +88,10 @@ public class STableColumnConfigEntity implements Serializable {
      */
     @TableField("is_group")
     private Integer is_group;
+
+    /**
+     * 列性质：0 数据列，可以从行数据取值，导出时带上；1 非数据列，操作按钮列、页面自己算出来的展示列、分组父列，导出时跳过
+     */
+    @TableField("column_type")
+    private String column_type;
 }

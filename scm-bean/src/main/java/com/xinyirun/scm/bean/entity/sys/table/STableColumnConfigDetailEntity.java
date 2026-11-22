@@ -78,4 +78,10 @@ public class STableColumnConfigDetailEntity implements Serializable {
      */
     @TableField("sort")
     private Integer sort;
+
+    /**
+     * 列性质：0 数据列，可以从行数据取值，导出时带上；1 非数据列，操作按钮列、页面自己算出来的展示列，导出时跳过
+     */
+    @TableField("column_type")
+    private String column_type;
 }

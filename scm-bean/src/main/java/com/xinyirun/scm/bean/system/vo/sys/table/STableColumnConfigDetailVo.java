@@ -59,4 +59,14 @@ public class STableColumnConfigDetailVo implements Serializable {
      * 是否删除
      */
     private Boolean is_delete;
+
+    /**
+     * 排序，分组内子列的先后顺序
+     */
+    private Integer sort;
+
+    /**
+     * 列性质：0 数据列，可以从行数据取值，导出时带上；1 非数据列，操作按钮列、页面自己算出来的展示列，导出时跳过
+     */
+    private String column_type;
 }
